@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactElement } from 'react'
+import { useState, type CSSProperties, type ReactElement } from 'react'
 import './App.css'
 
 type Variant = 'ink' | 'flame' | 'neon' | 'rose' | 'terminal' | 'midnight' | 'glass' | 'gold' | 'pixel'
@@ -18,6 +18,8 @@ type Template = {
   category: 'Original Concepts' | 'Calm' | 'Dark' | 'Bright' | 'Showcase'
   cta?: string
 }
+
+type TemplateFilter = 'All' | Template['category']
 
 type Page = {
   title: string
@@ -165,6 +167,7 @@ const templates: Template[] = [
 ]
 
 const featuredStudioSkins = templates.filter((template) => ['ink-mountain-scholar', 'flame-alchemist', 'urban-taoist-neon'].includes(template.slug))
+const templateFilters: TemplateFilter[] = ['All', 'Calm', 'Dark', 'Bright', 'Showcase', 'Original Concepts']
 
 const p0Routes = [
   '/',
@@ -183,7 +186,7 @@ const p0Routes = [
   '/terms',
 ]
 
-function setMeta(title: string, description: string) {
+function setMeta(title: string, description: string, options: { noindex?: boolean } = {}) {
   document.title = title
   const meta = document.querySelector('meta[name="description"]') ?? document.createElement('meta')
   meta.setAttribute('name', 'description')
@@ -194,6 +197,15 @@ function setMeta(title: string, description: string) {
   canonical.setAttribute('rel', 'canonical')
   canonical.setAttribute('href', `${siteUrl}${window.location.pathname === '/' ? '' : window.location.pathname}`)
   document.head.appendChild(canonical)
+
+  const robots = document.querySelector('meta[name="robots"]') ?? document.createElement('meta')
+  robots.setAttribute('name', 'robots')
+  if (options.noindex) {
+    robots.setAttribute('content', 'noindex,follow')
+    document.head.appendChild(robots)
+  } else {
+    robots.remove()
+  }
 }
 
 function Nav() {
@@ -372,6 +384,14 @@ function MetadataPanel({ template }: { template: Template }) {
   return <dl className="metadata-panel studio-card">{rows.map(([key, value]) => <div key={key}><dt>{key}</dt><dd>{value}</dd></div>)}</dl>
 }
 
+function isDarkHex(hex: string) {
+  const value = hex.replace('#', '')
+  if (!/^[0-9a-f]{6}$/i.test(value)) return false
+  const [r, g, b] = [0, 2, 4].map((start) => parseInt(value.slice(start, start + 2), 16) / 255)
+  const [lr, lg, lb] = [r, g, b].map((channel) => channel <= 0.03928 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4)
+  return (0.2126 * lr) + (0.7152 * lg) + (0.0722 * lb) < 0.28
+}
+
 function PaletteBoard({ template }: { template: Template }) {
   const names: Record<string, string[]> = {
     ink: ['Ink base', 'Pine panels', 'Rice paper', 'Jade focus'],
@@ -382,7 +402,7 @@ function PaletteBoard({ template }: { template: Template }) {
     <section className={`palette-board palette-board--${template.variant} studio-card`}>
       <p className="eyebrow">Palette Board</p>
       <div className="palette-board-grid">
-        {template.palette.map((color, index) => <div key={color} style={{ '--swatch': color } as CSSProperties & Record<string, string>}><b></b><strong>{names[template.variant]?.[index] ?? `Token ${index + 1}`}</strong><span>{color}</span></div>)}
+        {template.palette.map((color, index) => <div key={color} className={isDarkHex(color) ? 'is-dark-swatch' : undefined} style={{ '--swatch': color } as CSSProperties & Record<string, string>}><b></b><strong>{names[template.variant]?.[index] ?? `Token ${index + 1}`}</strong><span>{color}</span></div>)}
       </div>
     </section>
   )
@@ -473,7 +493,10 @@ function AdaptSteps() {
 }
 
 function TemplatesPage() {
-  return <><p className="page-lede">Pick a free Codex skin template and download a reviewable starter recipe. No upload, checkout, or one-click installer is required for v0.</p><div className="filter-chips" aria-label="Template filters"><span>All</span><span>Calm</span><span>Dark</span><span>Bright</span><span>Showcase</span><span>Original Concepts</span></div><TemplateGallery /></>
+  const [activeFilter, setActiveFilter] = useState<TemplateFilter>('All')
+  const filteredTemplates = activeFilter === 'All' ? templates : templates.filter((template) => template.category === activeFilter)
+
+  return <><p className="page-lede">Pick a free Codex skin template and download a reviewable starter recipe. No upload, checkout, or one-click installer is required for v0.</p><div className="filter-chips" aria-label="Template filters">{templateFilters.map((filter) => { const count = filter === 'All' ? templates.length : templates.filter((template) => template.category === filter).length; const isActive = activeFilter === filter; return <button key={filter} type="button" className={isActive ? 'is-active' : undefined} aria-pressed={isActive} onClick={() => setActiveFilter(filter)}>{filter} <span>{count}</span></button> })}</div><p className="filter-result-count" aria-live="polite">Showing {filteredTemplates.length} {filteredTemplates.length === 1 ? 'template' : 'templates'} in {activeFilter}.</p><TemplateGallery items={filteredTemplates} /></>
 }
 
 function HowItWorks() {
@@ -522,8 +545,8 @@ function App() {
     return <><Nav /><main><HomeBody /></main><Footer /></>
   }
   if (!page) {
-    setMeta('Page not found — Codex Skin Studio', 'The requested Codex Skin Studio page was not found.')
-    return <><Nav /><main className="section-pad page"><p className="eyebrow">404</p><h1>Page not found</h1><p className="page-lede">Try the free templates hub or one of the P0 routes in the footer.</p><StudioButton href="/templates">Browse free templates</StudioButton></main><Footer /></>
+    setMeta('404 Page not found — Codex Skin Studio', '404: the requested Codex Skin Studio page was not found.', { noindex: true })
+    return <><Nav /><main className="section-pad page"><p className="eyebrow">404 / Not Found</p><h1>404 — Page not found</h1><p className="page-lede">This Codex Skin Studio route does not exist. It is marked noindex for crawlers; try the free templates hub or one of the verified routes in the footer.</p><StudioButton href="/templates">Browse free templates</StudioButton></main><Footer /></>
   }
   setMeta(page.title, page.description)
   return <><Nav /><StandardPage page={page} /><Footer /></>
