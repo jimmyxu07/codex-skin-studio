@@ -140,6 +140,10 @@ const templates: Template[] = [
   },
 ]
 
+const originalEasternFantasyTemplates = templates.filter((template) =>
+  ['ink-mountain-scholar', 'flame-alchemist', 'urban-taoist-neon'].includes(template.slug),
+)
+
 const p0Routes = [
   '/',
   '/templates',
@@ -205,10 +209,10 @@ function TemplatePreview({ template }: { template: Template }) {
   )
 }
 
-function TemplateCards({ compact = false }: { compact?: boolean }) {
+function TemplateCards({ compact = false, items = templates }: { compact?: boolean; items?: Template[] }) {
   return (
     <div className="kit-grid">
-      {templates.map((template) => (
+      {items.map((template) => (
         <article className="kit-card" key={template.slug} style={{ '--kit-accent': template.accent } as CSSProperties & Record<string, string>}>
           <div className="kit-card-topline"><span>Free starter template</span><span>{template.tagline}</span></div>
           <TemplatePreview template={template} />
@@ -230,7 +234,7 @@ function TemplateCards({ compact = false }: { compact?: boolean }) {
 }
 
 function StudioMockup() {
-  const featured = [templates[1], templates[3], templates[4]]
+  const featured = originalEasternFantasyTemplates
 
   return (
     <div className="studio-mockup" aria-label="Codex skin studio template preview">
@@ -309,6 +313,14 @@ function HomeBody() {
         <StudioMockup />
       </section>
       <ShowcaseStrip />
+      <section className="section-pad original-skins">
+        <SectionHeading
+          eyebrow="Original Guoman-inspired skins"
+          title="Original Eastern Fantasy Covers for Codex"
+          text="Three clearly labeled, IP-neutral visual systems inspired by original Eastern fantasy moods — built as reviewable Codex skin recipes, not references to any existing franchise."
+        />
+        <TemplateCards items={originalEasternFantasyTemplates} compact />
+      </section>
       <section className="section-pad">
         <SectionHeading eyebrow="Template showcase" title="Start with a preset Codex skin mood" text="Each card is a safe, IP-neutral visual direction with palette, use case, and reviewable recipe notes — closer to a small customization studio than a plain link gallery." />
         <TemplateCards />

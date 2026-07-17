@@ -172,6 +172,20 @@ pre {
 .showcase-card strong { color: var(--brand-2); font-size: 1.7rem; }
 .showcase-card span { color: var(--heading); font-weight: 800; line-height: 1.3; }
 .section-heading { max-width: 760px; margin-bottom: 1.6rem; }
+.original-skins {
+  margin-top: -2rem;
+  padding-top: 3rem;
+  border-radius: 1.8rem;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(188, 232, 216, 0.14), transparent 19rem),
+    radial-gradient(circle at 88% 16%, rgba(255, 177, 59, 0.14), transparent 18rem),
+    linear-gradient(135deg, rgba(255,255,255,0.065), rgba(255,255,255,0.018));
+}
+.original-skins .section-heading { max-width: 850px; }
+.original-skins .kit-card {
+  border-color: color-mix(in srgb, var(--kit-accent) 38%, rgba(255,255,255,0.12));
+  background: linear-gradient(180deg, color-mix(in srgb, var(--kit-accent) 12%, rgba(255,255,255,0.07)), rgba(255,255,255,0.035));
+}
 h2 { margin: 0.35rem 0 0.75rem; color: var(--heading); font-size: clamp(2rem, 4vw, 3.3rem); line-height: 1; letter-spacing: -0.045em; }
 h3 { margin: 0 0 0.75rem; color: var(--heading); font-size: 1.2rem; }
 .kit-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
