@@ -11,6 +11,9 @@ type Template = {
   palette: string[]
   recipe: string
   accent: string
+  coverKind?: 'ink' | 'flame' | 'neon'
+  features?: string[]
+  cta?: string
 }
 
 type Page = {
@@ -93,6 +96,48 @@ const templates: Template[] = [
     recipe: 'Use a dark base with colorful blocks, reserve yellow for highlights, and test line-height/spacing so playful visuals do not reduce coding readability.',
     accent: '#fb7185',
   },
+  {
+    slug: 'ink-mountain-scholar',
+    name: 'Ink Mountain Scholar',
+    tagline: 'Ink-wash mountain focus skin',
+    description: 'A calm ink-wash coding skin for focused builders who like mist, mountains, and quiet momentum.',
+    mood: ['ink wash', 'mist', 'jade focus'],
+    bestFor: 'long writing-and-coding sessions, quiet planning, documentation-heavy builds',
+    palette: ['#101418', '#123C3D', '#A9D8D8', '#E8E1CF', '#BCE8D8', '#6F7F7B'],
+    recipe: 'Layer an ink-black base with deep pine teal panels, rice-paper surfaces, misty cyan selection states, and pale jade active accents. Keep calligraphy-inspired marks abstract and avoid any named weapons, symbols, factions, or franchise references.',
+    accent: '#BCE8D8',
+    coverKind: 'ink',
+    features: ['Mist-soft contrast for long coding sessions', 'Calligraphy-inspired accents without visual clutter', 'Jade highlights for active tabs, cursors, and search states'],
+    cta: 'Apply the Scholar Skin',
+  },
+  {
+    slug: 'flame-alchemist',
+    name: 'Flame Alchemist',
+    tagline: 'Forge-fire dark workspace',
+    description: 'A high-energy forge skin with ember contrast, molten focus states, and a disciplined dark base.',
+    mood: ['ember', 'forge', 'bronze'],
+    bestFor: 'terminal-heavy workflows, launch crunch, high-energy debugging sessions',
+    palette: ['#16110F', '#3B2118', '#D6401F', '#FFB13B', '#8A5A32', '#7B6C63'],
+    recipe: 'Use charcoal and furnace-brown foundations, ember-red cursor and error-adjacent accents, molten-gold focus lines, and low-opacity bronze geometry. Decorative fire rings should stay abstract with no cauldron, crest, academy, or known artifact cues.',
+    accent: '#FFB13B',
+    coverKind: 'flame',
+    features: ['Ember-guided cursor, selection, and active-line states', 'Warm contrast tuned for terminal-heavy workflows', 'Forged bronze UI accents for tabs, panels, and badges'],
+    cta: 'Ignite the Forge Skin',
+  },
+  {
+    slug: 'urban-taoist-neon',
+    name: 'Urban Taoist Neon',
+    tagline: 'Rain-lit folk geometry skin',
+    description: 'A rain-lit neon skin where folk geometry meets modern editor energy.',
+    mood: ['neon', 'rain', 'folk geometry'],
+    bestFor: 'night coding, creative tools, urban-fantasy mood boards, energetic personal setups',
+    palette: ['#080B12', '#16D9E3', '#D946EF', '#F6C85F', '#2C3A4A', '#EAF8FF'],
+    recipe: 'Build from night-asphalt surfaces, cyan-magenta focus rings, amber abstract talisman geometry, rainy blue-gray panels, and off-white glow text. Keep all signs, symbols, and paper patterns unreadable and geometric to avoid real brands or IP-specific talismans.',
+    accent: '#16D9E3',
+    coverKind: 'neon',
+    features: ['Cyan-magenta focus states for fast scanning', 'Talisman-inspired highlights built from abstract geometry', 'Dark rooftop palette designed for night coding'],
+    cta: 'Enter the Neon Ritual',
+  },
 ]
 
 const p0Routes = [
@@ -102,6 +147,9 @@ const p0Routes = [
   '/templates/neon-terminal',
   '/templates/midnight-focus',
   '/templates/soft-glass',
+  '/templates/ink-mountain-scholar',
+  '/templates/flame-alchemist',
+  '/templates/urban-taoist-neon',
   '/custom-codex-skin',
   '/how-it-works',
   '/safety',
@@ -142,8 +190,9 @@ function Nav() {
 
 function TemplatePreview({ template }: { template: Template }) {
   return (
-    <div className="skin-preview" style={{ '--template-accent': template.accent } as CSSProperties & Record<string, string>}>
+    <div className={`skin-preview ${template.coverKind ? `cover-${template.coverKind}` : ''}`} style={{ '--template-accent': template.accent } as CSSProperties & Record<string, string>}>
       <div className="preview-window">
+        {template.coverKind && <div className="cover-art" aria-hidden="true"><span className="cover-figure"></span><span className="cover-orb"></span><span className="cover-lines"></span></div>}
         <span className="terminal-dot red"></span><span className="terminal-dot yellow"></span><span className="terminal-dot green"></span>
         <div className="preview-lines">
           <span></span><span></span><span></span>
@@ -252,7 +301,7 @@ function HomeBody() {
             <a className="button secondary" href="/custom-codex-skin">Request Custom Skin</a>
           </div>
           <div className="metric-row" aria-label="Studio highlights">
-            <span><strong>6</strong> template moods</span>
+            <span><strong>9</strong> template moods</span>
             <span><strong>0</strong> risky installers</span>
             <span><strong>100%</strong> reviewable recipes</span>
           </div>
@@ -291,12 +340,13 @@ function TemplateDetail({ template }: { template: Template }) {
         <article className="recipe-card">
           <h2>Starter recipe</h2>
           <p>{template.recipe}</p>
+          {template.features && <><h3>Feature notes</h3><ul className="bullet-list compact">{template.features.map((feature) => <li key={feature}>{feature}</li>)}</ul></>}
           <h3>Palette</h3>
           <div className="palette-list">{template.palette.map((color) => <code key={color}>{color}</code>)}</div>
           <h3>Recommended use</h3>
           <p>{template.bestFor}</p>
           <div className="cta-row">
-            <a className="button primary" href={`data:text/plain;charset=utf-8,${encodeURIComponent(`${template.name} Codex skin starter recipe\n\nPalette: ${template.palette.join(', ')}\n\n${template.recipe}\n\nReview and adapt manually. No automatic installer is included.`)}`} download={`${template.slug}-starter-recipe.txt`}>Download starter recipe</a>
+            <a className="button primary" href={`data:text/plain;charset=utf-8,${encodeURIComponent(`${template.name} Codex skin starter recipe\n\nPalette: ${template.palette.join(', ')}\n\n${template.recipe}\n\n${template.features ? `Feature notes:\n- ${template.features.join('\n- ')}\n\n` : ''}Review and adapt manually. No automatic installer is included.`)}`} download={`${template.slug}-starter-recipe.txt`}>{template.cta ?? 'Download starter recipe'}</a>
             <a className="button secondary" href="/custom-codex-skin">Request custom version</a>
           </div>
         </article>
@@ -384,7 +434,7 @@ function Legal({ kind }: { kind: 'privacy' | 'terms' }) {
 const pageMap: Record<string, Page> = {
   '/templates': {
     title: 'Free Codex Skin Templates — Codex Skin Studio',
-    description: 'Browse free Codex skin templates including Rose Orbit, Neon Terminal, Midnight Focus, Soft Glass, Stage Gold, and Pixel Pop starter recipes.',
+    description: 'Browse free Codex skin templates including Rose Orbit, Neon Terminal, Midnight Focus, Soft Glass, Ink Mountain Scholar, Flame Alchemist, and Urban Taoist Neon starter recipes.',
     h1: 'Free Codex Skin Templates',
     eyebrow: 'Template studio',
     body: <><p className="page-lede">Pick a free Codex skin template and download a reviewable starter recipe. No upload, checkout, or one-click installer is required for v0.</p><TemplateCards /></>,
