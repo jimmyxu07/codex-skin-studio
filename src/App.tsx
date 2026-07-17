@@ -108,7 +108,7 @@ const templates: Template[] = [
     accent: '#BCE8D8',
     coverKind: 'ink',
     features: ['Mist-soft contrast for long coding sessions', 'Calligraphy-inspired accents without visual clutter', 'Jade highlights for active tabs, cursors, and search states'],
-    cta: 'Apply the Scholar Skin',
+    cta: 'Download the Quiet Scholar Recipe',
   },
   {
     slug: 'flame-alchemist',
@@ -122,7 +122,7 @@ const templates: Template[] = [
     accent: '#FFB13B',
     coverKind: 'flame',
     features: ['Ember-guided cursor, selection, and active-line states', 'Warm contrast tuned for terminal-heavy workflows', 'Forged bronze UI accents for tabs, panels, and badges'],
-    cta: 'Ignite the Forge Skin',
+    cta: 'Download the Forge Recipe',
   },
   {
     slug: 'urban-taoist-neon',
@@ -136,7 +136,7 @@ const templates: Template[] = [
     accent: '#16D9E3',
     coverKind: 'neon',
     features: ['Cyan-magenta focus states for fast scanning', 'Talisman-inspired highlights built from abstract geometry', 'Dark rooftop palette designed for night coding'],
-    cta: 'Enter the Neon Ritual',
+    cta: 'Download the Neon Ritual Recipe',
   },
 ]
 
@@ -343,7 +343,165 @@ function ValueCard({ title, text }: { title: string; text: string }) {
   return <article className="value-card"><h3>{title}</h3><p>{text}</p></article>
 }
 
+function recipeDownloadHref(template: Template) {
+  return `data:text/plain;charset=utf-8,${encodeURIComponent(`${template.name} Codex skin starter recipe\n\nPalette: ${template.palette.join(', ')}\n\n${template.recipe}\n\n${template.features ? `Feature notes:\n- ${template.features.join('\n- ')}\n\n` : ''}Review and adapt manually. No automatic installer is included.`)}`
+}
+
+function DetailPreview({ template }: { template: Template }) {
+  return (
+    <div className="detail-preview-shell">
+      <div className="detail-preview-titlebar"><span className="terminal-dot red"></span><span className="terminal-dot yellow"></span><span className="terminal-dot green"></span><span>/skins/{template.slug}</span></div>
+      <div className="detail-preview-editor">
+        <span className="editor-line long"></span><span className="editor-line mid"></span><span className="editor-line short"></span>
+        <span className="editor-line active"></span><span className="editor-line mid faint"></span>
+      </div>
+    </div>
+  )
+}
+
+function InkLayerRecipe() {
+  const layers = [
+    ['Ink base', '#101418', 'low-glare foundation'],
+    ['Pine panels', '#123C3D', 'deep sidebars and cards'],
+    ['Rice-paper surfaces', '#E8E1CF', 'soft reading planes'],
+    ['Jade focus states', '#BCE8D8', 'active tabs and cursor cues'],
+  ]
+
+  return (
+    <section className="recipe-viz recipe-viz--ink-layers" aria-label="Ink mountain layered recipe">
+      {layers.map(([name, color, use], index) => (
+        <div className="ink-layer-row" key={name} style={{ '--layer-color': color, '--layer-index': String(index) } as CSSProperties & Record<string, string>}>
+          <svg viewBox="0 0 360 42" role="img" aria-label={`${name} visual layer`}>
+            <path d={index % 2 === 0 ? 'M0 31 C38 14 72 27 111 16 C157 2 194 32 236 18 C286 2 318 20 360 8 L360 42 L0 42 Z' : 'M0 25 C44 9 83 12 124 26 C166 39 198 10 239 16 C281 22 316 34 360 14 L360 42 L0 42 Z'} />
+          </svg>
+          <div><strong>{name}</strong><span>{color} · {use}</span></div>
+        </div>
+      ))}
+    </section>
+  )
+}
+
+function ForgeRecipeGauge() {
+  const parts = [
+    ['Charcoal base', '52%', '#16110F', 'Base keeps glare down'],
+    ['Ember cursor', '18%', '#D6401F', 'Ember guides attention'],
+    ['Molten focus', '20%', '#FFB13B', 'Gold marks focus'],
+    ['Bronze geometry', '10%', '#8A5A32', 'Bronze adds structure'],
+  ]
+
+  return (
+    <section className="recipe-viz recipe-viz--forge-gauge" aria-label="Forge alloy recipe gauge">
+      <div className="forge-gauge-dial" aria-hidden="true"><span></span></div>
+      <div className="forge-gauge-bars">
+        {parts.map(([name, percent, color, note]) => (
+          <div className="forge-gauge-row" key={name} style={{ '--gauge-color': color, '--gauge-width': percent } as CSSProperties & Record<string, string>}>
+            <div><strong>{name}</strong><span>{note}</span></div><b>{percent}</b><i></i>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function NeonCircuitRecipe() {
+  const nodes = [
+    ['Asphalt base', '#2C3A4A', 'night foundation'],
+    ['Rain panel', '#EAF8FF', 'wet glass surfaces'],
+    ['Cyan focus', '#16D9E3', 'scan-ready highlights'],
+    ['Magenta scan', '#D946EF', 'secondary motion'],
+    ['Amber geometry', '#F6C85F', 'small structure cues'],
+  ]
+
+  return (
+    <section className="recipe-viz recipe-viz--neon-circuit" aria-label="Neon circuit recipe map">
+      <svg viewBox="0 0 520 190" aria-hidden="true">
+        <polyline points="44,132 145,72 246,118 355,48 474,112" />
+        {nodes.map(([, color], index) => {
+          const points = [[44, 132], [145, 72], [246, 118], [355, 48], [474, 112]][index]
+          return <circle key={color} cx={points[0]} cy={points[1]} r="10" style={{ '--node-color': color } as CSSProperties & Record<string, string>} />
+        })}
+      </svg>
+      <div className="neon-node-list">
+        {nodes.map(([name, color, note]) => <div key={name} style={{ '--node-color': color } as CSSProperties & Record<string, string>}><strong>{name}</strong><span>{note}</span></div>)}
+      </div>
+    </section>
+  )
+}
+
+function AbstractTalismanPanel() {
+  return (
+    <div className="neon-talisman-panel" aria-hidden="true">
+      <span></span><i></i><i></i><i></i><b></b><b></b><b></b><b></b><b></b><b></b>
+    </div>
+  )
+}
+
+function VariantTemplateDetail({ template }: { template: Template }) {
+  const isInk = template.coverKind === 'ink'
+  const isFlame = template.coverKind === 'flame'
+  const isNeon = template.coverKind === 'neon'
+  const secondaryCta = isInk ? 'Request a calmer custom skin' : isFlame ? 'Commission a hotter workspace skin' : 'Request a city-night custom skin'
+  const helperText = isInk
+    ? 'Best when you want Codex to feel like a quiet writing desk, not a dashboard.'
+    : isFlame
+      ? 'Use it when debugging needs heat, but the interface still needs discipline.'
+      : 'For night coding sessions that need motion, contrast, and a little street-level electricity.'
+
+  return (
+    <div className={`template-detail template-detail--${template.coverKind}`}>
+      <section className={`variant-hero detail-hero--${isInk ? 'ink-scroll' : isFlame ? 'forge-core' : 'rain-city'}`}>
+        <div className="variant-copy">
+          {isInk && <div className="ink-seal-pill"><span></span>Quiet focus recipe</div>}
+          {isFlame && <div className="forge-heat-label">Forge ratio / ember disciplined</div>}
+          {isNeon && <div className="neon-route-label">Rain city circuit / abstract geometry</div>}
+          <p className="page-lede">{template.description}</p>
+          <h2>{isInk ? 'Paper mountains for long-form focus.' : isFlame ? 'A furnace console for high-heat debugging.' : 'Rain-lit neon geometry for night sessions.'}</h2>
+          <p>{helperText}</p>
+          <div className="cta-row">
+            <a className="button primary" href={recipeDownloadHref(template)} download={`${template.slug}-starter-recipe.txt`}>{template.cta}</a>
+            <a className="button secondary" href="/custom-codex-skin">{secondaryCta}</a>
+          </div>
+        </div>
+        <div className="variant-art" aria-label={`${template.name} visual preview`}>
+          {isInk && <><div className="ink-paper-texture"></div><div className="ink-mist-band one"></div><div className="ink-mist-band two"></div><div className="ink-brush-stroke"></div><DetailPreview template={template} /><div className="ink-mountain-stack"><span></span><span></span><span></span></div></>}
+          {isFlame && <><div className="forge-metal-grid"></div><div className="forge-core-ring"></div><div className="forge-ember-field">{Array.from({ length: 12 }, (_, index) => <span key={index}></span>)}</div><div className="forge-cut-card"><DetailPreview template={template} /><div className="forge-heat-strip"><span></span><span></span><span></span></div></div></>}
+          {isNeon && <><div className="neon-rain-field"></div><div className="neon-sign-frame"></div><AbstractTalismanPanel /><div className="neon-reflection-strip"></div><div className="neon-tilted-preview"><DetailPreview template={template} /></div></>}
+        </div>
+      </section>
+      <section className="variant-recipe-grid">
+        <article className="recipe-card">
+          <h2>{isInk ? 'Mountain layer recipe' : isFlame ? 'Forge alloy recipe' : 'Rain-city circuit recipe'}</h2>
+          <p>{template.recipe}</p>
+          {isInk && <InkLayerRecipe />}
+          {isFlame && <ForgeRecipeGauge />}
+          {isNeon && <NeonCircuitRecipe />}
+        </article>
+        <article className="recipe-card variant-notes">
+          <h3>Palette tokens</h3>
+          <div className="palette-list">{template.palette.map((color) => <code key={color}>{color}</code>)}</div>
+          <h3>Recommended use</h3>
+          <p>{template.bestFor}</p>
+          {template.features && <><h3>Feature notes</h3><ul className="bullet-list compact">{template.features.map((feature) => <li key={feature}>{feature}</li>)}</ul></>}
+        </article>
+      </section>
+      <section className="section-block">
+        <h2>How to adapt it</h2>
+        <ol className="checklist">
+          <li>Copy the palette and written recipe into your own notes.</li>
+          <li>Back up current Codex, terminal, or editor appearance settings before changing anything.</li>
+          <li>Apply colors manually in the environment you actually use.</li>
+          <li>Test prompt text, selections, links, warnings, errors, and diffs for contrast.</li>
+          <li>Rollback immediately if readability or behavior changes unexpectedly.</li>
+        </ol>
+      </section>
+      <CustomCta />
+    </div>
+  )
+}
+
 function TemplateDetail({ template }: { template: Template }) {
+  if (template.coverKind) return <VariantTemplateDetail template={template} />
+
   return (
     <>
       <p className="page-lede">{template.description}</p>
@@ -358,7 +516,7 @@ function TemplateDetail({ template }: { template: Template }) {
           <h3>Recommended use</h3>
           <p>{template.bestFor}</p>
           <div className="cta-row">
-            <a className="button primary" href={`data:text/plain;charset=utf-8,${encodeURIComponent(`${template.name} Codex skin starter recipe\n\nPalette: ${template.palette.join(', ')}\n\n${template.recipe}\n\n${template.features ? `Feature notes:\n- ${template.features.join('\n- ')}\n\n` : ''}Review and adapt manually. No automatic installer is included.`)}`} download={`${template.slug}-starter-recipe.txt`}>{template.cta ?? 'Download starter recipe'}</a>
+            <a className="button primary" href={recipeDownloadHref(template)} download={`${template.slug}-starter-recipe.txt`}>{template.cta ?? 'Download starter recipe'}</a>
             <a className="button secondary" href="/custom-codex-skin">Request custom version</a>
           </div>
         </article>
