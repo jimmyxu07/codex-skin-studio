@@ -203,7 +203,12 @@ const templates: Template[] = [
   },
 ]
 
-const featuredStudioSkins = ['rainstreet-neon-ritual', 'forge-core-alchemist', 'glasshouse-sprint-lab', 'midnight-blueprint-room', 'rose-orbit-observatory', 'pixel-bento-arcade']
+const heroStoreSkins = ['rainstreet-neon-ritual', 'pixel-bento-arcade', 'forge-core-alchemist']
+  .map((slug) => templates.find((template) => template.slug === slug))
+  .filter((template): template is Template => Boolean(template))
+const heroCategoryChips = ['All', 'Neon', 'Cozy', 'Forge', 'Pixel', 'Glass', 'Blueprint', 'Custom']
+
+const featuredStudioSkins = ['rainstreet-neon-ritual', 'pixel-bento-arcade', 'forge-core-alchemist', 'glasshouse-sprint-lab', 'midnight-blueprint-room', 'rose-orbit-observatory']
   .map((slug) => templates.find((template) => template.slug === slug))
   .filter((template): template is Template => Boolean(template))
 const templateFilters: TemplateFilter[] = ['All', 'Featured Concepts', 'Focus Worlds', 'High-Energy Systems', 'Creative Workspaces', 'Light / Paper', 'Dark / Terminal']
@@ -391,15 +396,38 @@ function CodexWorkspaceMock({ template, size = 'card' }: { template: Template; s
   )
 }
 
-function HeroWorkspacePreview() {
-  const heroTemplate = templates.find((template) => template.slug === 'rainstreet-neon-ritual') ?? featuredStudioSkins[0]
+function HeroSkinStoreCard({ template }: { template: Template }) {
   return (
-    <div className="hero-preview studio-card" aria-label="Large original Codex workspace mock screenshot">
-      <div className="hero-preview-topline"><span>LIVE-STYLE PREVIEW MOCK</span><span>Original CSS/SVG · IP-safe</span></div>
-      <CodexWorkspaceMock template={heroTemplate} size="hero" />
-      <div className="skin-switch-tabs" aria-label="Example skin tabs">
-        {featuredStudioSkins.slice(0, 3).map((template) => <a key={template.slug} href={`/templates/${template.slug}`}>{template.name.replace(' ', '\u00a0')}</a>)}
+    <article className="hero-skin-card studio-card" style={{ '--accent': template.accent } as CSSProperties & Record<string, string>}>
+      <div className="hero-skin-media">
+        <span className="free-ribbon">FREE</span>
+        <CodexWorkspaceMock template={template} size="hero" />
       </div>
+      <div className="hero-skin-copy">
+        <p className="hero-skin-kicker">{template.mood[0]}</p>
+        <h3>{template.name}</h3>
+        <p>{template.tagline}</p>
+        <div className="hero-card-actions">
+          <StudioButton href={`/templates/${template.slug}`}>Preview Free</StudioButton>
+          <StudioButton href={recipeDownloadHref(template)} variant="secondary" download={`${template.slug}-starter-recipe.txt`}>Copy Recipe</StudioButton>
+        </div>
+      </div>
+    </article>
+  )
+}
+
+function HeroSkinStore() {
+  return (
+    <div className="hero-store" aria-label="Free Codex skin store cards">
+      <div className="hero-store-grid">
+        {heroStoreSkins.map((template) => <HeroSkinStoreCard key={template.slug} template={template} />)}
+      </div>
+      <aside className="hero-generator-entry studio-card">
+        <p className="eyebrow">Need a different vibe?</p>
+        <h3>Request Custom</h3>
+        <p>Send a moodboard and constraints. Keep it review-first and IP-safe.</p>
+        <StudioButton href="/custom-codex-skin" variant="secondary">Request Custom</StudioButton>
+      </aside>
     </div>
   )
 }
@@ -533,17 +561,18 @@ function HomeBody() {
     <>
       <section className="hero section-pad">
         <div className="hero-copy">
-          <p className="eyebrow">FREE + CUSTOM CODEX SKINS</p>
-          <h1>Free Codex skins that look like real workspaces — not color presets.</h1>
-          <p className="lede">Browse IP-safe skins, preview original Codex workspace mockups, download reviewable recipes, or request a custom skin direction for your own setup.</p>
+          <p className="eyebrow">CODEX SKIN STORE</p>
+          <h1>Free Codex skins you can preview and copy today.</h1>
+          <p className="lede">Pick a skin card first: Rain Neon Desk, Cozy Bug Café, Ember Forge Console, and more IP-safe workspace recipes.</p>
+          <div className="home-category-chips" aria-label="Skin categories">{heroCategoryChips.map((chip) => <a key={chip} href={chip === 'Custom' ? '/custom-codex-skin' : '/templates'}>{chip}</a>)}</div>
           <div className="cta-row">
-            <StudioButton href="/templates">Browse Free Skins</StudioButton>
+            <StudioButton href="/templates">Preview Free</StudioButton>
+            <StudioButton href={recipeDownloadHref(heroStoreSkins[0])} variant="secondary" download={`${heroStoreSkins[0].slug}-starter-recipe.txt`}>Copy Recipe</StudioButton>
             <StudioButton href="/custom-codex-skin" variant="secondary">Request Custom Skin</StudioButton>
-            <StudioButton href="#install-guide" variant="secondary">See Install Guide</StudioButton>
           </div>
           <TrustBadges />
         </div>
-        <HeroWorkspacePreview />
+        <HeroSkinStore />
       </section>
       <GeneratorRemixStrip />
       <section className="section-pad featured-skins">
