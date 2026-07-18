@@ -202,7 +202,7 @@ const templates: Template[] = [
   },
 ]
 
-const featuredStudioSkins = ['glasshouse-sprint-lab', 'ink-mountain-scholar', 'rainstreet-neon-ritual']
+const featuredStudioSkins = ['ink-mountain-scholar', 'rainstreet-neon-ritual', 'forge-core-alchemist', 'pixel-bento-arcade', 'deepsea-sonar-console', 'midnight-blueprint-room']
   .map((slug) => templates.find((template) => template.slug === slug))
   .filter((template): template is Template => Boolean(template))
 const templateFilters: TemplateFilter[] = ['All', 'Featured Concepts', 'Focus Worlds', 'High-Energy Systems', 'Creative Workspaces', 'Light / Paper', 'Dark / Terminal']
@@ -253,14 +253,13 @@ function Nav() {
     <header className="topbar">
       <a className="brand" href="/" aria-label="Codex Skin Studio home">
         <span className="brand-mark">CS</span>
-        <span>Codex Skin Studio</span>
+        <span>CodexSkin.fun</span>
       </a>
       <nav aria-label="Primary navigation">
-        <a href="/templates">Templates</a>
+        <a href="/templates">Free Skins</a>
         <a href="/custom-codex-skin">Custom Skin</a>
-        <a href="/how-it-works">How it works</a>
-        <a href="/safety">Safety</a>
-        <a className="nav-cta" href="/custom-codex-skin">Studio</a>
+        <a href="/#install-guide">Install Guide</a>
+        <a className="nav-cta" href="/templates">Browse</a>
       </nav>
     </header>
   )
@@ -348,15 +347,14 @@ function CodexWorkspaceMock({ template, size = 'card' }: { template: Template; s
   )
 }
 
-function FeaturedStudioBoard() {
+function HeroWorkspacePreview() {
+  const heroTemplate = templates.find((template) => template.slug === 'rainstreet-neon-ritual') ?? featuredStudioSkins[0]
   return (
-    <div className="featured-studio-board studio-card" aria-label="Studio board with three featured workspace mock screenshots">
-      <div className="board-topline"><span>STUDIO BOARD</span><span>003 SKINS FEATURED</span></div>
-      <div className="board-collage">
-        <div className="board-main-shot"><CodexWorkspaceMock template={featuredStudioSkins[0]} size="hero" /></div>
-        <CodexWorkspaceMock template={featuredStudioSkins[1]} size="mini" />
-        <CodexWorkspaceMock template={featuredStudioSkins[2]} size="mini" />
-        <a className="queue-strip" href="/custom-codex-skin"><strong>Custom request queue</strong><span>Mood / Palette / Constraints</span></a>
+    <div className="hero-preview studio-card" aria-label="Large original Codex workspace mock screenshot">
+      <div className="hero-preview-topline"><span>LIVE-STYLE PREVIEW MOCK</span><span>Original CSS/SVG · IP-safe</span></div>
+      <CodexWorkspaceMock template={heroTemplate} size="hero" />
+      <div className="skin-switch-tabs" aria-label="Example skin tabs">
+        {featuredStudioSkins.slice(0, 3).map((template) => <a key={template.slug} href={`/templates/${template.slug}`}>{template.name.replace(' ', '\u00a0')}</a>)}
       </div>
     </div>
   )
@@ -373,8 +371,8 @@ function SkinGalleryCard({ template, featured = false }: { template: Template; f
         <ul className="studio-tags">{template.mood.slice(0, 3).map((tag) => <li key={tag}>{tag}</li>)}</ul>
         <div className="palette-strip" aria-label={`${template.name} palette`}>{template.palette.map((color) => <span key={color} style={{ '--swatch': color } as CSSProperties & Record<string, string>}></span>)}</div>
         <div className="card-actions">
-          <StudioButton href={`/templates/${template.slug}`}>View Skin</StudioButton>
-          <StudioButton href={recipeDownloadHref(template)} variant="secondary" download={`${template.slug}-starter-recipe.txt`}>Download Recipe</StudioButton>
+          <StudioButton href={`/templates/${template.slug}`}>Preview Skin</StudioButton>
+          <StudioButton href={recipeDownloadHref(template)} variant="secondary" download={`${template.slug}-starter-recipe.txt`}>Recipe TXT</StudioButton>
         </div>
       </div>
     </article>
@@ -403,15 +401,59 @@ function ShowcaseStrip() {
   )
 }
 
+function TrustBadges() {
+  return <div className="paper-badges trust-badges" aria-label="Trust and safety highlights"><span>Free recipes</span><span>Original CSS/SVG mockups</span><span>No third-party artwork</span><span>Review before applying</span><span>Restore guide included</span></div>
+}
+
+function PathSplit() {
+  return (
+    <section className="section-pad path-split" aria-label="Free Template vs Custom Skin paths">
+      <SectionHeading eyebrow="Choose your lane" title="Free Template vs Custom Skin" text="Start with a free reviewable recipe, or send a moodboard and constraints for a custom skin direction. No checkout promise, no fake instant generator." />
+      <div className="path-grid">
+        <article className="studio-card path-card path-card--free">
+          <p className="eyebrow">Free template path</p>
+          <h3>Browse → preview → copy the recipe.</h3>
+          <p>Use the gallery when you want an IP-safe visual direction, palette, and manual install notes you can inspect before changing your setup.</p>
+          <StudioButton href="/templates">Browse Free Skins</StudioButton>
+        </article>
+        <article className="studio-card path-card path-card--custom">
+          <p className="eyebrow">Custom skin path</p>
+          <h3>Send moodboard, style, email, constraints.</h3>
+          <p>Request a custom direction for a personal or team workspace. Delivery scope and price are confirmed by email before any work starts.</p>
+          <StudioButton href="/custom-codex-skin" variant="secondary">Request Custom Skin</StudioButton>
+        </article>
+      </div>
+    </section>
+  )
+}
+
+function SafetyInstallGuide() {
+  return (
+    <section id="install-guide" className="section-pad install-guide" aria-label="Safety and install guide">
+      <div className="studio-card install-guide-inner">
+        <p className="eyebrow">Safety / Install Guide</p>
+        <h2>Reviewable recipes, restore-first workflow.</h2>
+        <div className="install-steps-grid">
+          <article><strong>1. Preview the skin</strong><span>Open a detail page and inspect the mock, palette, states, and recipe notes.</span></article>
+          <article><strong>2. Back up settings</strong><span>Save your current Codex/editor/terminal appearance settings before changing colors.</span></article>
+          <article><strong>3. Apply manually</strong><span>Use the recipe as text guidance. No hidden installer, no app bundle patching promise.</span></article>
+          <article><strong>4. Test and restore</strong><span>Check prompt text, selections, warnings, errors, links, and diffs. Roll back if readability drops.</span></article>
+        </div>
+        <div className="cta-row"><StudioButton href="/safety">Read Safety Notes</StudioButton><StudioButton href="/templates" variant="secondary">Pick a Skin First</StudioButton></div>
+      </div>
+    </section>
+  )
+}
+
 function CustomCta() {
   return (
     <section className="custom-order-card section-pad" aria-label="Custom skin request order form">
       <div className="studio-card custom-order-inner">
         <div className="order-form-preview">
           <p className="eyebrow">CUSTOM SKIN REQUEST</p>
-          <h2>Tell us the workspace mood, palette, and safety constraints.</h2>
-          <p>We turn it into a reviewable Codex skin direction. Free templates stay downloadable; custom work is the next studio lane.</p>
-          <div className="form-lines" aria-hidden="true"><span>Mood: calm / high energy / branded / night mode</span><span>Palette: attach colors or describe feeling</span><span>Constraints: no IP, no official UI copy, readability first</span></div>
+          <h2>Submit a moodboard, desired style, email, and constraints.</h2>
+          <p>We will reply by email to confirm scope, delivery path, and price before any custom work starts. Free templates remain the fastest path today.</p>
+          <div className="form-lines" aria-hidden="true"><span>Email: where should we reply?</span><span>Moodboard / desired style: calm, paper, neon, forge...</span><span>Constraints: IP-safe, no third-party artwork, readability first</span></div>
           <StudioButton href={`mailto:${contactEmail}?subject=Custom%20Codex%20Skin%20Request&body=Name%2Femail%3A%0AWorkspace%20mood%3A%0APalette%3A%0ASafety%20constraints%3A%0APersonal%20or%20team%20use%3A%0ADeadline%3A`}>Request Custom Skin</StudioButton>
         </div>
         <div className="before-after-mock" aria-label="Before and after Codex workspace mockup">
@@ -428,32 +470,30 @@ function HomeBody() {
     <>
       <section className="hero section-pad">
         <div className="hero-copy">
-          <p className="eyebrow">CODEX SKIN STUDIO</p>
-          <h1>Free Codex Skin Templates, Built Like Studio Concepts</h1>
-          <p className="lede">Download reviewable Codex skin recipes, preview original workspace concepts, or request a custom skin direction for your own setup.</p>
+          <p className="eyebrow">FREE + CUSTOM CODEX SKINS</p>
+          <h1>Free Codex skins that look like real workspaces — not color presets.</h1>
+          <p className="lede">Browse IP-safe skins, preview original Codex workspace mockups, download reviewable recipes, or request a custom skin direction for your own setup.</p>
           <div className="cta-row">
-            <StudioButton href="/templates">Browse Free Templates</StudioButton>
+            <StudioButton href="/templates">Browse Free Skins</StudioButton>
             <StudioButton href="/custom-codex-skin" variant="secondary">Request Custom Skin</StudioButton>
+            <StudioButton href="#install-guide" variant="secondary">See Install Guide</StudioButton>
           </div>
-          <div className="paper-badges" aria-label="Studio highlights"><span>CSS/SVG mockups</span><span>IP-safe concepts</span><span>Manual recipes</span></div>
+          <TrustBadges />
         </div>
-        <FeaturedStudioBoard />
+        <HeroWorkspacePreview />
       </section>
-      <ShowcaseStrip />
+      <PathSplit />
       <section className="section-pad featured-skins">
-        <SectionHeading eyebrow="Featured Studio Skins" title="Glasshouse, Ink, and Neon now read at first glance" text="Three complete workspace concept cards — a greenhouse sprint lab, a water-ink scholar desk, and a rainstreet neon ritual — drawn only with CSS, SVG, and React DOM." />
+        <SectionHeading eyebrow="Featured Free Skins" title="Six skins worth clicking before you read anything." text="Paper calm, rain neon, forge heat, pixel bento, deepsea diagnostics, and blueprint focus — all drawn only with CSS, SVG, and React DOM." />
         <TemplateGallery items={featuredStudioSkins} featured />
       </section>
+      <ShowcaseStrip />
       <section className="section-pad">
         <SectionHeading eyebrow="Browse Free Codex Skin Templates" title="Gallery cards, not abstract widgets" text="Every template includes a large workspace mock screenshot, palette strip, use case, and a reviewable recipe download." />
         <TemplateGallery />
       </section>
       <CustomCta />
-      <section className="section-pad safety-note studio-card">
-        <p className="eyebrow">Safety / Manual Recipe</p>
-        <h2>Reviewable recipes, not risky installers.</h2>
-        <p>Templates are text-only guidance. Back up your local settings, apply colors manually, and test prompt text, selections, warnings, errors, links, and diffs before relying on a skin.</p>
-      </section>
+      <SafetyInstallGuide />
     </>
   )
 }
@@ -590,7 +630,7 @@ function VariantTemplateDetail({ template }: { template: Template }) {
           <h2>{template.name}</h2>
           <p>{template.conceptHook}</p>
           <MetadataPanel template={template} />
-          <div className="cta-row"><StudioButton href={recipeDownloadHref(template)} download={`${template.slug}-starter-recipe.txt`}>{template.cta}</StudioButton><StudioButton href="/custom-codex-skin" variant="secondary">{ctaByVariant[template.variant]}</StudioButton></div>
+          <div className="cta-row"><StudioButton href={recipeDownloadHref(template)} download={`${template.slug}-starter-recipe.txt`}>Use This Skin Recipe</StudioButton><StudioButton href="/custom-codex-skin" variant="secondary">{ctaByVariant[template.variant]}</StudioButton></div>
         </div>
         <div className="concept-shot"><CodexWorkspaceMock template={template} size="detail" /></div>
       </section>
@@ -623,11 +663,11 @@ function HowItWorks() {
 }
 
 function Safety() {
-  return <><p className="page-lede">v0 is intentionally conservative: no uploads, no checkout, no accounts, and no unverified one-click installer.</p><div className="value-grid"><article className="studio-card value-card"><h3>Starter recipes</h3><p>Text and palette guidance. Review them before applying anything to your local setup.</p></article><article className="studio-card value-card"><h3>Manual adaptation</h3><p>Back up configs first, change one layer at a time, and verify prompt/diff/error readability.</p></article><article className="studio-card value-card"><h3>No official claim</h3><p>This independent site does not claim official affiliation, endorsement, or guaranteed compatibility.</p></article></div></>
+  return <><p className="page-lede">v0 is intentionally conservative: no uploads, no checkout, no accounts, and no automatic installer claim.</p><div className="value-grid"><article className="studio-card value-card"><h3>Starter recipes</h3><p>Text and palette guidance. Review them before applying anything to your local setup.</p></article><article className="studio-card value-card"><h3>Manual adaptation</h3><p>Back up configs first, change one layer at a time, and verify prompt/diff/error readability.</p></article><article className="studio-card value-card"><h3>No official claim</h3><p>This independent site does not claim official affiliation, endorsement, or guaranteed compatibility.</p></article></div></>
 }
 
 function CustomRequestPage() {
-  return <><p className="page-lede">Premium custom Codex skins are request-based in v0. Use this page to join the waitlist or ask for a quote; checkout and order management are not live yet.</p><CustomCta /></>
+  return <><p className="page-lede">Custom Codex skins are request-based in v0. Send your moodboard, desired style, reply email, and safety constraints; scope, delivery, and price are confirmed by email before work starts.</p><CustomCta /><SafetyInstallGuide /></>
 }
 
 function Legal({ kind }: { kind: 'privacy' | 'terms' }) {
@@ -660,7 +700,7 @@ function App() {
   const path = window.location.pathname.replace(/\/$/, '') || '/'
   const page = pageMap[path]
   if (path === '/') {
-    setMeta('Codex Skin Studio — Free Codex Skin Templates Built Like Studio Concepts', 'Browse free Codex skin templates, original workspace concept mockups, reviewable recipes, and a custom skin request path.')
+    setMeta('CodexSkin.fun — Free Codex Skins That Look Like Real Workspaces', 'Browse free IP-safe Codex skins, preview original workspace mockups, download reviewable recipes, or request a custom skin direction.')
     return <><Nav /><main><HomeBody /></main><Footer /></>
   }
   if (!page) {
