@@ -30,6 +30,7 @@ type Page = {
   h1: string
   eyebrow?: string
   body: ReactElement
+  schema?: Record<string, unknown>[]
 }
 
 const siteUrl = 'https://codexskin.fun'
@@ -218,7 +219,56 @@ const footerLinks = [
   ['/terms', 'Terms'],
 ] as const
 
-function setMeta(title: string, description: string, options: { noindex?: boolean } = {}) {
+function buildWebSiteSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'CodexSkin.fun',
+    url: siteUrl,
+    description: 'Free and custom Codex skin concepts with IP-safe workspace mockups, reviewable recipes, and manual install guidance.',
+    inLanguage: 'en',
+  }
+}
+
+function buildSoftwareApplicationSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Codex Skin Studio',
+    applicationCategory: 'DeveloperApplication',
+    operatingSystem: 'Desktop',
+    url: siteUrl,
+    description: 'A static Codex skin concept library for browsing free skin recipes and requesting custom workspace skin directions.',
+  }
+}
+
+function buildCollectionPageSchema(path: string, name: string, description: string) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name,
+    url: `${siteUrl}${path}`,
+    description,
+    isPartOf: { '@type': 'WebSite', name: 'CodexSkin.fun', url: siteUrl },
+    inLanguage: 'en',
+  }
+}
+
+function setJsonLd(schemas: Record<string, unknown>[] = []) {
+  const scriptId = 'codexskin-jsonld'
+  const existing = document.getElementById(scriptId)
+  if (schemas.length === 0) {
+    existing?.remove()
+    return
+  }
+  const script = existing ?? document.createElement('script')
+  script.id = scriptId
+  script.setAttribute('type', 'application/ld+json')
+  script.textContent = JSON.stringify(schemas.length === 1 ? schemas[0] : schemas)
+  document.head.appendChild(script)
+}
+
+function setMeta(title: string, description: string, options: { noindex?: boolean; schema?: Record<string, unknown>[] } = {}) {
   document.title = title
   const meta = document.querySelector('meta[name="description"]') ?? document.createElement('meta')
   meta.setAttribute('name', 'description')
@@ -238,6 +288,8 @@ function setMeta(title: string, description: string, options: { noindex?: boolea
   } else {
     robots.remove()
   }
+
+  setJsonLd(options.noindex ? [] : options.schema)
 }
 
 function Nav() {
@@ -681,12 +733,38 @@ function CustomRequestPage() {
   return <><p className="page-lede">Custom Codex skins are request-based in v0. Send your moodboard, desired style, reply email, and safety constraints; scope, delivery, and price are confirmed by email before work starts.</p><CustomCta /><SafetyInstallGuide /></>
 }
 
+function KeywordLandingPage({ keyword, intro, bullets }: { keyword: string; intro: string; bullets: string[] }) {
+  return (
+    <>
+      <p className="page-lede"><strong>{keyword}</strong> is the focus of this landing page: {intro}</p>
+      <div className="value-grid">
+        {bullets.map((bullet) => {
+          const [title, text] = bullet.split(': ')
+          return <article className="studio-card value-card" key={bullet}><h3>{title}</h3><p>{text ?? bullet}</p></article>
+        })}
+      </div>
+      <section className="studio-card adapt-steps">
+        <h2>Start from a reviewable Codex skin path</h2>
+        <ol>
+          <li>Browse the <a href="/templates">free Codex skin templates</a> and open any preview before changing your own workspace.</li>
+          <li>Use the <a href="/#install-guide">install guide</a> to back up settings, apply changes manually, test readability, and restore if needed.</li>
+          <li>If you need a personal moodboard direction, request a <a href="/custom-codex-skin">custom Codex skin</a> instead of forcing a generic preset.</li>
+        </ol>
+      </section>
+      <TemplateGallery items={featuredStudioSkins} featured />
+    </>
+  )
+}
+
 function Legal({ kind }: { kind: 'privacy' | 'terms' }) {
   if (kind === 'privacy') return <div className="legal-copy studio-card"><p>Codex Skin Studio v0 is a static site. It does not provide accounts, uploads, payments, hosted file processing, or a live custom order backend.</p><p>If you use the email request link, your email client and email provider handle the message. Do not send secrets, tokens, private configs, unreleased code, or assets you do not have rights to use.</p><p>Future analytics, forms, uploads, payments, or custom order workflows should be documented here before launch.</p></div>
   return <div className="legal-copy studio-card"><p>{disclaimer}</p><p>Templates are informational starter recipes, not guaranteed Codex engine packages. Review and adapt manually. Compatibility, appearance, and behavior vary by local environment.</p><p>Codex Skin Studio does not provide an automatic installer, official support channel, upload pipeline, checkout, or guaranteed custom delivery in v0.</p></div>
 }
 
 const pageMap: Record<string, Page> = {
+  '/codex-skin': { title: 'Codex Skin — Free Workspace Skin Recipes and Previews', description: 'Explore Codex skin ideas with original workspace mockups, free starter recipes, manual install guidance, and custom request options.', h1: 'Codex Skin Ideas for a Real Workspace Look', eyebrow: 'Codex skin landing', body: <KeywordLandingPage keyword="Codex skin" intro="use it to compare original workspace mockups, palette recipes, and safe manual adaptation steps before changing your own Codex setup." bullets={['Original preview first: each featured skin is shown as a large CSS/SVG workspace mock rather than a vague color preset.', 'Manual and safe: recipes are text guidance you can inspect, adapt, test, and roll back without hidden installers.', 'Free or custom path: start with a free recipe or request a custom direction when your workspace needs a specific moodboard.']} />, schema: [buildCollectionPageSchema('/codex-skin', 'Codex Skin Ideas', 'Original Codex skin previews, recipes, and safe manual adaptation guidance.')] },
+  '/free-codex-skins': { title: 'Free Codex Skins — Download Reviewable Skin Recipes', description: 'Browse free Codex skins with IP-safe visual concepts, palette strips, reviewable recipes, and install safety notes.', h1: 'Free Codex Skins You Can Review Before Applying', eyebrow: 'Free skin library', body: <KeywordLandingPage keyword="Free Codex skins" intro="this page gathers the fastest route to IP-safe previews, downloadable text recipes, and safety notes for builders who want a better-looking workspace without guessing." bullets={['No fake downloads: free recipes are readable text starters, not opaque installers or bundled third-party artwork.', 'Template library: compare Rain Neon, Ember Forge, Aurora Glass, Blueprint, Rose Orbit, and Cozy Bug Café from one indexable entry.', 'Install with rollback: follow the backup-first workflow before applying any palette or interface changes manually.']} />, schema: [buildCollectionPageSchema('/free-codex-skins', 'Free Codex Skins', 'A collection of free Codex skin recipes and workspace concept previews.')] },
+  '/codex-skin-generator': { title: 'Codex Skin Generator — Moodboard to Custom Skin Direction', description: 'Use the Codex skin generator entry to turn a moodboard into an original custom skin direction or start from free templates.', h1: 'Codex Skin Generator Entry for Moodboard-Based Skins', eyebrow: 'Generator entry', body: <KeywordLandingPage keyword="Codex skin generator" intro="treat it as a request-based generator entry: send mood, colors, and constraints, then review an original skin direction instead of trusting an instant black-box upload." bullets={['Moodboard to direction: translate colors, atmosphere, and constraints into an original Codex workspace concept.', 'Request-based v0: no fake instant generator claim; custom scope, delivery path, and price are confirmed before work starts.', 'Start free first: use the gallery to learn which visual lane fits before asking for a personalized Codex skin.']} />, schema: [buildCollectionPageSchema('/codex-skin-generator', 'Codex Skin Generator', 'A request-based Codex skin generator entry for moodboard-driven custom skin directions.')] },
   '/templates': { title: 'Browse Free Codex Skin Concepts — Codex Skin Studio', description: 'Browse nine original Codex workspace skin concept cards including Glasshouse Sprint Lab, Ink Mountain Scholar, Rainstreet Neon Ritual, Rose Orbit Observatory, and more.', h1: 'Browse Free Codex Skin Concepts', eyebrow: 'Template studio', body: <TemplatesPage /> },
   '/custom-codex-skin': { title: 'Request a Custom Codex Skin — Codex Skin Studio', description: 'Join the custom Codex skin request list for premium personal, image-based, brand, or team skin customization.', h1: 'Request a Custom Codex Skin', eyebrow: 'Studio order', body: <CustomRequestPage /> },
   '/how-it-works': { title: 'How Codex Skin Customization Works — Templates, Recipes, Requests', description: 'Learn how Codex Skin Studio works: choose a free template, preview the mood, download a starter recipe, adapt manually, or request custom work.', h1: 'How Codex Skin Customization Works', eyebrow: 'Workflow', body: <HowItWorks /> },
@@ -711,14 +789,14 @@ function App() {
   const path = window.location.pathname.replace(/\/$/, '') || '/'
   const page = pageMap[path]
   if (path === '/') {
-    setMeta('CodexSkin.fun — Free Codex Skins That Look Like Real Workspaces', 'Browse free IP-safe Codex skins, preview original workspace mockups, download reviewable recipes, or request a custom skin direction.')
+    setMeta('CodexSkin.fun — Free Codex Skins That Look Like Real Workspaces', 'Browse free IP-safe Codex skins, preview original workspace mockups, download reviewable recipes, or request a custom skin direction.', { schema: [buildWebSiteSchema(), buildSoftwareApplicationSchema()] })
     return <><Nav /><main><HomeBody /></main><Footer /></>
   }
   if (!page) {
     setMeta('404 Page not found — Codex Skin Studio', '404: the requested Codex Skin Studio page was not found.', { noindex: true })
     return <><Nav /><main className="section-pad page"><p className="eyebrow">404 / Not Found</p><h1>404 — Page not found</h1><p className="page-lede">This Codex Skin Studio route does not exist. It is marked noindex for crawlers; try the free templates hub or one of the verified routes in the footer.</p><StudioButton href="/templates">Browse free templates</StudioButton></main><Footer /></>
   }
-  setMeta(page.title, page.description)
+  setMeta(page.title, page.description, { schema: page.schema })
   return <><Nav /><StandardPage page={page} /><Footer /></>
 }
 
