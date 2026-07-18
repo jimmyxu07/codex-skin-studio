@@ -41,13 +41,13 @@ const templates: Template[] = [
   {
     slug: 'ink-mountain-scholar',
     name: 'Ink Mountain Scholar',
-    tagline: 'Quiet paper-and-mist Codex workspace',
-    description: 'A quiet paper-and-mist Codex workspace for long focus sessions.',
-    conceptHook: 'Paper mountains, mist bands, and a calm jade prompt turn Codex into a quiet scholar desk.',
+    tagline: 'Layered ink-mountain Codex workspace with mist bands and a seal mark',
+    description: 'A quiet layered ink-mountain Codex workspace with mist bands, rice-paper planes, and a red seal mark for long focus sessions.',
+    conceptHook: 'Layered ink mountains, drifting mist bands, rice-paper planes, and a red studio seal turn Codex into a quiet scholar desk with a memorable silhouette.',
     mood: ['Quiet Focus', 'Paper Workspace', 'Ink System', 'Long Sessions'],
     bestFor: 'long writing-and-coding sessions, quiet planning, documentation-heavy builds',
     palette: ['#101418', '#123C3D', '#E8E1CF', '#BCE8D8', '#D94A32'],
-    recipe: 'Layer an ink-black base with deep pine teal panels, rice-paper surfaces, misty reading planes, a small studio seal, and pale jade active accents. Keep every mark abstract and CSS/SVG generated.',
+    recipe: 'Layer an ink-black base with deep pine teal panels, rice-paper surfaces, overlapping mist belts, a square red studio seal, and pale jade active accents. Keep every mark abstract and CSS/SVG generated.',
     accent: '#BCE8D8',
     variant: 'ink',
     studioId: 'CSS-INK-001',
@@ -131,13 +131,13 @@ const templates: Template[] = [
   {
     slug: 'glasshouse-sprint-lab',
     name: 'Glasshouse Sprint Lab',
-    tagline: 'Clean sprint workspace with frosted greenhouse geometry',
-    description: 'A clean sprint workspace with frosted panels and greenhouse geometry.',
-    conceptHook: 'Frosted sprint columns sit inside an abstract glasshouse frame with growth meters and readable ink text.',
+    tagline: 'Bright sprint lab inside a frosted glasshouse frame',
+    description: 'A clean sprint workspace with frosted panels, greenhouse roof ribs, growth meters, and lab instrument accents.',
+    conceptHook: 'Frosted sprint columns sit inside a greenhouse roof frame with blue lab rails, growth meters, sun-glare panes, and readable ink text.',
     mood: ['Sprint Board', 'Clean UI', 'Glasshouse', 'Light Mode'],
     bestFor: 'sprint planning, light-mode workdays, product demos, small team rituals',
     palette: ['#F8FAFC', '#DFF7EA', '#38BDF8', '#34D399', '#0F172A'],
-    recipe: 'Use frosted white panels, pale mint atmosphere, clean blue controls, growth-mint success states, high-contrast ink text, and CSS arch lines instead of any third-party imagery.',
+    recipe: 'Use frosted white panels, pale mint atmosphere, clean blue lab controls, growth-mint success states, high-contrast ink text, greenhouse roof ribs, light streaks, and CSS-only sprint gauges instead of any third-party imagery.',
     accent: '#34D399',
     variant: 'glasshouse',
     studioId: 'CSS-GLH-006',
@@ -458,9 +458,20 @@ function InkLayerRecipe() {
     ['Ink base', '#101418', 'app shell / deep background'],
     ['Pine panels', '#123C3D', 'sidebar / cards'],
     ['Rice paper', '#E8E1CF', 'reading surfaces'],
-    ['Jade focus', '#BCE8D8', 'active tab / cursor / prompt'],
+    ['Mist belt', '#BCE8D8', 'separator fog / prompt glow'],
+    ['Studio seal', '#D94A32', 'small landmark / active stamp'],
   ]
   return <section className="recipe-board recipe-board--ink studio-card"><p className="eyebrow">Recipe System</p>{layers.map(([name, color, use], index) => <div className="ink-layer-row" key={name} style={{ '--layer-color': color, '--layer-index': String(index) } as CSSProperties & Record<string, string>}><svg viewBox="0 0 360 42" aria-hidden="true"><path d={index % 2 === 0 ? 'M0 31 C38 14 72 27 111 16 C157 2 194 32 236 18 C286 2 318 20 360 8 L360 42 L0 42 Z' : 'M0 25 C44 9 83 12 124 26 C166 39 198 10 239 16 C281 22 316 34 360 14 L360 42 L0 42 Z'} /></svg><div><strong>{name}</strong><span>{color} · {use}</span></div></div>)}</section>
+}
+
+function GlasshouseSprintRecipe() {
+  const gauges = [
+    ['Frame ribs', '76%', '#38BDF8', 'visible greenhouse roof and lab rails'],
+    ['Sprint health', '64%', '#34D399', 'growth meter / done state'],
+    ['Focus glare', '42%', '#F8FAFC', 'sun pane highlight without low contrast'],
+    ['Ink anchor', '88%', '#0F172A', 'readability and card edges'],
+  ]
+  return <section className="recipe-board recipe-board--glasshouse studio-card"><p className="eyebrow">Recipe System · Sprint Lab Gauges</p><div className="glasshouse-instrument" aria-hidden="true"><span></span><b></b><i></i></div><div className="glasshouse-gauge-list">{gauges.map(([name, percent, color, note]) => <div className="glasshouse-gauge-row" key={name} style={{ '--gauge-color': color, '--gauge-width': percent } as CSSProperties & Record<string, string>}><div><strong>{name}</strong><span>{note}</span></div><em>{percent}</em><i></i></div>)}</div></section>
 }
 
 function ForgeRecipeGauge() {
@@ -507,6 +518,7 @@ function RecipeVisualization({ template }: { template: Template }) {
   if (template.variant === 'ink') return <InkLayerRecipe />
   if (template.variant === 'forge') return <ForgeRecipeGauge />
   if (template.variant === 'neon') return <NeonCircuitRecipe />
+  if (template.variant === 'glasshouse') return <GlasshouseSprintRecipe />
   return <section className={`recipe-board recipe-board--concept recipe-board--${template.variant} studio-card`}><p className="eyebrow">Recipe System · {template.recipeTitle}</p><div className="concept-recipe-map">{template.palette.map((color, index) => <div key={color} style={{ '--node-color': color, '--node-index': String(index) } as CSSProperties & Record<string, string>}><b></b><strong>{template.mood[index % template.mood.length]}</strong><span>{color}</span></div>)}</div></section>
 }
 
