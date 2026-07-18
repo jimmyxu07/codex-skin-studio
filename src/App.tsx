@@ -58,10 +58,10 @@ const templates: Template[] = [
   },
   {
     slug: 'forge-core-alchemist',
-    name: 'Forge Core Alchemist',
-    tagline: 'Molten Codex control room for disciplined debugging',
-    description: 'A molten Codex control room for debugging with heat and discipline.',
-    conceptHook: 'A cast-iron console, ember cursor, furnace gauges, and hot geometry make every debug pass feel deliberate.',
+    name: 'Ember Forge Console',
+    tagline: 'Molten black-gold Codex control room for disciplined debugging',
+    description: 'A molten forge-console Codex skin with heat rings, ember controls, and dark premium contrast.',
+    conceptHook: 'Charcoal glass, molten orange heat rings, cast-iron panels, and hot command accents make the workspace feel like a premium debug forge.',
     mood: ['High Energy', 'Debug Mode', 'Forge UI', 'Terminal Heavy'],
     bestFor: 'terminal-heavy workflows, launch crunch, high-energy debugging sessions',
     palette: ['#16110F', '#3B2118', '#D6401F', '#FFB13B', '#8A5A32'],
@@ -76,10 +76,10 @@ const templates: Template[] = [
   },
   {
     slug: 'rainstreet-neon-ritual',
-    name: 'Rainstreet Neon Ritual',
-    tagline: 'Rain-lit neon workspace with cyan focus and magenta motion',
-    description: 'A rain-lit Codex workspace with cyan focus and magenta motion.',
-    conceptHook: 'Tilted night poster, rainy asphalt, unreadable geometry signs, cyan input glow, and a wet reflection strip.',
+    name: 'Rain Neon Desk',
+    tagline: 'Rain-lit neon Codex workspace with cyan focus and violet reflections',
+    description: 'A cinematic rain-lit Codex workspace with cyan focus, violet glass, and screenshot-style depth.',
+    conceptHook: 'Night rain, cyan-violet reflections, circuit glass, a glowing prompt bar, and a shareable Codex workspace screenshot feel.',
     mood: ['Night Coding', 'Neon City', 'Rain Lines', 'High Contrast'],
     bestFor: 'night coding, creative tools, energetic personal setups',
     palette: ['#080B12', '#2C3A4A', '#16D9E3', '#D946EF', '#F6C85F'],
@@ -94,10 +94,10 @@ const templates: Template[] = [
   },
   {
     slug: 'rose-orbit-observatory',
-    name: 'Rose Orbit Observatory',
-    tagline: 'Soft planning workspace with orbit lines and task nodes',
-    description: 'A soft planning workspace with orbit lines, task nodes, and pearl panels.',
-    conceptHook: 'A plum observatory board wraps plan/code/review/ship nodes in rose and violet orbital paths.',
+    name: 'Rose Orbit Studio',
+    tagline: 'Soft Codex planning studio with orbit lines and task nodes',
+    description: 'A rose-violet Codex studio for planning, writing, and creative builds with orbit paths and pearl panels.',
+    conceptHook: 'Rose light, violet orbital paths, pearl task cards, and small node highlights make planning feel cinematic and memorable.',
     mood: ['Planning', 'Soft Focus', 'Orbit Map', 'Creator Desk'],
     bestFor: 'personal workspaces, creator portfolios, late-night planning sessions',
     palette: ['#2A1023', '#FFF1F7', '#F8B4D9', '#C084FC', '#FDE68A'],
@@ -112,10 +112,10 @@ const templates: Template[] = [
   },
   {
     slug: 'midnight-blueprint-room',
-    name: 'Midnight Blueprint Room',
-    tagline: 'Low-glare engineering blueprint desk for deep work',
-    description: 'A low-glare Codex skin shaped like an engineering blueprint desk.',
-    conceptHook: 'A midnight blueprint sheet with measurement ticks, dashed modules, diff blocks, and architecture insets.',
+    name: 'Blueprint Debugger',
+    tagline: 'Low-glare engineering blueprint Codex desk for deep reviews',
+    description: 'A deep-blue blueprint debugger skin shaped by grid lines, diff modules, measurements, and calm focus states.',
+    conceptHook: 'Deep blue schematics, measurement ticks, diff panels, and architecture insets make the workspace read as an engineering debugger screenshot.',
     mood: ['Deep Work', 'Blueprint', 'Architecture', 'Low Glare'],
     bestFor: 'long coding sessions, review loops, architecture planning, low-distraction workspaces',
     palette: ['#07111F', '#111827', '#1E3A8A', '#60A5FA', '#C7D2FE'],
@@ -130,10 +130,10 @@ const templates: Template[] = [
   },
   {
     slug: 'glasshouse-sprint-lab',
-    name: 'Glasshouse Sprint Lab',
-    tagline: 'Greenhouse sprint lab with a glass roof, lab rail, sprint board, and plants',
-    description: 'A bright sprint lab where a large glasshouse roof, rib structure, blue lab rail, three-column sprint board, growth meter, and plant silhouettes dominate the mock.',
-    conceptHook: 'A giant glass roof covers the top half, a blue lab rail cuts across the middle, and three sprint columns sit above plant and lab silhouettes for an unmistakable greenhouse sprint-lab read.',
+    name: 'Aurora Glass Lab',
+    tagline: 'Aurora-lit glass Codex lab with translucent panels and ice-blue focus',
+    description: 'A bright aurora glass lab skin where frosted layers, ice-blue rails, and soft green highlights make light mode feel premium.',
+    conceptHook: 'Frosted glass panes, aurora gradients, clean blue rails, and translucent sprint panels create a premium light workspace rather than a plain white preset.',
     mood: ['Sprint Board', 'Clean UI', 'Glasshouse', 'Light Mode'],
     bestFor: 'sprint planning, light-mode workdays, product demos, small team rituals',
     palette: ['#F8FAFC', '#DFF7EA', '#38BDF8', '#34D399', '#0F172A'],
@@ -166,10 +166,10 @@ const templates: Template[] = [
   },
   {
     slug: 'pixel-bento-arcade',
-    name: 'Pixel Bento Arcade',
-    tagline: 'Playful block-grid Codex skin for creative builds',
-    description: 'A playful block-grid Codex skin for creative builds and personal projects.',
-    conceptHook: 'A four-panel bento workspace uses stepped corners, color chips, scanlines, and pixel command blocks without game IP.',
+    name: 'Cozy Bug Café',
+    tagline: 'Warm café Codex skin with soft notes and an original abstract bug mascot',
+    description: 'A cozy café workspace skin with warm panels, note cards, soft amber light, and a tiny abstract bug helper mark.',
+    conceptHook: 'Coffee warmth, sticky-note panels, soft amber gradients, and an original abstract bug mascot give the workspace a friendly cover-level identity.',
     mood: ['Creative Coding', 'Pixel Grid', 'Playful', 'Bento Layout'],
     bestFor: 'creative coding, personal projects, community demos, playful prototypes',
     palette: ['#111827', '#FB7185', '#22D3EE', '#FACC15', '#A78BFA'],
@@ -202,7 +202,7 @@ const templates: Template[] = [
   },
 ]
 
-const featuredStudioSkins = ['ink-mountain-scholar', 'rainstreet-neon-ritual', 'forge-core-alchemist', 'pixel-bento-arcade', 'deepsea-sonar-console', 'midnight-blueprint-room']
+const featuredStudioSkins = ['rainstreet-neon-ritual', 'forge-core-alchemist', 'glasshouse-sprint-lab', 'midnight-blueprint-room', 'rose-orbit-observatory', 'pixel-bento-arcade']
   .map((slug) => templates.find((template) => template.slug === slug))
   .filter((template): template is Template => Boolean(template))
 const templateFilters: TemplateFilter[] = ['All', 'Featured Concepts', 'Focus Worlds', 'High-Energy Systems', 'Creative Workspaces', 'Light / Paper', 'Dark / Terminal']
@@ -379,22 +379,41 @@ function TemplateGallery({ items = templates, featured = false }: { items?: Temp
   return <div className="gallery-grid">{items.map((template) => <SkinGalleryCard key={template.slug} template={template} featured={featured} />)}</div>
 }
 
-function ShowcaseStrip() {
-  return (
-    <section className="showcase-strip section-pad" aria-label="Studio workflow highlights">
-      <div className="showcase-card studio-card wide">
-        <p className="eyebrow">Studio workflow</p>
-        <h2>Pick a concept, download a reviewable recipe, adapt by hand.</h2>
-      </div>
-      <div className="showcase-card studio-card"><strong>01</strong><span>Original CSS/SVG concept mockups</span></div>
-      <div className="showcase-card studio-card"><strong>02</strong><span>Palette and manual recipe notes</span></div>
-      <div className="showcase-card studio-card"><strong>03</strong><span>Custom skin request queue</span></div>
-    </section>
-  )
+function TrustBadges() {
+  return <div className="trust-badges" aria-label="Trust and safety highlights"><span>Original visuals</span><span>No third-party artwork</span><span>Review before applying</span><span>Restore guide included</span></div>
 }
 
-function TrustBadges() {
-  return <div className="paper-badges trust-badges" aria-label="Trust and safety highlights"><span>Free recipes</span><span>Original CSS/SVG mockups</span><span>No third-party artwork</span><span>Review before applying</span><span>Restore guide included</span></div>
+function GeneratorRemixStrip() {
+  return (
+    <section className="generator-strip section-pad" id="generator-mock" aria-label="Moodboard to Codex skin direction mock workflow">
+      <div className="generator-head">
+        <p className="eyebrow">Generator / Remix mock</p>
+        <h2>Drop a moodboard. Get a Codex skin direction.</h2>
+        <p>v0 is request-based: no fake instant upload. The strip shows the path from moodboard cues to palette, scene mapping, preview, and recipe handoff.</p>
+      </div>
+      <div className="generator-flow">
+        <article>
+          <strong>01</strong>
+          <h3>Upload / paste moodboard</h3>
+          <p>Send vibe, colors, constraints, and links by email request.</p>
+          <div className="moodboard-pixels" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        </article>
+        <article>
+          <strong>02</strong>
+          <h3>Palette + scene mapping</h3>
+          <p>Convert references into original, IP-safe workspace concepts.</p>
+          <div className="palette-analyzer" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+        </article>
+        <article>
+          <strong>03</strong>
+          <h3>Preview + recipe handoff</h3>
+          <p>Review a screenshot-style mock, then copy a readable recipe.</p>
+          <div className="recipe-mini-card" aria-hidden="true"><b>recipe.json</b><span></span><span></span><span></span></div>
+        </article>
+      </div>
+      <div className="cta-row"><StudioButton href="/custom-codex-skin">Request Custom Skin</StudioButton><StudioButton href="/templates" variant="secondary">Start from a Free Skin</StudioButton></div>
+    </section>
+  )
 }
 
 function PathSplit() {
@@ -474,12 +493,12 @@ function HomeBody() {
         </div>
         <HeroWorkspacePreview />
       </section>
-      <PathSplit />
+      <GeneratorRemixStrip />
       <section className="section-pad featured-skins">
-        <SectionHeading eyebrow="Featured Free Skins" title="Six skins worth clicking before you read anything." text="Paper calm, rain neon, forge heat, pixel bento, deepsea diagnostics, and blueprint focus — all drawn only with CSS, SVG, and React DOM." />
+        <SectionHeading eyebrow="Featured Free Skins" title="Pick a free Codex skin preview." text="Six large screenshot-style workspace covers: Rain Neon, Ember Forge, Aurora Glass, Blueprint, Rose Orbit, and Cozy Bug Café. Original CSS/SVG/DOM, no third-party artwork." />
         <TemplateGallery items={featuredStudioSkins} featured />
       </section>
-      <ShowcaseStrip />
+      <PathSplit />
       <section className="section-pad">
         <SectionHeading eyebrow="Browse Free Codex Skin Templates" title="Gallery cards, not abstract widgets" text="Every template includes a large workspace mock screenshot, palette strip, use case, and a reviewable recipe download." />
         <TemplateGallery />
