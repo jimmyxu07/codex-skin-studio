@@ -41,9 +41,9 @@ const templates: Template[] = [
   {
     slug: 'ink-mountain-scholar',
     name: 'Ink Mountain Scholar',
-    tagline: 'Layered ink-mountain Codex workspace with mist bands and a seal mark',
-    description: 'A quiet layered ink-mountain Codex workspace with mist bands, rice-paper planes, and a red seal mark for long focus sessions.',
-    conceptHook: 'Layered ink mountains, drifting mist bands, rice-paper planes, and a red studio seal turn Codex into a quiet scholar desk with a memorable silhouette.',
+    tagline: 'Water-ink scholar desk with mountains, fog, scroll, and a bold red seal',
+    description: 'A quiet water-ink Codex workspace where ink mountains, drifting fog, rice-paper scrolls, and a large red seal dominate the visual field.',
+    conceptHook: 'Ink mountains, wide mist bands, a rice-paper scroll, and a bold red seal take over the mock so the modern editor recedes into a scholar-desk atmosphere.',
     mood: ['Quiet Focus', 'Paper Workspace', 'Ink System', 'Long Sessions'],
     bestFor: 'long writing-and-coding sessions, quiet planning, documentation-heavy builds',
     palette: ['#101418', '#123C3D', '#E8E1CF', '#BCE8D8', '#D94A32'],
@@ -131,9 +131,9 @@ const templates: Template[] = [
   {
     slug: 'glasshouse-sprint-lab',
     name: 'Glasshouse Sprint Lab',
-    tagline: 'Bright sprint lab inside a frosted glasshouse frame',
-    description: 'A clean sprint workspace with frosted panels, greenhouse roof ribs, growth meters, and lab instrument accents.',
-    conceptHook: 'Frosted sprint columns sit inside a greenhouse roof frame with blue lab rails, growth meters, sun-glare panes, and readable ink text.',
+    tagline: 'Greenhouse sprint lab with a glass roof, lab rail, sprint board, and plants',
+    description: 'A bright sprint lab where a large glasshouse roof, rib structure, blue lab rail, three-column sprint board, growth meter, and plant silhouettes dominate the mock.',
+    conceptHook: 'A giant glass roof covers the top half, a blue lab rail cuts across the middle, and three sprint columns sit above plant and lab silhouettes for an unmistakable greenhouse sprint-lab read.',
     mood: ['Sprint Board', 'Clean UI', 'Glasshouse', 'Light Mode'],
     bestFor: 'sprint planning, light-mode workdays, product demos, small team rituals',
     palette: ['#F8FAFC', '#DFF7EA', '#38BDF8', '#34D399', '#0F172A'],
@@ -202,7 +202,9 @@ const templates: Template[] = [
   },
 ]
 
-const featuredStudioSkins = templates.filter((template) => ['ink-mountain-scholar', 'forge-core-alchemist', 'rainstreet-neon-ritual'].includes(template.slug))
+const featuredStudioSkins = ['glasshouse-sprint-lab', 'ink-mountain-scholar', 'rainstreet-neon-ritual']
+  .map((slug) => templates.find((template) => template.slug === slug))
+  .filter((template): template is Template => Boolean(template))
 const templateFilters: TemplateFilter[] = ['All', 'Featured Concepts', 'Focus Worlds', 'High-Energy Systems', 'Creative Workspaces', 'Light / Paper', 'Dark / Terminal']
 
 const p0Routes = [
@@ -276,6 +278,62 @@ function MockLines({ count = 4 }: { count?: number }) {
   return <>{Array.from({ length: count }, (_, index) => <span key={index} className={`mock-line mock-line--${index + 1}`}></span>)}</>
 }
 
+function DefaultWorkspaceInterior({ template }: { template: Template }) {
+  return (
+    <div className="mock-body">
+      <aside className="mock-sidebar">
+        <b></b><span className="active"></span><span></span><span></span><span></span>
+      </aside>
+      <main className="mock-main">
+        <section className="mock-chat-card"><MockLines count={3} /></section>
+        <section className="mock-code-card"><MockLines count={5} /></section>
+        <div className="mock-status-row"><i></i><i></i><i></i></div>
+        <div className="mock-prompt-input"><span>{template.prompt}</span><b></b></div>
+      </main>
+    </div>
+  )
+}
+
+function GlasshouseWorkspaceInterior({ template }: { template: Template }) {
+  return (
+    <div className="glasshouse-lab-interior">
+      <div className="glass-roof" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+      <div className="lab-rail"><strong>GROWTH RAIL</strong><span></span><b>78%</b></div>
+      <main className="sprint-board" aria-label="Three-column sprint lab board">
+        {['Seed', 'Grow', 'Ship'].map((label, index) => (
+          <section key={label} className="sprint-column">
+            <strong>{label}</strong>
+            <span></span><span></span><span></span>
+            {index === 1 ? <em>LAB</em> : null}
+          </section>
+        ))}
+      </main>
+      <div className="growth-meter"><span>{template.prompt}</span><i></i><b></b></div>
+      <div className="greenhouse-silhouette" aria-hidden="true"><i></i><i></i><i></i><i></i><b></b></div>
+    </div>
+  )
+}
+
+function InkWorkspaceInterior({ template }: { template: Template }) {
+  return (
+    <div className="ink-scholar-interior">
+      <div className="scroll-panel"><strong>墨 · SCHOLAR DESK</strong><span>{template.prompt}</span></div>
+      <div className="ink-mist ink-mist--one" aria-hidden="true"></div>
+      <div className="ink-mist ink-mist--two" aria-hidden="true"></div>
+      <div className="ink-mountain ink-mountain--back" aria-hidden="true"></div>
+      <div className="ink-mountain ink-mountain--front" aria-hidden="true"></div>
+      <div className="red-seal" aria-hidden="true"><span>印</span></div>
+      <div className="brush-editor" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+  )
+}
+
+function WorkspaceInterior({ template }: { template: Template }) {
+  if (template.variant === 'glasshouse') return <GlasshouseWorkspaceInterior template={template} />
+  if (template.variant === 'ink') return <InkWorkspaceInterior template={template} />
+  return <DefaultWorkspaceInterior template={template} />
+}
+
 function CodexWorkspaceMock({ template, size = 'card' }: { template: Template; size?: 'mini' | 'card' | 'hero' | 'detail' }) {
   return (
     <div className={`workspace-mock workspace-mock--${template.variant} workspace-mock--${size}`} style={{ '--accent': template.accent } as CSSProperties & Record<string, string>} aria-label={`${template.name} original Codex workspace concept mock screenshot`}>
@@ -284,17 +342,7 @@ function CodexWorkspaceMock({ template, size = 'card' }: { template: Template; s
         <strong>{template.studioId}</strong>
         <em>{template.mood[0]}</em>
       </div>
-      <div className="mock-body">
-        <aside className="mock-sidebar">
-          <b></b><span className="active"></span><span></span><span></span><span></span>
-        </aside>
-        <main className="mock-main">
-          <section className="mock-chat-card"><MockLines count={3} /></section>
-          <section className="mock-code-card"><MockLines count={5} /></section>
-          <div className="mock-status-row"><i></i><i></i><i></i></div>
-          <div className="mock-prompt-input"><span>{template.prompt}</span><b></b></div>
-        </main>
-      </div>
+      <WorkspaceInterior template={template} />
       <div className="mock-decoration" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
     </div>
   )
@@ -393,7 +441,7 @@ function HomeBody() {
       </section>
       <ShowcaseStrip />
       <section className="section-pad featured-skins">
-        <SectionHeading eyebrow="Featured Studio Skins" title="Original Codex Skin Concepts" text="Three complete workspace concept cards — Ink Mountain, Forge Core, and Rainstreet Neon — drawn only with CSS, SVG, and React DOM." />
+        <SectionHeading eyebrow="Featured Studio Skins" title="Glasshouse, Ink, and Neon now read at first glance" text="Three complete workspace concept cards — a greenhouse sprint lab, a water-ink scholar desk, and a rainstreet neon ritual — drawn only with CSS, SVG, and React DOM." />
         <TemplateGallery items={featuredStudioSkins} featured />
       </section>
       <section className="section-pad">
@@ -588,7 +636,7 @@ function Legal({ kind }: { kind: 'privacy' | 'terms' }) {
 }
 
 const pageMap: Record<string, Page> = {
-  '/templates': { title: 'Browse Free Codex Skin Concepts — Codex Skin Studio', description: 'Browse nine original Codex workspace skin concept cards including Ink Mountain Scholar, Forge Core Alchemist, Rainstreet Neon Ritual, Rose Orbit Observatory, and more.', h1: 'Browse Free Codex Skin Concepts', eyebrow: 'Template studio', body: <TemplatesPage /> },
+  '/templates': { title: 'Browse Free Codex Skin Concepts — Codex Skin Studio', description: 'Browse nine original Codex workspace skin concept cards including Glasshouse Sprint Lab, Ink Mountain Scholar, Rainstreet Neon Ritual, Rose Orbit Observatory, and more.', h1: 'Browse Free Codex Skin Concepts', eyebrow: 'Template studio', body: <TemplatesPage /> },
   '/custom-codex-skin': { title: 'Request a Custom Codex Skin — Codex Skin Studio', description: 'Join the custom Codex skin request list for premium personal, image-based, brand, or team skin customization.', h1: 'Request a Custom Codex Skin', eyebrow: 'Studio order', body: <CustomRequestPage /> },
   '/how-it-works': { title: 'How Codex Skin Customization Works — Templates, Recipes, Requests', description: 'Learn how Codex Skin Studio works: choose a free template, preview the mood, download a starter recipe, adapt manually, or request custom work.', h1: 'How Codex Skin Customization Works', eyebrow: 'Workflow', body: <HowItWorks /> },
   '/safety': { title: 'Codex Skin Safety — Reviewable Recipes, Manual Adaptation, Privacy', description: 'Safety and privacy boundaries for Codex skin templates, manual adaptation, custom skin requests, and independent compatibility disclaimers.', h1: 'Codex Skin Safety', eyebrow: 'Safety boundary', body: <Safety /> },
