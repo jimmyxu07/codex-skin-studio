@@ -207,24 +207,16 @@ const featuredStudioSkins = ['ink-mountain-scholar', 'rainstreet-neon-ritual', '
   .filter((template): template is Template => Boolean(template))
 const templateFilters: TemplateFilter[] = ['All', 'Featured Concepts', 'Focus Worlds', 'High-Energy Systems', 'Creative Workspaces', 'Light / Paper', 'Dark / Terminal']
 
-const p0Routes = [
-  '/',
-  '/templates',
-  '/templates/ink-mountain-scholar',
-  '/templates/forge-core-alchemist',
-  '/templates/rainstreet-neon-ritual',
-  '/templates/rose-orbit-observatory',
-  '/templates/midnight-blueprint-room',
-  '/templates/glasshouse-sprint-lab',
-  '/templates/blackbox-gold-premiere',
-  '/templates/pixel-bento-arcade',
-  '/templates/deepsea-sonar-console',
-  '/custom-codex-skin',
-  '/how-it-works',
-  '/safety',
-  '/privacy',
-  '/terms',
-]
+const footerLinks = [
+  ['/', 'Home'],
+  ['/templates', 'Free Skins'],
+  ['/custom-codex-skin', 'Custom Skin'],
+  ['/how-it-works', 'How it works'],
+  ['/safety', 'Safety'],
+  ['/#install-guide', 'Install Guide'],
+  ['/privacy', 'Privacy'],
+  ['/terms', 'Terms'],
+] as const
 
 function setMeta(title: string, description: string, options: { noindex?: boolean } = {}) {
   document.title = title
@@ -693,7 +685,7 @@ function StandardPage({ page }: { page: Page }) {
 }
 
 function Footer() {
-  return <footer className="footer section-pad"><p>{disclaimer}</p><div className="footer-links">{p0Routes.map((route) => <a key={route} href={route}>{route === '/' ? 'Home' : route}</a>)}</div></footer>
+  return <footer className="footer section-pad"><p>{disclaimer}</p><div className="footer-links">{footerLinks.map(([href, label]) => <a key={href} href={href}>{label}</a>)}</div></footer>
 }
 
 function App() {
