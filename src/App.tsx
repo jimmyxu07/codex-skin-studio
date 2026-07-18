@@ -1,7 +1,7 @@
 import { useState, type CSSProperties, type ReactElement } from 'react'
 import './App.css'
 
-type Variant = 'ink' | 'flame' | 'neon' | 'rose' | 'terminal' | 'midnight' | 'glass' | 'gold' | 'pixel'
+type Variant = 'ink' | 'forge' | 'neon' | 'rose' | 'blueprint' | 'glasshouse' | 'gold' | 'pixel' | 'sonar'
 
 type Template = {
   slug: string
@@ -15,8 +15,11 @@ type Template = {
   accent: string
   variant: Variant
   studioId: string
-  category: 'Original Concepts' | 'Calm' | 'Dark' | 'Bright' | 'Showcase'
-  cta?: string
+  category: 'Featured Concepts' | 'Focus Worlds' | 'High-Energy Systems' | 'Creative Workspaces' | 'Light / Paper' | 'Dark / Terminal'
+  conceptHook: string
+  prompt: string
+  recipeTitle: string
+  cta: string
 }
 
 type TemplateFilter = 'All' | Template['category']
@@ -36,149 +39,184 @@ const disclaimer =
 
 const templates: Template[] = [
   {
-    slug: 'rose-orbit',
-    name: 'Rose Orbit',
-    tagline: 'Soft rose planning desk',
-    description: 'A warm rose, pearl, and violet starter skin for users who want Codex to feel softer without losing terminal contrast.',
-    mood: ['rose', 'soft focus', 'creator desk'],
-    bestFor: 'personal workspaces, creator portfolios, late-night planning sessions',
-    palette: ['#fff1f7', '#f8b4d9', '#c084fc', '#2a1023'],
-    recipe: 'Use a deep plum base, rose accent borders, pearl cards, and violet highlights. Keep terminal text high-contrast and avoid tiny pastel-on-pastel labels.',
-    accent: '#f472b6',
-    variant: 'rose',
-    studioId: 'CSS-ROS-004',
-    category: 'Bright',
-  },
-  {
-    slug: 'neon-terminal',
-    name: 'Neon Terminal',
-    tagline: 'Classic green command skin',
-    description: 'A high-energy black and green Codex look inspired by classic terminals, cyber dashboards, and command-center workflows.',
-    mood: ['terminal', 'signal green', 'CLI energy'],
-    bestFor: 'CLI-heavy coding, demos, security-flavored builds, high-signal dashboards',
-    palette: ['#020617', '#0f172a', '#22c55e', '#a3e635'],
-    recipe: 'Start from a near-black background, use green highlights sparingly, reserve lime for active states, and test diff/error colors before relying on the skin.',
-    accent: '#22c55e',
-    variant: 'terminal',
-    studioId: 'CSS-TRM-005',
-    category: 'Dark',
-  },
-  {
-    slug: 'midnight-focus',
-    name: 'Midnight Focus',
-    tagline: 'Low-glare deep work skin',
-    description: 'A low-glare navy Codex skin recipe for long focus blocks, code review, and deep work without visual noise.',
-    mood: ['midnight', 'minimal', 'productive'],
-    bestFor: 'long coding sessions, review loops, low-distraction workspaces',
-    palette: ['#07111f', '#111827', '#60a5fa', '#c7d2fe'],
-    recipe: 'Combine a midnight background with blue focus rings, muted slate panels, and pale text. Prioritize readability for prompts, selections, and errors.',
-    accent: '#60a5fa',
-    variant: 'midnight',
-    studioId: 'CSS-MID-006',
-    category: 'Calm',
-  },
-  {
-    slug: 'soft-glass',
-    name: 'Soft Glass',
-    tagline: 'Clean translucent workspace',
-    description: 'A clean translucent skin direction with soft borders, frosted panels, and neutral accents for a modern Codex workspace.',
-    mood: ['glass', 'clean', 'translucent'],
-    bestFor: 'minimal setups, product demos, calm daily workspaces',
-    palette: ['#f8fafc', '#e2e8f0', '#38bdf8', '#0f172a'],
-    recipe: 'Use light panels, subtle shadows, blue accent strokes, and strong text contrast. Avoid claiming native blur support unless your environment verifies it.',
-    accent: '#38bdf8',
-    variant: 'glass',
-    studioId: 'CSS-GLS-007',
-    category: 'Calm',
-  },
-  {
-    slug: 'stage-gold',
-    name: 'Stage Gold',
-    tagline: 'Black/gold demo skin',
-    description: 'A dramatic black and gold starter recipe for launches, premium demos, and showcase sessions.',
-    mood: ['premium', 'gold', 'launch'],
-    bestFor: 'presentation machines, launch demos, premium brand mood boards',
-    palette: ['#050505', '#1f2937', '#f59e0b', '#fde68a'],
-    recipe: 'Keep most surfaces black or charcoal, use gold only for key CTAs and active states, and keep warning/error colors visually distinct from gold accents.',
-    accent: '#f59e0b',
-    variant: 'gold',
-    studioId: 'CSS-GLD-008',
-    category: 'Showcase',
-  },
-  {
-    slug: 'pixel-pop',
-    name: 'Pixel Pop',
-    tagline: 'Playful block-color skin',
-    description: 'A bright, playful Codex skin recipe with pixel-art energy, useful when personality matters more than minimalism.',
-    mood: ['playful', 'pixel', 'colorful'],
-    bestFor: 'creative coding, personal projects, community demos',
-    palette: ['#111827', '#fb7185', '#22d3ee', '#facc15'],
-    recipe: 'Use a dark base with colorful blocks, reserve yellow for highlights, and test line-height/spacing so playful visuals do not reduce coding readability.',
-    accent: '#fb7185',
-    variant: 'pixel',
-    studioId: 'CSS-POP-009',
-    category: 'Bright',
-  },
-  {
     slug: 'ink-mountain-scholar',
     name: 'Ink Mountain Scholar',
     tagline: 'Quiet paper-and-mist Codex workspace',
     description: 'A quiet paper-and-mist Codex workspace for long focus sessions.',
-    mood: ['Ink base', 'Pine panels', 'Jade focus'],
+    conceptHook: 'Paper mountains, mist bands, and a calm jade prompt turn Codex into a quiet scholar desk.',
+    mood: ['Quiet Focus', 'Paper Workspace', 'Ink System', 'Long Sessions'],
     bestFor: 'long writing-and-coding sessions, quiet planning, documentation-heavy builds',
-    palette: ['#101418', '#123C3D', '#E8E1CF', '#BCE8D8'],
-    recipe: 'Layer an ink-black base with deep pine teal panels, rice-paper surfaces, misty reading planes, and pale jade active accents. Keep all marks abstract and avoid any named symbols, factions, characters, or franchise references.',
+    palette: ['#101418', '#123C3D', '#E8E1CF', '#BCE8D8', '#D94A32'],
+    recipe: 'Layer an ink-black base with deep pine teal panels, rice-paper surfaces, misty reading planes, a small studio seal, and pale jade active accents. Keep every mark abstract and CSS/SVG generated.',
     accent: '#BCE8D8',
     variant: 'ink',
     studioId: 'CSS-INK-001',
-    category: 'Original Concepts',
+    category: 'Featured Concepts',
+    prompt: 'draft calm refactor plan',
+    recipeTitle: 'InkLayerRecipe',
     cta: 'Download Quiet Scholar Recipe',
   },
   {
-    slug: 'flame-alchemist',
-    name: 'Flame Alchemist',
-    tagline: 'Forge-fire Codex skin with disciplined contrast',
-    description: 'A forge-fire Codex skin with ember focus and disciplined contrast.',
-    mood: ['Charcoal base', 'Ember cursor', 'Molten focus'],
+    slug: 'forge-core-alchemist',
+    name: 'Forge Core Alchemist',
+    tagline: 'Molten Codex control room for disciplined debugging',
+    description: 'A molten Codex control room for debugging with heat and discipline.',
+    conceptHook: 'A cast-iron console, ember cursor, furnace gauges, and hot geometry make every debug pass feel deliberate.',
+    mood: ['High Energy', 'Debug Mode', 'Forge UI', 'Terminal Heavy'],
     bestFor: 'terminal-heavy workflows, launch crunch, high-energy debugging sessions',
-    palette: ['#16110F', '#3B2118', '#D6401F', '#FFB13B'],
-    recipe: 'Use charcoal and furnace-brown foundations, ember-red cursor and command accents, molten-gold focus lines, and low-opacity bronze geometry. Decorative heat rings stay abstract with no devices, crests, schools, or known artifact cues.',
+    palette: ['#16110F', '#3B2118', '#D6401F', '#FFB13B', '#8A5A32'],
+    recipe: 'Use charcoal and cast-iron foundations, ember-red command accents, molten-gold focus lines, bronze geometry gauges, and low-opacity heat rings. Decorative particles stay abstract and brand-neutral.',
     accent: '#FFB13B',
-    variant: 'flame',
-    studioId: 'CSS-FLM-002',
-    category: 'Original Concepts',
+    variant: 'forge',
+    studioId: 'CSS-FRG-002',
+    category: 'Featured Concepts',
+    prompt: 'stabilize hot path trace',
+    recipeTitle: 'ForgeRecipeGauge',
     cta: 'Download Forge Recipe',
   },
   {
-    slug: 'urban-taoist-neon',
-    name: 'Urban Taoist Neon',
-    tagline: 'Rain-lit neon geometry for night coding',
-    description: 'Rain-lit neon geometry for night coding sessions.',
-    mood: ['Asphalt base', 'Cyan focus', 'Magenta scan'],
+    slug: 'rainstreet-neon-ritual',
+    name: 'Rainstreet Neon Ritual',
+    tagline: 'Rain-lit neon workspace with cyan focus and magenta motion',
+    description: 'A rain-lit Codex workspace with cyan focus and magenta motion.',
+    conceptHook: 'Tilted night poster, rainy asphalt, unreadable geometry signs, cyan input glow, and a wet reflection strip.',
+    mood: ['Night Coding', 'Neon City', 'Rain Lines', 'High Contrast'],
     bestFor: 'night coding, creative tools, energetic personal setups',
     palette: ['#080B12', '#2C3A4A', '#16D9E3', '#D946EF', '#F6C85F'],
-    recipe: 'Build from night-asphalt surfaces, cyan-magenta focus rings, amber abstract geometry, rainy blue-gray panels, and off-white glow text. Keep all signs and symbols unreadable, geometric, and brand-neutral.',
+    recipe: 'Build from night-asphalt surfaces, cyan-magenta focus rings, amber abstract geometry, rainy blue-gray panels, and off-white glow text. Keep all signs unreadable, geometric, and IP-safe.',
     accent: '#16D9E3',
     variant: 'neon',
     studioId: 'CSS-NEO-003',
-    category: 'Original Concepts',
+    category: 'Featured Concepts',
+    prompt: 'ship night build ritual',
+    recipeTitle: 'NeonCircuitRecipe',
     cta: 'Download Neon Ritual Recipe',
+  },
+  {
+    slug: 'rose-orbit-observatory',
+    name: 'Rose Orbit Observatory',
+    tagline: 'Soft planning workspace with orbit lines and task nodes',
+    description: 'A soft planning workspace with orbit lines, task nodes, and pearl panels.',
+    conceptHook: 'A plum observatory board wraps plan/code/review/ship nodes in rose and violet orbital paths.',
+    mood: ['Planning', 'Soft Focus', 'Orbit Map', 'Creator Desk'],
+    bestFor: 'personal workspaces, creator portfolios, late-night planning sessions',
+    palette: ['#2A1023', '#FFF1F7', '#F8B4D9', '#C084FC', '#FDE68A'],
+    recipe: 'Use a deep plum shell, pearl planning cards, rose panels, violet orbit strokes, and small star-note highlights. Treat tasks as abstract nodes, not real constellation symbols.',
+    accent: '#F8B4D9',
+    variant: 'rose',
+    studioId: 'CSS-OBS-004',
+    category: 'Creative Workspaces',
+    prompt: 'map next sprint',
+    recipeTitle: 'OrbitPlanningMap',
+    cta: 'Download Orbit Recipe',
+  },
+  {
+    slug: 'midnight-blueprint-room',
+    name: 'Midnight Blueprint Room',
+    tagline: 'Low-glare engineering blueprint desk for deep work',
+    description: 'A low-glare Codex skin shaped like an engineering blueprint desk.',
+    conceptHook: 'A midnight blueprint sheet with measurement ticks, dashed modules, diff blocks, and architecture insets.',
+    mood: ['Deep Work', 'Blueprint', 'Architecture', 'Low Glare'],
+    bestFor: 'long coding sessions, review loops, architecture planning, low-distraction workspaces',
+    palette: ['#07111F', '#111827', '#1E3A8A', '#60A5FA', '#C7D2FE'],
+    recipe: 'Combine a midnight base with slate panels, blueprint grids, electric-blue focus lines, measurement markers, and pale readable text. Keep schematics abstract.',
+    accent: '#60A5FA',
+    variant: 'blueprint',
+    studioId: 'CSS-BLU-005',
+    category: 'Focus Worlds',
+    prompt: 'review system boundary',
+    recipeTitle: 'BlueprintTokenSpec',
+    cta: 'Download Blueprint Recipe',
+  },
+  {
+    slug: 'glasshouse-sprint-lab',
+    name: 'Glasshouse Sprint Lab',
+    tagline: 'Clean sprint workspace with frosted greenhouse geometry',
+    description: 'A clean sprint workspace with frosted panels and greenhouse geometry.',
+    conceptHook: 'Frosted sprint columns sit inside an abstract glasshouse frame with growth meters and readable ink text.',
+    mood: ['Sprint Board', 'Clean UI', 'Glasshouse', 'Light Mode'],
+    bestFor: 'sprint planning, light-mode workdays, product demos, small team rituals',
+    palette: ['#F8FAFC', '#DFF7EA', '#38BDF8', '#34D399', '#0F172A'],
+    recipe: 'Use frosted white panels, pale mint atmosphere, clean blue controls, growth-mint success states, high-contrast ink text, and CSS arch lines instead of any third-party imagery.',
+    accent: '#34D399',
+    variant: 'glasshouse',
+    studioId: 'CSS-GLH-006',
+    category: 'Light / Paper',
+    prompt: 'grow feature branch',
+    recipeTitle: 'GrowthMeterRecipe',
+    cta: 'Download Lab Recipe',
+  },
+  {
+    slug: 'blackbox-gold-premiere',
+    name: 'Blackbox Gold Premiere',
+    tagline: 'Dramatic black-and-gold console for launch demos',
+    description: 'A dramatic black-and-gold Codex skin for launch demos and showcase sessions.',
+    conceptHook: 'A hard-shell black stage case frames demo script, terminal proof, cue strips, and a gold live-demo sticker.',
+    mood: ['Showcase', 'Demo Mode', 'Black Gold', 'Launch'],
+    bestFor: 'presentation machines, launch demos, premium showcase sessions',
+    palette: ['#050505', '#1F2937', '#F59E0B', '#FDE68A', '#E5E7EB'],
+    recipe: 'Keep surfaces matte black or charcoal, reserve gold for cue lines and active states, add soft spotlight gradients, and keep warning/error colors distinct from the gold system.',
+    accent: '#F59E0B',
+    variant: 'gold',
+    studioId: 'CSS-PRM-007',
+    category: 'High-Energy Systems',
+    prompt: 'rehearse launch proof',
+    recipeTitle: 'PremiereCueSheet',
+    cta: 'Download Premiere Recipe',
+  },
+  {
+    slug: 'pixel-bento-arcade',
+    name: 'Pixel Bento Arcade',
+    tagline: 'Playful block-grid Codex skin for creative builds',
+    description: 'A playful block-grid Codex skin for creative builds and personal projects.',
+    conceptHook: 'A four-panel bento workspace uses stepped corners, color chips, scanlines, and pixel command blocks without game IP.',
+    mood: ['Creative Coding', 'Pixel Grid', 'Playful', 'Bento Layout'],
+    bestFor: 'creative coding, personal projects, community demos, playful prototypes',
+    palette: ['#111827', '#FB7185', '#22D3EE', '#FACC15', '#A78BFA'],
+    recipe: 'Use a dark canvas with coral, cyan, yellow, and violet tiles, stepped corners, abstract square ornaments, and high-contrast command bars. Avoid characters, devices, or recognizable game references.',
+    accent: '#FB7185',
+    variant: 'pixel',
+    studioId: 'CSS-PXL-008',
+    category: 'Creative Workspaces',
+    prompt: 'compose playful prototype',
+    recipeTitle: 'PixelTileRecipe',
+    cta: 'Download Bento Recipe',
+  },
+  {
+    slug: 'deepsea-sonar-console',
+    name: 'Deepsea Sonar Console',
+    tagline: 'Quiet diagnostic workspace with sonar rings and waveforms',
+    description: 'A quiet diagnostic workspace with sonar rings, waveforms, and deep-sea contrast.',
+    conceptHook: 'Deep navy panels, cyan pressure glow, signal waveforms, and sonar rings make failure tracing feel calm.',
+    mood: ['Diagnostics', 'Sonar UI', 'Calm Tech', 'Signal Trace'],
+    bestFor: 'diagnostics, log scanning, quiet bug hunts, production incident reviews',
+    palette: ['#030B16', '#0B2545', '#0E7490', '#67E8F9', '#D9F99D'],
+    recipe: 'Use abyss backgrounds, deep navy panels, sonar teal structures, cyan pulse states, signal-lime trace markers, and abstract wave lines only. Do not use submarines, animals, or military symbols.',
+    accent: '#67E8F9',
+    variant: 'sonar',
+    studioId: 'CSS-SON-009',
+    category: 'Dark / Terminal',
+    prompt: 'trace quiet failure',
+    recipeTitle: 'SonarSignalStack',
+    cta: 'Download Sonar Recipe',
   },
 ]
 
-const featuredStudioSkins = templates.filter((template) => ['ink-mountain-scholar', 'flame-alchemist', 'urban-taoist-neon'].includes(template.slug))
-const templateFilters: TemplateFilter[] = ['All', 'Calm', 'Dark', 'Bright', 'Showcase', 'Original Concepts']
+const featuredStudioSkins = templates.filter((template) => ['ink-mountain-scholar', 'forge-core-alchemist', 'rainstreet-neon-ritual'].includes(template.slug))
+const templateFilters: TemplateFilter[] = ['All', 'Featured Concepts', 'Focus Worlds', 'High-Energy Systems', 'Creative Workspaces', 'Light / Paper', 'Dark / Terminal']
 
 const p0Routes = [
   '/',
   '/templates',
-  '/templates/rose-orbit',
-  '/templates/neon-terminal',
-  '/templates/midnight-focus',
-  '/templates/soft-glass',
   '/templates/ink-mountain-scholar',
-  '/templates/flame-alchemist',
-  '/templates/urban-taoist-neon',
+  '/templates/forge-core-alchemist',
+  '/templates/rainstreet-neon-ritual',
+  '/templates/rose-orbit-observatory',
+  '/templates/midnight-blueprint-room',
+  '/templates/glasshouse-sprint-lab',
+  '/templates/blackbox-gold-premiere',
+  '/templates/pixel-bento-arcade',
+  '/templates/deepsea-sonar-console',
   '/custom-codex-skin',
   '/how-it-works',
   '/safety',
@@ -244,7 +282,7 @@ function CodexWorkspaceMock({ template, size = 'card' }: { template: Template; s
       <div className="mock-titlebar">
         <span className="window-dot"></span><span className="window-dot"></span><span className="window-dot"></span>
         <strong>{template.studioId}</strong>
-        <em>{size === 'mini' ? 'preview' : 'workspace recipe'}</em>
+        <em>{template.mood[0]}</em>
       </div>
       <div className="mock-body">
         <aside className="mock-sidebar">
@@ -254,7 +292,7 @@ function CodexWorkspaceMock({ template, size = 'card' }: { template: Template; s
           <section className="mock-chat-card"><MockLines count={3} /></section>
           <section className="mock-code-card"><MockLines count={5} /></section>
           <div className="mock-status-row"><i></i><i></i><i></i></div>
-          <div className="mock-prompt-input"><span>review palette + apply manually</span><b></b></div>
+          <div className="mock-prompt-input"><span>{template.prompt}</span><b></b></div>
         </main>
       </div>
       <div className="mock-decoration" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
@@ -283,8 +321,9 @@ function SkinGalleryCard({ template, featured = false }: { template: Template; f
       <CodexWorkspaceMock template={template} size="card" />
       <div className="gallery-copy">
         <h3>{template.name}</h3>
-        <p>{template.description}</p>
+        <p>{template.conceptHook}</p>
         <ul className="studio-tags">{template.mood.slice(0, 3).map((tag) => <li key={tag}>{tag}</li>)}</ul>
+        <div className="palette-strip" aria-label={`${template.name} palette`}>{template.palette.map((color) => <span key={color} style={{ '--swatch': color } as CSSProperties & Record<string, string>}></span>)}</div>
         <div className="card-actions">
           <StudioButton href={`/templates/${template.slug}`}>View Skin</StudioButton>
           <StudioButton href={recipeDownloadHref(template)} variant="secondary" download={`${template.slug}-starter-recipe.txt`}>Download Recipe</StudioButton>
@@ -354,7 +393,7 @@ function HomeBody() {
       </section>
       <ShowcaseStrip />
       <section className="section-pad featured-skins">
-        <SectionHeading eyebrow="Featured Studio Skins" title="Original Codex Skin Concepts" text="Three complete workspace concept cards — Ink, Flame, and Neon — drawn only with CSS, SVG, and React DOM." />
+        <SectionHeading eyebrow="Featured Studio Skins" title="Original Codex Skin Concepts" text="Three complete workspace concept cards — Ink Mountain, Forge Core, and Rainstreet Neon — drawn only with CSS, SVG, and React DOM." />
         <TemplateGallery items={featuredStudioSkins} featured />
       </section>
       <section className="section-pad">
@@ -394,9 +433,15 @@ function isDarkHex(hex: string) {
 
 function PaletteBoard({ template }: { template: Template }) {
   const names: Record<string, string[]> = {
-    ink: ['Ink base', 'Pine panels', 'Rice paper', 'Jade focus'],
-    flame: ['Charcoal base', 'Forge panel', 'Ember cursor', 'Molten focus'],
+    ink: ['Ink base', 'Pine panels', 'Rice paper', 'Jade focus', 'Studio seal'],
+    forge: ['Charcoal base', 'Cast iron', 'Ember cursor', 'Molten focus', 'Bronze geometry'],
     neon: ['Night asphalt', 'Slate panel', 'Cyan focus', 'Magenta scan', 'Amber geometry'],
+    rose: ['Deep plum', 'Pearl surface', 'Rose panel', 'Violet orbit', 'Star note'],
+    blueprint: ['Midnight base', 'Slate panel', 'Blueprint blue', 'Focus line', 'Soft text'],
+    glasshouse: ['Frosted white', 'Greenhouse mist', 'Clean blue', 'Growth mint', 'Ink text'],
+    gold: ['Matte black', 'Charcoal panel', 'Stage gold', 'Spotlight', 'Presenter text'],
+    pixel: ['Dark canvas', 'Coral block', 'Cyan block', 'Yellow highlight', 'Violet chip'],
+    sonar: ['Abyss base', 'Deep navy', 'Sonar teal', 'Cyan pulse', 'Signal lime'],
   }
   return (
     <section className={`palette-board palette-board--${template.variant} studio-card`}>
@@ -446,37 +491,52 @@ function UIStatesMock({ template }: { template: Template }) {
 function ConceptStatement({ template }: { template: Template }) {
   const statements: Record<Variant, string> = {
     ink: 'Designed for builders who want Codex to feel like a quiet writing desk: dark enough for code, warm enough for notes, and calm enough for long reasoning loops.',
-    flame: 'Built for debugging sprints and launch crunch: the interface feels hot, but the reading surfaces stay controlled.',
+    forge: 'Built for debugging sprints and launch crunch: the interface feels hot, but the reading surfaces stay controlled.',
     neon: 'For late-night builds that need motion and contrast without turning the workspace into a noisy cyberpunk cliché.',
-    rose: template.description,
-    terminal: template.description,
-    midnight: template.description,
-    glass: template.description,
-    gold: template.description,
-    pixel: template.description,
+    rose: 'For creators who plan visually: orbit paths and task nodes make the workspace feel like a soft observatory instead of a pastel preset.',
+    blueprint: 'For deep reviews and systems thinking: low-glare code surfaces sit inside an engineering sheet with measured boundaries.',
+    glasshouse: 'For sprint planning in light mode: frosted panels, growth meters, and greenhouse geometry keep the desk clean and active.',
+    gold: 'For demos and launches: blackbox staging, cue strips, and spotlight accents make the workspace presentation-ready.',
+    pixel: 'For personal creative builds: bento tiles and stepped blocks add energy while staying readable and IP-safe.',
+    sonar: 'For quiet diagnostics: sonar rings, waveforms, and cyan pulse states make failure tracing feel calm and technical.',
   }
   return <section className="concept-statement studio-card"><p className="eyebrow">Concept Statement</p><h2>{template.tagline}</h2><p>{statements[template.variant]}</p></section>
 }
 
+function RecipeVisualization({ template }: { template: Template }) {
+  if (template.variant === 'ink') return <InkLayerRecipe />
+  if (template.variant === 'forge') return <ForgeRecipeGauge />
+  if (template.variant === 'neon') return <NeonCircuitRecipe />
+  return <section className={`recipe-board recipe-board--concept recipe-board--${template.variant} studio-card`}><p className="eyebrow">Recipe System · {template.recipeTitle}</p><div className="concept-recipe-map">{template.palette.map((color, index) => <div key={color} style={{ '--node-color': color, '--node-index': String(index) } as CSSProperties & Record<string, string>}><b></b><strong>{template.mood[index % template.mood.length]}</strong><span>{color}</span></div>)}</div></section>
+}
+
 function VariantTemplateDetail({ template }: { template: Template }) {
-  const secondaryCta = template.variant === 'ink' ? 'Request a calmer custom skin' : template.variant === 'flame' ? 'Commission a hotter workspace skin' : 'Request a city-night custom skin'
+  const ctaByVariant: Record<Variant, string> = {
+    ink: 'Request a calmer custom skin',
+    forge: 'Commission a hotter workspace skin',
+    neon: 'Request a city-night custom skin',
+    rose: 'Request a softer planning skin',
+    blueprint: 'Request a deep-work system skin',
+    glasshouse: 'Request a cleaner sprint skin',
+    gold: 'Request a launch-ready custom skin',
+    pixel: 'Request a more playful coding skin',
+    sonar: 'Request a calmer diagnostic skin',
+  }
   return (
     <div className={`detail-work-page detail-work-page--${template.variant}`}>
       <section className="work-hero">
         <div className="work-copy">
           <p className="eyebrow">Skin Concept Work Page</p>
           <h2>{template.name}</h2>
-          <p>{template.description}</p>
+          <p>{template.conceptHook}</p>
           <MetadataPanel template={template} />
-          <div className="cta-row"><StudioButton href={recipeDownloadHref(template)} download={`${template.slug}-starter-recipe.txt`}>{template.cta ?? 'Download starter recipe'}</StudioButton><StudioButton href="/custom-codex-skin" variant="secondary">{secondaryCta}</StudioButton></div>
+          <div className="cta-row"><StudioButton href={recipeDownloadHref(template)} download={`${template.slug}-starter-recipe.txt`}>{template.cta}</StudioButton><StudioButton href="/custom-codex-skin" variant="secondary">{ctaByVariant[template.variant]}</StudioButton></div>
         </div>
         <div className="concept-shot"><CodexWorkspaceMock template={template} size="detail" /></div>
       </section>
       <ConceptStatement template={template} />
       <PaletteBoard template={template} />
-      {template.variant === 'ink' && <InkLayerRecipe />}
-      {template.variant === 'flame' && <ForgeRecipeGauge />}
-      {template.variant === 'neon' && <NeonCircuitRecipe />}
+      <RecipeVisualization template={template} />
       <UIStatesMock template={template} />
       <CustomCta />
     </div>
@@ -484,8 +544,7 @@ function VariantTemplateDetail({ template }: { template: Template }) {
 }
 
 function TemplateDetail({ template }: { template: Template }) {
-  if (['ink', 'flame', 'neon'].includes(template.variant)) return <VariantTemplateDetail template={template} />
-  return <div className="standard-template-detail"><p className="page-lede">{template.description}</p><div className="detail-layout"><SkinGalleryCard template={template} /><article className="studio-card recipe-copy"><h2>Starter recipe</h2><p>{template.recipe}</p><PaletteBoard template={template} /><div className="cta-row"><StudioButton href={recipeDownloadHref(template)} download={`${template.slug}-starter-recipe.txt`}>Download starter recipe</StudioButton><StudioButton href="/custom-codex-skin" variant="secondary">Request custom version</StudioButton></div></article></div><AdaptSteps /><CustomCta /></div>
+  return <VariantTemplateDetail template={template} />
 }
 
 function AdaptSteps() {
@@ -496,7 +555,7 @@ function TemplatesPage() {
   const [activeFilter, setActiveFilter] = useState<TemplateFilter>('All')
   const filteredTemplates = activeFilter === 'All' ? templates : templates.filter((template) => template.category === activeFilter)
 
-  return <><p className="page-lede">Pick a free Codex skin template and download a reviewable starter recipe. No upload, checkout, or one-click installer is required for v0.</p><div className="filter-chips" aria-label="Template filters">{templateFilters.map((filter) => { const count = filter === 'All' ? templates.length : templates.filter((template) => template.category === filter).length; const isActive = activeFilter === filter; return <button key={filter} type="button" className={isActive ? 'is-active' : undefined} aria-pressed={isActive} onClick={() => setActiveFilter(filter)}>{filter} <span>{count}</span></button> })}</div><p className="filter-result-count" aria-live="polite">Showing {filteredTemplates.length} {filteredTemplates.length === 1 ? 'template' : 'templates'} in {activeFilter}.</p><TemplateGallery items={filteredTemplates} /></>
+  return <><p className="page-lede">Each template is an original Codex workspace concept built with CSS, DOM, and SVG — no screenshots, no third-party art, no IP references.</p><div className="filter-chips" aria-label="Template filters">{templateFilters.map((filter) => { const count = filter === 'All' ? templates.length : templates.filter((template) => template.category === filter).length; const isActive = activeFilter === filter; return <button key={filter} type="button" className={isActive ? 'is-active' : undefined} aria-pressed={isActive} onClick={() => setActiveFilter(filter)}>{filter} <span>{count}</span></button> })}</div><p className="filter-result-count" aria-live="polite">Showing {filteredTemplates.length} {filteredTemplates.length === 1 ? 'template' : 'templates'} in {activeFilter}.</p><TemplateGallery items={filteredTemplates} /></>
 }
 
 function HowItWorks() {
@@ -517,7 +576,7 @@ function Legal({ kind }: { kind: 'privacy' | 'terms' }) {
 }
 
 const pageMap: Record<string, Page> = {
-  '/templates': { title: 'Free Codex Skin Templates — Codex Skin Studio', description: 'Browse free Codex skin templates including Ink Mountain Scholar, Flame Alchemist, Urban Taoist Neon, Rose Orbit, Neon Terminal, Midnight Focus, Soft Glass and more.', h1: 'Browse Free Codex Skin Templates', eyebrow: 'Template studio', body: <TemplatesPage /> },
+  '/templates': { title: 'Browse Free Codex Skin Concepts — Codex Skin Studio', description: 'Browse nine original Codex workspace skin concept cards including Ink Mountain Scholar, Forge Core Alchemist, Rainstreet Neon Ritual, Rose Orbit Observatory, and more.', h1: 'Browse Free Codex Skin Concepts', eyebrow: 'Template studio', body: <TemplatesPage /> },
   '/custom-codex-skin': { title: 'Request a Custom Codex Skin — Codex Skin Studio', description: 'Join the custom Codex skin request list for premium personal, image-based, brand, or team skin customization.', h1: 'Request a Custom Codex Skin', eyebrow: 'Studio order', body: <CustomRequestPage /> },
   '/how-it-works': { title: 'How Codex Skin Customization Works — Templates, Recipes, Requests', description: 'Learn how Codex Skin Studio works: choose a free template, preview the mood, download a starter recipe, adapt manually, or request custom work.', h1: 'How Codex Skin Customization Works', eyebrow: 'Workflow', body: <HowItWorks /> },
   '/safety': { title: 'Codex Skin Safety — Reviewable Recipes, Manual Adaptation, Privacy', description: 'Safety and privacy boundaries for Codex skin templates, manual adaptation, custom skin requests, and independent compatibility disclaimers.', h1: 'Codex Skin Safety', eyebrow: 'Safety boundary', body: <Safety /> },
