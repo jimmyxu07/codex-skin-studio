@@ -1,7 +1,10 @@
 import { useState, type CSSProperties, type ReactElement } from 'react'
 import './App.css'
+import moonlitMagicWorkspace from './assets/pc-skins/moonlit-magic-workspace.jpg'
+import forgeAlchemyConsole from './assets/pc-skins/forge-alchemy-console.jpg'
+import neonRainWorkspace from './assets/pc-skins/neon-rain-workspace.jpg'
 
-type Variant = 'ink' | 'forge' | 'neon' | 'rose' | 'blueprint' | 'glasshouse' | 'gold' | 'pixel' | 'sonar'
+type Variant = 'moonlit' | 'ink' | 'forge' | 'neon' | 'rose' | 'blueprint' | 'glasshouse' | 'gold' | 'pixel' | 'sonar'
 
 type Template = {
   slug: string
@@ -20,6 +23,7 @@ type Template = {
   prompt: string
   recipeTitle: string
   cta: string
+  imageUrl?: string
 }
 
 type TemplateFilter = 'All' | Template['category']
@@ -40,6 +44,25 @@ const disclaimer =
 
 const templates: Template[] = [
   {
+    slug: 'moonlit-magic-workspace',
+    name: 'Moonlit Magic Workspace',
+    tagline: 'Moonlit purple-blue Codex PC workspace with spell cards, amber composer, and calm magic-desk atmosphere',
+    description: 'A moonlit Codex PC workspace skin preview with a real macOS chrome, sidebar, four task cards, right AI panel, and bottom composer layered over a magic desk atmosphere.',
+    conceptHook: 'A wide moonlit workshop scene, cool violet glass, four floating task cards, a right AI/code panel, and a warm generate composer make the workspace feel like a magical desktop skin rather than a color preset.',
+    mood: ['Moonlit Focus', 'Magic Desk', 'Violet Glass', 'Warm Composer'],
+    bestFor: 'builders who want a cinematic but readable PC workspace skin for planning, coding, and prompt sessions',
+    palette: ['#0E1028', '#2C214B', '#7C6CF2', '#A7D8FF', '#F6B45C'],
+    recipe: 'Start with a deep indigo shell, purple glass panels, moon-blue ambient glow, translucent task cards, and amber composer/send focus. Keep UI labels as real DOM text and use the Stitch image only as atmosphere or preview reference.',
+    accent: '#F6B45C',
+    variant: 'moonlit',
+    studioId: 'PC-MOON-001',
+    category: 'Featured Concepts',
+    prompt: 'generate moonlit workspace plan',
+    recipeTitle: 'MoonlitWorkspaceTokens',
+    cta: 'Download Moonlit Recipe',
+    imageUrl: moonlitMagicWorkspace,
+  },
+  {
     slug: 'ink-mountain-scholar',
     name: 'Ink Mountain Scholar',
     tagline: 'Water-ink scholar desk with mountains, fog, scroll, and a bold red seal',
@@ -59,10 +82,10 @@ const templates: Template[] = [
   },
   {
     slug: 'forge-core-alchemist',
-    name: 'Ember Forge Console',
-    tagline: 'Molten black-gold Codex control room for disciplined debugging',
-    description: 'A molten forge-console Codex skin with heat rings, ember controls, and dark premium contrast.',
-    conceptHook: 'Charcoal glass, molten orange heat rings, cast-iron panels, and hot command accents make the workspace feel like a premium debug forge.',
+    name: 'Forge Alchemy Console',
+    tagline: 'Molten bronze Codex PC console with alchemy cards, right AI chat, and anvil-bright composer',
+    description: 'A molten forge-alchemy Codex workspace with cast-iron panels, amber outlines, alchemy task cards, right AI chat, and a bottom command composer.',
+    conceptHook: 'Charcoal glass, bright amber outlines, forge sparks, alchemy cards, a right AI chat panel, and a heavy bottom composer make the workspace feel like a premium debug forge.',
     mood: ['High Energy', 'Debug Mode', 'Forge UI', 'Terminal Heavy'],
     bestFor: 'terminal-heavy workflows, launch crunch, high-energy debugging sessions',
     palette: ['#16110F', '#3B2118', '#D6401F', '#FFB13B', '#8A5A32'],
@@ -74,13 +97,14 @@ const templates: Template[] = [
     prompt: 'stabilize hot path trace',
     recipeTitle: 'ForgeRecipeGauge',
     cta: 'Download Forge Recipe',
+    imageUrl: forgeAlchemyConsole,
   },
   {
     slug: 'rainstreet-neon-ritual',
-    name: 'Rain Neon Desk',
-    tagline: 'Rain-lit neon Codex workspace with cyan focus and violet reflections',
-    description: 'A cinematic rain-lit Codex workspace with cyan focus, violet glass, and screenshot-style depth.',
-    conceptHook: 'Night rain, cyan-violet reflections, circuit glass, a glowing prompt bar, and a shareable Codex workspace screenshot feel.',
+    name: 'Neon Rain Workspace',
+    tagline: 'Rain-lit cyan-magenta Codex PC workspace with grid board, right AI chat, and glowing composer',
+    description: 'A cinematic neon-rain Codex workspace with cyan focus, magenta glass, four task cards, right AI chat, and screenshot-style depth.',
+    conceptHook: 'Night rain, cyan-violet reflections, grid glass, four task cards, right AI chat, and a glowing prompt bar create a shareable Codex PC workspace preview.',
     mood: ['Night Coding', 'Neon City', 'Rain Lines', 'High Contrast'],
     bestFor: 'night coding, creative tools, energetic personal setups',
     palette: ['#080B12', '#2C3A4A', '#16D9E3', '#D946EF', '#F6C85F'],
@@ -92,6 +116,7 @@ const templates: Template[] = [
     prompt: 'ship night build ritual',
     recipeTitle: 'NeonCircuitRecipe',
     cta: 'Download Neon Ritual Recipe',
+    imageUrl: neonRainWorkspace,
   },
   {
     slug: 'rose-orbit-observatory',
@@ -203,12 +228,12 @@ const templates: Template[] = [
   },
 ]
 
-const heroStoreSkins = ['rainstreet-neon-ritual', 'pixel-bento-arcade', 'forge-core-alchemist']
+const heroStoreSkins = ['moonlit-magic-workspace', 'forge-core-alchemist', 'rainstreet-neon-ritual']
   .map((slug) => templates.find((template) => template.slug === slug))
   .filter((template): template is Template => Boolean(template))
-const heroCategoryChips = ['All', 'Neon', 'Cozy', 'Forge', 'Pixel', 'Glass', 'Blueprint', 'Custom']
+const heroCategoryChips = ['Moonlit', 'Forge', 'Neon', 'Free skins', 'Custom']
 
-const featuredStudioSkins = ['rainstreet-neon-ritual', 'pixel-bento-arcade', 'forge-core-alchemist', 'glasshouse-sprint-lab', 'midnight-blueprint-room', 'rose-orbit-observatory']
+const featuredStudioSkins = ['moonlit-magic-workspace', 'forge-core-alchemist', 'rainstreet-neon-ritual']
   .map((slug) => templates.find((template) => template.slug === slug))
   .filter((template): template is Template => Boolean(template))
 const templateFilters: TemplateFilter[] = ['All', 'Featured Concepts', 'Focus Worlds', 'High-Energy Systems', 'Creative Workspaces', 'Light / Paper', 'Dark / Terminal']
@@ -327,17 +352,38 @@ function MockLines({ count = 4 }: { count?: number }) {
 }
 
 function DefaultWorkspaceInterior({ template }: { template: Template }) {
+  const taskCards = [
+    ['Plan', 'Map workspace tokens', '68%'],
+    ['Build', 'Layer DOM preview', '52%'],
+    ['Review', 'Contrast states', '44%'],
+    ['Ship', 'Copy recipe notes', '76%'],
+  ]
+  const sideItems = ['Files', 'Search', 'Branches', 'Run', 'Extensions']
+  const chatCards = ['Palette check', 'Component pass', 'Readable diff']
   return (
-    <div className="mock-body">
-      <aside className="mock-sidebar">
-        <b></b><span className="active"></span><span></span><span></span><span></span>
+    <div className="mock-body mock-body--pc">
+      <aside className="mock-sidebar" aria-label="Workspace sidebar">
+        <b>CS</b>
+        {sideItems.map((item, index) => <span key={item} className={index === 1 ? 'active' : undefined}>{item}</span>)}
       </aside>
-      <main className="mock-main">
-        <section className="mock-chat-card"><MockLines count={3} /></section>
-        <section className="mock-code-card"><MockLines count={5} /></section>
-        <div className="mock-status-row"><i></i><i></i><i></i></div>
-        <div className="mock-prompt-input"><span>{template.prompt}</span><b></b></div>
+      <main className="mock-main" aria-label="Codex workspace canvas">
+        <div className="mock-file-tab"><span>{template.name}</span><i></i></div>
+        <section className="task-card-grid" aria-label="Four skin task cards">
+          {taskCards.map(([title, detail, percent], index) => (
+            <article className="skin-task-card" key={title}>
+              <strong>{title}</strong>
+              <span>{detail}</span>
+              <i style={{ '--progress': percent } as CSSProperties & Record<string, string>}></i>
+              <em>{index + 1}</em>
+            </article>
+          ))}
+        </section>
+        <div className="mock-prompt-input"><span>{template.prompt}</span><button type="button">Generate</button></div>
       </main>
+      <aside className="mock-right-panel" aria-label="AI chat and code panel">
+        <strong>AI chat</strong>
+        {chatCards.map((card) => <section className="mock-chat-card" key={card}><b>{card}</b><MockLines count={3} /></section>)}
+      </aside>
     </div>
   )
 }
@@ -384,10 +430,11 @@ function WorkspaceInterior({ template }: { template: Template }) {
 
 function CodexWorkspaceMock({ template, size = 'card' }: { template: Template; size?: 'mini' | 'card' | 'hero' | 'detail' }) {
   return (
-    <div className={`workspace-mock workspace-mock--${template.variant} workspace-mock--${size}`} style={{ '--accent': template.accent } as CSSProperties & Record<string, string>} aria-label={`${template.name} original Codex workspace concept mock screenshot`}>
+    <div className={`workspace-mock workspace-mock--${template.variant} workspace-mock--${size} ${template.imageUrl ? 'workspace-mock--stitch-backed' : ''}`} style={{ '--accent': template.accent, '--atmosphere': template.imageUrl ? `url(${template.imageUrl})` : 'none' } as CSSProperties & Record<string, string>} aria-label={`${template.name} original Codex PC workspace skin preview`}>
+      {template.imageUrl ? <div className="stitch-atmosphere" aria-hidden="true"></div> : null}
       <div className="mock-titlebar">
         <span className="window-dot"></span><span className="window-dot"></span><span className="window-dot"></span>
-        <strong>{template.studioId}</strong>
+        <strong>CodexSkin.fun / {template.studioId}</strong>
         <em>{template.mood[0]}</em>
       </div>
       <WorkspaceInterior template={template} />
@@ -543,7 +590,7 @@ function CustomCta() {
         <div className="order-form-preview">
           <p className="eyebrow">CUSTOM SKIN REQUEST</p>
           <h2>Submit a moodboard, desired style, email, and constraints.</h2>
-          <p>We will reply by email to confirm scope, delivery path, and price before any custom work starts. Free templates remain the fastest path today.</p>
+          <p>We will reply by email to confirm scope, delivery path, and price before any custom work starts. For a high-custom request, contact <a href={`mailto:${contactEmail}`}>{contactEmail}</a>. Free templates remain the fastest path today.</p>
           <div className="form-lines" aria-hidden="true"><span>Email: where should we reply?</span><span>Moodboard / desired style: calm, paper, neon, forge...</span><span>Constraints: IP-safe, no third-party artwork, readability first</span></div>
           <StudioButton href={`mailto:${contactEmail}?subject=Custom%20Codex%20Skin%20Request&body=Name%2Femail%3A%0AWorkspace%20mood%3A%0APalette%3A%0ASafety%20constraints%3A%0APersonal%20or%20team%20use%3A%0ADeadline%3A`}>Request Custom Skin</StudioButton>
         </div>
@@ -562,12 +609,12 @@ function HomeBody() {
       <section className="hero section-pad">
         <div className="hero-copy">
           <p className="eyebrow">CODEX SKIN STORE</p>
-          <h1>Free Codex skins you can preview and copy today.</h1>
-          <p className="lede">Pick a skin card first: Rain Neon Desk, Cozy Bug Café, Ember Forge Console, and more IP-safe workspace recipes.</p>
+          <h1>Moonlit Magic Codex PC workspace skin preview.</h1>
+          <p className="lede">Start with the Moonlit Magic Workspace hero, then compare Forge Alchemy Console and Neon Rain Workspace — three wide PC skin previews with real DOM UI layers and reviewable recipes.</p>
           <div className="home-category-chips" aria-label="Skin categories">{heroCategoryChips.map((chip) => <a key={chip} href={chip === 'Custom' ? '/custom-codex-skin' : '/templates'}>{chip}</a>)}</div>
           <div className="cta-row">
             <StudioButton href="/templates">Preview Free</StudioButton>
-            <StudioButton href={recipeDownloadHref(heroStoreSkins[0])} variant="secondary" download={`${heroStoreSkins[0].slug}-starter-recipe.txt`}>Copy Recipe</StudioButton>
+            <StudioButton href={recipeDownloadHref(heroStoreSkins[0])} variant="secondary" download={`${heroStoreSkins[0].slug}-starter-recipe.txt`}>Copy Moonlit Recipe</StudioButton>
             <StudioButton href="/custom-codex-skin" variant="secondary">Request Custom Skin</StudioButton>
           </div>
           <TrustBadges />
@@ -576,12 +623,12 @@ function HomeBody() {
       </section>
       <GeneratorRemixStrip />
       <section className="section-pad featured-skins">
-        <SectionHeading eyebrow="Featured Free Skins" title="Pick a free Codex skin preview." text="Six large screenshot-style workspace covers: Rain Neon, Ember Forge, Aurora Glass, Blueprint, Rose Orbit, and Cozy Bug Café. Original CSS/SVG/DOM, no third-party artwork." />
+        <SectionHeading eyebrow="Featured Free Skins" title="The first three PC workspace skins." text="Moonlit Magic, Forge Alchemy, and Neon Rain are the selected homepage previews. Each uses the Stitch visual source for atmosphere while macOS chrome, sidebar, cards, right AI panel, and composer remain real DOM." />
         <TemplateGallery items={featuredStudioSkins} featured />
       </section>
       <PathSplit />
       <section className="section-pad">
-        <SectionHeading eyebrow="Browse Free Codex Skin Templates" title="Gallery cards, not abstract widgets" text="Every template includes a large workspace mock screenshot, palette strip, use case, and a reviewable recipe download." />
+        <SectionHeading eyebrow="Browse Free Codex Skin Templates" title="More recipes sit below the selected PC skins" text="The full library remains available for SEO and exploration, while the homepage lead stays focused on Moonlit Magic, Forge Alchemy, and Neon Rain." />
         <TemplateGallery />
       </section>
       <CustomCta />
@@ -613,6 +660,7 @@ function isDarkHex(hex: string) {
 
 function PaletteBoard({ template }: { template: Template }) {
   const names: Record<string, string[]> = {
+    moonlit: ['Indigo shell', 'Violet glass', 'Arcane focus', 'Moon glow', 'Amber composer'],
     ink: ['Ink base', 'Pine panels', 'Rice paper', 'Jade focus', 'Studio seal'],
     forge: ['Charcoal base', 'Cast iron', 'Ember cursor', 'Molten focus', 'Bronze geometry'],
     neon: ['Night asphalt', 'Slate panel', 'Cyan focus', 'Magenta scan', 'Amber geometry'],
@@ -681,6 +729,7 @@ function UIStatesMock({ template }: { template: Template }) {
 
 function ConceptStatement({ template }: { template: Template }) {
   const statements: Record<Variant, string> = {
+    moonlit: 'For builders who want a cinematic PC workspace without losing structure: a moonlit atmosphere frames real Codex-style panels, task cards, a right AI/code panel, and a warm composer.',
     ink: 'Designed for builders who want Codex to feel like a quiet writing desk: dark enough for code, warm enough for notes, and calm enough for long reasoning loops.',
     forge: 'Built for debugging sprints and launch crunch: the interface feels hot, but the reading surfaces stay controlled.',
     neon: 'For late-night builds that need motion and contrast without turning the workspace into a noisy cyberpunk cliché.',
@@ -704,6 +753,7 @@ function RecipeVisualization({ template }: { template: Template }) {
 
 function VariantTemplateDetail({ template }: { template: Template }) {
   const ctaByVariant: Record<Variant, string> = {
+    moonlit: 'Request a moonlit custom skin',
     ink: 'Request a calmer custom skin',
     forge: 'Commission a hotter workspace skin',
     neon: 'Request a city-night custom skin',
@@ -794,7 +844,7 @@ const pageMap: Record<string, Page> = {
   '/codex-skin': { title: 'Codex Skin — Free Workspace Skin Recipes and Previews', description: 'Explore Codex skin ideas with original workspace mockups, free starter recipes, manual install guidance, and custom request options.', h1: 'Codex Skin Ideas for a Real Workspace Look', eyebrow: 'Codex skin landing', body: <KeywordLandingPage keyword="Codex skin" intro="use it to compare original workspace mockups, palette recipes, and safe manual adaptation steps before changing your own Codex setup." bullets={['Original preview first: each featured skin is shown as a large CSS/SVG workspace mock rather than a vague color preset.', 'Manual and safe: recipes are text guidance you can inspect, adapt, test, and roll back without hidden installers.', 'Free or custom path: start with a free recipe or request a custom direction when your workspace needs a specific moodboard.']} />, schema: [buildCollectionPageSchema('/codex-skin', 'Codex Skin Ideas', 'Original Codex skin previews, recipes, and safe manual adaptation guidance.')] },
   '/free-codex-skins': { title: 'Free Codex Skins — Download Reviewable Skin Recipes', description: 'Browse free Codex skins with IP-safe visual concepts, palette strips, reviewable recipes, and install safety notes.', h1: 'Free Codex Skins You Can Review Before Applying', eyebrow: 'Free skin library', body: <KeywordLandingPage keyword="Free Codex skins" intro="this page gathers the fastest route to IP-safe previews, downloadable text recipes, and safety notes for builders who want a better-looking workspace without guessing." bullets={['No fake downloads: free recipes are readable text starters, not opaque installers or bundled third-party artwork.', 'Template library: compare Rain Neon, Ember Forge, Aurora Glass, Blueprint, Rose Orbit, and Cozy Bug Café from one indexable entry.', 'Install with rollback: follow the backup-first workflow before applying any palette or interface changes manually.']} />, schema: [buildCollectionPageSchema('/free-codex-skins', 'Free Codex Skins', 'A collection of free Codex skin recipes and workspace concept previews.')] },
   '/codex-skin-generator': { title: 'Codex Skin Generator — Moodboard to Custom Skin Direction', description: 'Use the Codex skin generator entry to turn a moodboard into an original custom skin direction or start from free templates.', h1: 'Codex Skin Generator Entry for Moodboard-Based Skins', eyebrow: 'Generator entry', body: <KeywordLandingPage keyword="Codex skin generator" intro="treat it as a request-based generator entry: send mood, colors, and constraints, then review an original skin direction instead of trusting an instant black-box upload." bullets={['Moodboard to direction: translate colors, atmosphere, and constraints into an original Codex workspace concept.', 'Request-based v0: no fake instant generator claim; custom scope, delivery path, and price are confirmed before work starts.', 'Start free first: use the gallery to learn which visual lane fits before asking for a personalized Codex skin.']} />, schema: [buildCollectionPageSchema('/codex-skin-generator', 'Codex Skin Generator', 'A request-based Codex skin generator entry for moodboard-driven custom skin directions.')] },
-  '/templates': { title: 'Browse Free Codex Skin Concepts — Codex Skin Studio', description: 'Browse nine original Codex workspace skin concept cards including Glasshouse Sprint Lab, Ink Mountain Scholar, Rainstreet Neon Ritual, Rose Orbit Observatory, and more.', h1: 'Browse Free Codex Skin Concepts', eyebrow: 'Template studio', body: <TemplatesPage /> },
+  '/templates': { title: 'Browse Free Codex Skin Concepts — Codex Skin Studio', description: 'Browse original Codex workspace skin concept cards including Moonlit Magic Workspace, Forge Alchemy Console, Neon Rain Workspace, Glasshouse Sprint Lab, Ink Mountain Scholar, and more.', h1: 'Browse Free Codex Skin Concepts', eyebrow: 'Template studio', body: <TemplatesPage /> },
   '/custom-codex-skin': { title: 'Request a Custom Codex Skin — Codex Skin Studio', description: 'Join the custom Codex skin request list for premium personal, image-based, brand, or team skin customization.', h1: 'Request a Custom Codex Skin', eyebrow: 'Studio order', body: <CustomRequestPage /> },
   '/how-it-works': { title: 'How Codex Skin Customization Works — Templates, Recipes, Requests', description: 'Learn how Codex Skin Studio works: choose a free template, preview the mood, download a starter recipe, adapt manually, or request custom work.', h1: 'How Codex Skin Customization Works', eyebrow: 'Workflow', body: <HowItWorks /> },
   '/safety': { title: 'Codex Skin Safety — Reviewable Recipes, Manual Adaptation, Privacy', description: 'Safety and privacy boundaries for Codex skin templates, manual adaptation, custom skin requests, and independent compatibility disclaimers.', h1: 'Codex Skin Safety', eyebrow: 'Safety boundary', body: <Safety /> },
@@ -818,7 +868,7 @@ function App() {
   const path = window.location.pathname.replace(/\/$/, '') || '/'
   const page = pageMap[path]
   if (path === '/') {
-    setMeta('CodexSkin.fun — Free Codex Skins That Look Like Real Workspaces', 'Browse free IP-safe Codex skins, preview original workspace mockups, download reviewable recipes, or request a custom skin direction.', { schema: [buildWebSiteSchema(), buildSoftwareApplicationSchema()] })
+    setMeta('CodexSkin.fun — Moonlit Magic Codex PC Workspace Skin Preview', 'Preview Moonlit Magic, Forge Alchemy, and Neon Rain Codex PC workspace skins with real DOM UI layers, reviewable recipes, and custom skin request options.', { schema: [buildWebSiteSchema(), buildSoftwareApplicationSchema()] })
     return <><Nav /><main><HomeBody /></main><Footer /></>
   }
   if (!page) {
