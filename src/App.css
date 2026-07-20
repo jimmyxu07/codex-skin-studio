@@ -402,6 +402,12 @@ p { line-height: 1.68; }
 .value-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
 .value-card, .legal-copy, .adapt-steps, .concept-statement, .palette-board, .recipe-board, .ui-states { padding: 1.25rem; }
 .adapt-steps ol { display: grid; gap: .7rem; padding-left: 1.2rem; line-height: 1.65; color: var(--muted); }
+.theme-kit-workflow { padding: 1.25rem; }
+.theme-kit-workflow h2 { margin-bottom: .65rem; }
+.theme-kit-workflow .kit-step-list { display: grid; gap: .8rem; padding-left: 1.2rem; line-height: 1.65; color: var(--muted); margin: .9rem 0; }
+.theme-kit-workflow .kit-step-list li strong { display: block; color: var(--primary); font-weight: 900; margin-bottom: .15rem; }
+.theme-kit-workflow .kit-step-list li span { color: var(--muted); }
+.theme-kit-workflow .kit-note { margin-top: 1rem; padding: .8rem .9rem; border-radius: 14px; background: rgba(109,69,255,.07); border: 1px solid rgba(109,69,255,.14); color: var(--muted); font-size: .9rem; line-height: 1.6; }
 .detail-work-page { display: grid; gap: 1.15rem; }
 .work-hero { position: relative; display: grid; grid-template-columns: minmax(0, .84fr) minmax(420px, 1.16fr); gap: 1.25rem; align-items: stretch; overflow: hidden; padding: 1rem; border: 1px solid rgba(255,255,255,.82); border-radius: 30px; box-shadow: var(--shadow-soft); background: radial-gradient(circle at 85% 18%, rgba(109,69,255,.16), transparent 14rem), rgba(255,255,255,.68); }
 .work-copy { position: relative; z-index: 2; display: grid; align-content: center; padding: clamp(1rem, 3vw, 2rem); }

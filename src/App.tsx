@@ -39,6 +39,12 @@ type Page = {
 
 const siteUrl = 'https://codexskin.fun'
 const contactEmail = 'hongkai.xb@gmail.com'
+// Path to the real, verified macOS helper theme kit (moonlit only).
+// Other skins remain text-recipe-only until their own kit is built and verified.
+const moonlitKitHref = '/codexskin-macos-helper-moonlit-v0.zip'
+const moonlitKitDownloadName = 'codexskin-macos-helper-moonlit-v0.zip'
+// A skin slug → boolean: only slugs in this set ship a real download kit.
+const skinSlugWithKit: ReadonlySet<string> = new Set(['moonlit-magic-workspace'])
 const disclaimer =
   'Codex Skin Studio is an independent Codex skin customization resource. It is not affiliated with, endorsed by, or sponsored by OpenAI, Codex, or any official product team. Templates are starter recipes to review and adapt manually; compatibility can vary by environment.'
 
@@ -347,6 +353,11 @@ function recipeDownloadHref(template: Template) {
   return `data:text/plain;charset=utf-8,${encodeURIComponent(`${template.name} Codex skin starter recipe\n\nPalette: ${template.palette.join(', ')}\n\n${template.recipe}\n\nReview and adapt manually. No automatic installer is included.`)}`
 }
 
+// Whether a skin ships a real downloadable macOS theme kit (vs text recipe only).
+function hasMacOsKit(slug: string) {
+  return skinSlugWithKit.has(slug)
+}
+
 function MockLines({ count = 4 }: { count?: number }) {
   return <>{Array.from({ length: count }, (_, index) => <span key={index} className={`mock-line mock-line--${index + 1}`}></span>)}</>
 }
@@ -456,7 +467,9 @@ function HeroSkinStoreCard({ template }: { template: Template }) {
         <p>{template.tagline}</p>
         <div className="hero-card-actions">
           <StudioButton href={`/templates/${template.slug}`}>Preview Free</StudioButton>
-          <StudioButton href={recipeDownloadHref(template)} variant="secondary" download={`${template.slug}-starter-recipe.txt`}>Copy Recipe</StudioButton>
+          {hasMacOsKit(template.slug)
+            ? <StudioButton href={moonlitKitHref} variant="secondary" download={moonlitKitDownloadName}>Download macOS Theme Kit</StudioButton>
+            : <StudioButton href={recipeDownloadHref(template)} variant="secondary" download={`${template.slug}-starter-recipe.txt`}>Copy Recipe</StudioButton>}
         </div>
       </div>
     </article>
@@ -491,7 +504,9 @@ function SkinGalleryCard({ template, featured = false }: { template: Template; f
         <div className="palette-strip" aria-label={`${template.name} palette`}>{template.palette.map((color) => <span key={color} style={{ '--swatch': color } as CSSProperties & Record<string, string>}></span>)}</div>
         <div className="card-actions">
           <StudioButton href={`/templates/${template.slug}`}>Preview Skin</StudioButton>
-          <StudioButton href={recipeDownloadHref(template)} variant="secondary" download={`${template.slug}-starter-recipe.txt`}>Recipe TXT</StudioButton>
+          {hasMacOsKit(template.slug)
+            ? <StudioButton href={moonlitKitHref} variant="secondary" download={moonlitKitDownloadName}>Download macOS Theme Kit</StudioButton>
+            : <StudioButton href={recipeDownloadHref(template)} variant="secondary" download={`${template.slug}-starter-recipe.txt`}>Recipe TXT</StudioButton>}
         </div>
       </div>
     </article>
@@ -614,7 +629,7 @@ function HomeBody() {
           <div className="home-category-chips" aria-label="Skin categories">{heroCategoryChips.map((chip) => <a key={chip} href={chip === 'Custom' ? '/custom-codex-skin' : '/templates'}>{chip}</a>)}</div>
           <div className="cta-row">
             <StudioButton href="/templates">Preview Free</StudioButton>
-            <StudioButton href={recipeDownloadHref(heroStoreSkins[0])} variant="secondary" download={`${heroStoreSkins[0].slug}-starter-recipe.txt`}>Copy Moonlit Recipe</StudioButton>
+            <StudioButton href={moonlitKitHref} variant="secondary" download={moonlitKitDownloadName}>Download macOS Theme Kit</StudioButton>
             <StudioButton href="/custom-codex-skin" variant="secondary">Request Custom Skin</StudioButton>
           </div>
           <TrustBadges />
@@ -727,6 +742,29 @@ function UIStatesMock({ template }: { template: Template }) {
   return <section className="ui-states studio-card"><p className="eyebrow">UI States Mock</p><div className="state-grid">{['Active tab', 'Prompt focus', 'Diff line', 'Command tag'].map((state) => <div key={state} style={{ '--accent': template.accent } as CSSProperties & Record<string, string>}><span>{state}</span><b></b><i></i></div>)}</div></section>
 }
 
+// macOS theme kit install workflow: mirrors the four real helper steps
+// (install → apply → verify → restore) so users know exactly what they get.
+function ThemeKitWorkflow({ template }: { template: Template }) {
+  if (!hasMacOsKit(template.slug)) return null
+  const steps = [
+    ['1. Download & Install', 'Double-click "Install CodexSkin.command". It copies the theme kit to ~/.codex/codexskin-macos-helper, validates the Codex desktop signature (bundle id com.openai.codex, Team ID 2DC432GLL2), and creates Desktop launchers. No app bundle is modified.'],
+    ['2. Apply the theme', 'Run "Apply CodexSkin.command". It launches Codex Desktop with a loopback-only CDP port (127.0.0.1) and injects the CSS/DOM theme into the live renderer. Nothing touches the on-disk application.'],
+    ['3. Verify', 'Run "Verify CodexSkin.command" to confirm the theme marker is present in the renderer and optionally capture a screenshot for your own records.'],
+    ['4. Restore', 'Run "Restore CodexSkin.command" to remove the injected theme and clear helper state. Fully reversible — your Codex Desktop returns to its original appearance.'],
+  ]
+  return (
+    <section className="theme-kit-workflow studio-card">
+      <p className="eyebrow">macOS Theme Kit · Install / Apply / Verify / Restore</p>
+      <h2>What the downloaded kit actually does</h2>
+      <p className="page-lede">This is a local-only helper that customizes the live Codex Desktop renderer on your own Mac. It is unofficial, not affiliated with OpenAI, and does not modify the Codex app bundle. Run it on a machine you control after reviewing the source.</p>
+      <ol className="kit-step-list">
+        {steps.map(([title, body]) => <li key={title}><strong>{title}</strong><span>{body}</span></li>)}
+      </ol>
+      <p className="kit-note">Compatibility verified on Codex Desktop 26.715.52143 (shipped as ChatGPT.app, bundle id com.openai.codex) on macOS. Requires the official Codex desktop app to be installed. The bundled background image is an original Google Stitch generation, not third-party artwork. See NOTICE.md inside the kit for full provenance and security notes.</p>
+    </section>
+  )
+}
+
 function ConceptStatement({ template }: { template: Template }) {
   const statements: Record<Variant, string> = {
     moonlit: 'For builders who want a cinematic PC workspace without losing structure: a moonlit atmosphere frames real Codex-style panels, task cards, a right AI/code panel, and a warm composer.',
@@ -772,7 +810,12 @@ function VariantTemplateDetail({ template }: { template: Template }) {
           <h2>{template.name}</h2>
           <p>{template.conceptHook}</p>
           <MetadataPanel template={template} />
-          <div className="cta-row"><StudioButton href={recipeDownloadHref(template)} download={`${template.slug}-starter-recipe.txt`}>Use This Skin Recipe</StudioButton><StudioButton href="/custom-codex-skin" variant="secondary">{ctaByVariant[template.variant]}</StudioButton></div>
+          <div className="cta-row">
+            {hasMacOsKit(template.slug)
+              ? <StudioButton href={moonlitKitHref} download={moonlitKitDownloadName}>Download macOS Theme Kit</StudioButton>
+              : <StudioButton href={recipeDownloadHref(template)} download={`${template.slug}-starter-recipe.txt`}>Use This Skin Recipe</StudioButton>}
+            <StudioButton href="/custom-codex-skin" variant="secondary">{ctaByVariant[template.variant]}</StudioButton>
+          </div>
         </div>
         <div className="concept-shot"><CodexWorkspaceMock template={template} size="detail" /></div>
       </section>
@@ -780,6 +823,7 @@ function VariantTemplateDetail({ template }: { template: Template }) {
       <PaletteBoard template={template} />
       <RecipeVisualization template={template} />
       <UIStatesMock template={template} />
+      <ThemeKitWorkflow template={template} />
       <CustomCta />
     </div>
   )
