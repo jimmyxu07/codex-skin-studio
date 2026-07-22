@@ -1,926 +1,369 @@
-import { useState, type CSSProperties, type ReactElement } from 'react'
+import { useMemo, useState, type CSSProperties, type ChangeEvent } from 'react'
 import './App.css'
-import moonlitMagicWorkspace from './assets/pc-skins/moonlit-magic-workspace.jpg'
-import forgeAlchemyConsole from './assets/pc-skins/forge-alchemy-console.jpg'
-import neonRainWorkspace from './assets/pc-skins/neon-rain-workspace.jpg'
+import idolPreview from '../design-xiu-themed-v1/idol-stage-skin/marketplace-preview.png'
+import idolBackground from '../design-xiu-themed-v1/idol-stage-skin/live-background.png'
+import animePreview from '../design-xiu-themed-v1/anime-hero-desk/marketplace-preview.png'
+import animeBackground from '../design-xiu-themed-v1/anime-hero-desk/live-background.png'
+import footballPreview from '../design-xiu-themed-v1/football-nation-arena/marketplace-preview.png'
+import footballBackground from '../design-xiu-themed-v1/football-nation-arena/live-background.png'
 
-type Variant = 'moonlit' | 'ink' | 'forge' | 'neon' | 'rose' | 'blueprint' | 'glasshouse' | 'gold' | 'pixel' | 'sonar'
-
-type Template = {
+type Skin = {
   slug: string
   name: string
-  tagline: string
-  description: string
-  mood: string[]
-  bestFor: string
+  category: string
+  hook: string
   palette: string[]
-  recipe: string
   accent: string
-  variant: Variant
-  studioId: string
-  category: 'Featured Concepts' | 'Focus Worlds' | 'High-Energy Systems' | 'Creative Workspaces' | 'Light / Paper' | 'Dark / Terminal'
-  conceptHook: string
-  prompt: string
-  recipeTitle: string
-  cta: string
-  imageUrl?: string
+  accentAlt: string
+  background: string
+  preview?: string
+  status: string
+  rightZone: string
+  rightsNote: string
 }
 
-type TemplateFilter = 'All' | Template['category']
-
-type Page = {
-  title: string
-  description: string
-  h1: string
-  eyebrow?: string
-  body: ReactElement
-  schema?: Record<string, unknown>[]
+type BuilderState = {
+  preset: string
+  localImage: string
+  localImageName: string
+  localImageType: string
+  focusX: number
+  focusY: number
+  cropZoom: number
+  dimming: number
+  blur: number
+  panelOpacity: number
+  readability: 'balanced' | 'strong' | 'soft'
+  accent: string
+  accentAlt: string
+  surface: 'home' | 'task' | 'diff' | 'composer'
+  rightsConfirmed: boolean
 }
 
-const siteUrl = 'https://codexskin.fun'
 const contactEmail = 'hongkai.xb@gmail.com'
-// Path to the real, verified macOS helper theme kit (moonlit only).
-// Other skins remain text-recipe-only until their own kit is built and verified.
-const moonlitKitHref = '/codexskin-macos-helper-moonlit-v0.zip'
-const moonlitKitDownloadName = 'codexskin-macos-helper-moonlit-v0.zip'
-// A skin slug → boolean: only slugs in this set ship a real download kit.
-const skinSlugWithKit: ReadonlySet<string> = new Set(['moonlit-magic-workspace'])
-const disclaimer =
-  'Codex Skin Studio is an independent Codex skin customization resource. It is not affiliated with, endorsed by, or sponsored by OpenAI, Codex, or any official product team. Templates are starter recipes to review and adapt manually; compatibility can vary by environment.'
+const disclaimer = 'CodexSkin.fun is an independent customization tool and is not affiliated with, endorsed by, or sponsored by OpenAI, Codex, any sports league, tournament organizer, team, celebrity, anime/game studio, or brand. Public templates use original, genre-inspired artwork only. All trademarks, names, and logos belong to their respective owners.'
 
-const templates: Template[] = [
+const skins: Skin[] = [
   {
-    slug: 'moonlit-magic-workspace',
-    name: 'Moonlit Magic Workspace',
-    tagline: 'Moonlit purple-blue Codex PC workspace with spell cards, amber composer, and calm magic-desk atmosphere',
-    description: 'A moonlit Codex PC workspace skin preview with a real macOS chrome, sidebar, four task cards, right AI panel, and bottom composer layered over a magic desk atmosphere.',
-    conceptHook: 'A wide moonlit workshop scene, cool violet glass, four floating task cards, a right AI/code panel, and a warm generate composer make the workspace feel like a magical desktop skin rather than a color preset.',
-    mood: ['Moonlit Focus', 'Magic Desk', 'Violet Glass', 'Warm Composer'],
-    bestFor: 'builders who want a cinematic but readable PC workspace skin for planning, coding, and prompt sessions',
-    palette: ['#0E1028', '#2C214B', '#7C6CF2', '#A7D8FF', '#F6B45C'],
-    recipe: 'Start with a deep indigo shell, purple glass panels, moon-blue ambient glow, translucent task cards, and amber composer/send focus. Keep UI labels as real DOM text and use the Stitch image only as atmosphere or preview reference.',
-    accent: '#F6B45C',
-    variant: 'moonlit',
-    studioId: 'PC-MOON-001',
-    category: 'Featured Concepts',
-    prompt: 'generate moonlit workspace plan',
-    recipeTitle: 'MoonlitWorkspaceTokens',
-    cta: 'Download Moonlit Recipe',
-    imageUrl: moonlitMagicWorkspace,
+    slug: 'idol-stage',
+    name: 'Idol Stage Skin',
+    category: 'Idol Stage Originals',
+    hook: 'Turn Codex into a concert-stage workspace around an original cyber idol vibe.',
+    palette: ['#FFF5FB', '#F8E8F3', '#251326', '#E83E8C', '#7C3AED'],
+    accent: '#E83E8C',
+    accentAlt: '#7C3AED',
+    background: idolBackground,
+    preview: idolPreview,
+    status: 'USABILITY_MOCK_PASS · OWNER_REVIEW_INPUT',
+    rightZone: 'Right 42% original faceless cyber-idol silhouette, light sticks, fan-card shapes — no celebrity likeness.',
+    rightsNote: 'Original genre-inspired design; no real celebrity, agency logo, idol group, or brand assets.',
   },
   {
-    slug: 'ink-mountain-scholar',
-    name: 'Ink Mountain Scholar',
-    tagline: 'Water-ink scholar desk with mountains, fog, scroll, and a bold red seal',
-    description: 'A quiet water-ink Codex workspace where ink mountains, drifting fog, rice-paper scrolls, and a large red seal dominate the visual field.',
-    conceptHook: 'Ink mountains, wide mist bands, a rice-paper scroll, and a bold red seal take over the mock so the modern editor recedes into a scholar-desk atmosphere.',
-    mood: ['Quiet Focus', 'Paper Workspace', 'Ink System', 'Long Sessions'],
-    bestFor: 'long writing-and-coding sessions, quiet planning, documentation-heavy builds',
-    palette: ['#101418', '#123C3D', '#E8E1CF', '#BCE8D8', '#D94A32'],
-    recipe: 'Layer an ink-black base with deep pine teal panels, rice-paper surfaces, overlapping mist belts, a square red studio seal, and pale jade active accents. Keep every mark abstract and CSS/SVG generated.',
-    accent: '#BCE8D8',
-    variant: 'ink',
-    studioId: 'CSS-INK-001',
-    category: 'Featured Concepts',
-    prompt: 'draft calm refactor plan',
-    recipeTitle: 'InkLayerRecipe',
-    cta: 'Download Quiet Scholar Recipe',
+    slug: 'anime-hero-desk',
+    name: 'Anime Hero Desk',
+    category: 'Anime-style Originals',
+    hook: 'Anime-style coding desk with heroic protagonist energy, built from an original character world.',
+    palette: ['#F4FBFF', '#E3F1FA', '#102033', '#0EA5E9', '#F97316'],
+    accent: '#0EA5E9',
+    accentAlt: '#F97316',
+    background: animeBackground,
+    preview: animePreview,
+    status: 'USABILITY_MOCK_PASS · OWNER_REVIEW_INPUT',
+    rightZone: 'Original heroic coder silhouette, training cards, and dawn cyber-city mood — no known character or franchise costume.',
+    rightsNote: 'Original anime-style template; no recognizable anime/game characters, copied costumes, logos, or franchise text.',
   },
   {
-    slug: 'forge-core-alchemist',
-    name: 'Forge Alchemy Console',
-    tagline: 'Molten bronze Codex PC console with alchemy cards, right AI chat, and anvil-bright composer',
-    description: 'A molten forge-alchemy Codex workspace with cast-iron panels, amber outlines, alchemy task cards, right AI chat, and a bottom command composer.',
-    conceptHook: 'Charcoal glass, bright amber outlines, forge sparks, alchemy cards, a right AI chat panel, and a heavy bottom composer make the workspace feel like a premium debug forge.',
-    mood: ['High Energy', 'Debug Mode', 'Forge UI', 'Terminal Heavy'],
-    bestFor: 'terminal-heavy workflows, launch crunch, high-energy debugging sessions',
-    palette: ['#16110F', '#3B2118', '#D6401F', '#FFB13B', '#8A5A32'],
-    recipe: 'Use charcoal and cast-iron foundations, ember-red command accents, molten-gold focus lines, bronze geometry gauges, and low-opacity heat rings. Decorative particles stay abstract and brand-neutral.',
-    accent: '#FFB13B',
-    variant: 'forge',
-    studioId: 'CSS-FRG-002',
-    category: 'Featured Concepts',
-    prompt: 'stabilize hot path trace',
-    recipeTitle: 'ForgeRecipeGauge',
-    cta: 'Download Forge Recipe',
-    imageUrl: forgeAlchemyConsole,
+    slug: 'football-nation-arena',
+    name: 'Football Nation Arena',
+    category: 'Football Arena Vibes',
+    hook: 'A national-team inspired football arena skin for tournament season without real flags, crests, players, or FIFA marks.',
+    palette: ['#F6FFF8', '#E4F4E9', '#102418', '#16A34A', '#F59E0B'],
+    accent: '#16A34A',
+    accentAlt: '#F59E0B',
+    background: footballBackground,
+    preview: footballPreview,
+    status: 'USABILITY_MOCK_PASS · OWNER_REVIEW_INPUT',
+    rightZone: 'Generic arena floodlights, abstract jersey ribbons, pitch-line geometry, scoreboard-like blocks — no flags, crests, or players.',
+    rightsNote: 'Original sports-arena mood; no team crests, tournament marks, player likenesses, flags, sponsors, or official typography.',
   },
   {
-    slug: 'rainstreet-neon-ritual',
-    name: 'Neon Rain Workspace',
-    tagline: 'Rain-lit cyan-magenta Codex PC workspace with grid board, right AI chat, and glowing composer',
-    description: 'A cinematic neon-rain Codex workspace with cyan focus, magenta glass, four task cards, right AI chat, and screenshot-style depth.',
-    conceptHook: 'Night rain, cyan-violet reflections, grid glass, four task cards, right AI chat, and a glowing prompt bar create a shareable Codex PC workspace preview.',
-    mood: ['Night Coding', 'Neon City', 'Rain Lines', 'High Contrast'],
-    bestFor: 'night coding, creative tools, energetic personal setups',
-    palette: ['#080B12', '#2C3A4A', '#16D9E3', '#D946EF', '#F6C85F'],
-    recipe: 'Build from night-asphalt surfaces, cyan-magenta focus rings, amber abstract geometry, rainy blue-gray panels, and off-white glow text. Keep all signs unreadable, geometric, and IP-safe.',
-    accent: '#16D9E3',
-    variant: 'neon',
-    studioId: 'CSS-NEO-003',
-    category: 'Featured Concepts',
-    prompt: 'ship night build ritual',
-    recipeTitle: 'NeonCircuitRecipe',
-    cta: 'Download Neon Ritual Recipe',
-    imageUrl: neonRainWorkspace,
+    slug: 'basketball-court-lights',
+    name: 'Basketball Court Lights',
+    category: 'Basketball Court Lights',
+    hook: 'Warm court-light energy, tactical cards, and a late-game command desk without league, team, or player marks.',
+    palette: ['#FFF7ED', '#FDEBD1', '#20120A', '#EA580C', '#7C2D12'],
+    accent: '#EA580C',
+    accentAlt: '#7C2D12',
+    background: 'linear-gradient(135deg, #fff7ed, #fdebd1 45%, #ffedd5)',
+    status: 'MVP_PROCEDURAL_TEMPLATE',
+    rightZone: 'Abstract hardwood arcs, spotlights, scoreboard blocks, and net-like geometry only.',
+    rightsNote: 'No NBA, team logo, player likeness, sponsor, or league asset.',
   },
   {
-    slug: 'rose-orbit-observatory',
-    name: 'Rose Orbit Studio',
-    tagline: 'Soft Codex planning studio with orbit lines and task nodes',
-    description: 'A rose-violet Codex studio for planning, writing, and creative builds with orbit paths and pearl panels.',
-    conceptHook: 'Rose light, violet orbital paths, pearl task cards, and small node highlights make planning feel cinematic and memorable.',
-    mood: ['Planning', 'Soft Focus', 'Orbit Map', 'Creator Desk'],
-    bestFor: 'personal workspaces, creator portfolios, late-night planning sessions',
-    palette: ['#2A1023', '#FFF1F7', '#F8B4D9', '#C084FC', '#FDE68A'],
-    recipe: 'Use a deep plum shell, pearl planning cards, rose panels, violet orbit strokes, and small star-note highlights. Treat tasks as abstract nodes, not real constellation symbols.',
-    accent: '#F8B4D9',
-    variant: 'rose',
-    studioId: 'CSS-OBS-004',
-    category: 'Creative Workspaces',
-    prompt: 'map next sprint',
-    recipeTitle: 'OrbitPlanningMap',
-    cta: 'Download Orbit Recipe',
+    slug: 'mecha-command-bay',
+    name: 'Mecha Command Bay',
+    category: 'Mecha Command Originals',
+    hook: 'A cockpit-like coding workspace with original robot silhouettes, warning rails, and modular command cards.',
+    palette: ['#F7F9FC', '#E4ECF7', '#111827', '#2563EB', '#F59E0B'],
+    accent: '#2563EB',
+    accentAlt: '#F59E0B',
+    background: 'linear-gradient(135deg, #f7f9fc, #e4ecf7 46%, #dbeafe)',
+    status: 'MVP_PROCEDURAL_TEMPLATE',
+    rightZone: 'Original cockpit HUD shapes and robot silhouettes; no recognizable franchise mecha design.',
+    rightsNote: 'No Gundam/EVA/Transformers-like silhouettes, marks, names, or color layouts.',
   },
   {
-    slug: 'midnight-blueprint-room',
-    name: 'Blueprint Debugger',
-    tagline: 'Low-glare engineering blueprint Codex desk for deep reviews',
-    description: 'A deep-blue blueprint debugger skin shaped by grid lines, diff modules, measurements, and calm focus states.',
-    conceptHook: 'Deep blue schematics, measurement ticks, diff panels, and architecture insets make the workspace read as an engineering debugger screenshot.',
-    mood: ['Deep Work', 'Blueprint', 'Architecture', 'Low Glare'],
-    bestFor: 'long coding sessions, review loops, architecture planning, low-distraction workspaces',
-    palette: ['#07111F', '#111827', '#1E3A8A', '#60A5FA', '#C7D2FE'],
-    recipe: 'Combine a midnight base with slate panels, blueprint grids, electric-blue focus lines, measurement markers, and pale readable text. Keep schematics abstract.',
-    accent: '#60A5FA',
-    variant: 'blueprint',
-    studioId: 'CSS-BLU-005',
-    category: 'Focus Worlds',
-    prompt: 'review system boundary',
-    recipeTitle: 'BlueprintTokenSpec',
-    cta: 'Download Blueprint Recipe',
-  },
-  {
-    slug: 'glasshouse-sprint-lab',
-    name: 'Aurora Glass Lab',
-    tagline: 'Aurora-lit glass Codex lab with translucent panels and ice-blue focus',
-    description: 'A bright aurora glass lab skin where frosted layers, ice-blue rails, and soft green highlights make light mode feel premium.',
-    conceptHook: 'Frosted glass panes, aurora gradients, clean blue rails, and translucent sprint panels create a premium light workspace rather than a plain white preset.',
-    mood: ['Sprint Board', 'Clean UI', 'Glasshouse', 'Light Mode'],
-    bestFor: 'sprint planning, light-mode workdays, product demos, small team rituals',
-    palette: ['#F8FAFC', '#DFF7EA', '#38BDF8', '#34D399', '#0F172A'],
-    recipe: 'Use frosted white panels, pale mint atmosphere, clean blue lab controls, growth-mint success states, high-contrast ink text, greenhouse roof ribs, light streaks, and CSS-only sprint gauges instead of any third-party imagery.',
-    accent: '#34D399',
-    variant: 'glasshouse',
-    studioId: 'CSS-GLH-006',
-    category: 'Light / Paper',
-    prompt: 'grow feature branch',
-    recipeTitle: 'GrowthMeterRecipe',
-    cta: 'Download Lab Recipe',
-  },
-  {
-    slug: 'blackbox-gold-premiere',
-    name: 'Blackbox Gold Premiere',
-    tagline: 'Dramatic black-and-gold console for launch demos',
-    description: 'A dramatic black-and-gold Codex skin for launch demos and showcase sessions.',
-    conceptHook: 'A hard-shell black stage case frames demo script, terminal proof, cue strips, and a gold live-demo sticker.',
-    mood: ['Showcase', 'Demo Mode', 'Black Gold', 'Launch'],
-    bestFor: 'presentation machines, launch demos, premium showcase sessions',
-    palette: ['#050505', '#1F2937', '#F59E0B', '#FDE68A', '#E5E7EB'],
-    recipe: 'Keep surfaces matte black or charcoal, reserve gold for cue lines and active states, add soft spotlight gradients, and keep warning/error colors distinct from the gold system.',
-    accent: '#F59E0B',
-    variant: 'gold',
-    studioId: 'CSS-PRM-007',
-    category: 'High-Energy Systems',
-    prompt: 'rehearse launch proof',
-    recipeTitle: 'PremiereCueSheet',
-    cta: 'Download Premiere Recipe',
-  },
-  {
-    slug: 'pixel-bento-arcade',
-    name: 'Cozy Bug Café',
-    tagline: 'Warm café Codex skin with soft notes and an original abstract bug mascot',
-    description: 'A cozy café workspace skin with warm panels, note cards, soft amber light, and a tiny abstract bug helper mark.',
-    conceptHook: 'Coffee warmth, sticky-note panels, soft amber gradients, and an original abstract bug mascot give the workspace a friendly cover-level identity.',
-    mood: ['Creative Coding', 'Pixel Grid', 'Playful', 'Bento Layout'],
-    bestFor: 'creative coding, personal projects, community demos, playful prototypes',
-    palette: ['#111827', '#FB7185', '#22D3EE', '#FACC15', '#A78BFA'],
-    recipe: 'Use a dark canvas with coral, cyan, yellow, and violet tiles, stepped corners, abstract square ornaments, and high-contrast command bars. Avoid characters, devices, or recognizable game references.',
-    accent: '#FB7185',
-    variant: 'pixel',
-    studioId: 'CSS-PXL-008',
-    category: 'Creative Workspaces',
-    prompt: 'compose playful prototype',
-    recipeTitle: 'PixelTileRecipe',
-    cta: 'Download Bento Recipe',
-  },
-  {
-    slug: 'deepsea-sonar-console',
-    name: 'Deepsea Sonar Console',
-    tagline: 'Quiet diagnostic workspace with sonar rings and waveforms',
-    description: 'A quiet diagnostic workspace with sonar rings, waveforms, and deep-sea contrast.',
-    conceptHook: 'Deep navy panels, cyan pressure glow, signal waveforms, and sonar rings make failure tracing feel calm.',
-    mood: ['Diagnostics', 'Sonar UI', 'Calm Tech', 'Signal Trace'],
-    bestFor: 'diagnostics, log scanning, quiet bug hunts, production incident reviews',
-    palette: ['#030B16', '#0B2545', '#0E7490', '#67E8F9', '#D9F99D'],
-    recipe: 'Use abyss backgrounds, deep navy panels, sonar teal structures, cyan pulse states, signal-lime trace markers, and abstract wave lines only. Do not use submarines, animals, or military symbols.',
-    accent: '#67E8F9',
-    variant: 'sonar',
-    studioId: 'CSS-SON-009',
-    category: 'Dark / Terminal',
-    prompt: 'trace quiet failure',
-    recipeTitle: 'SonarSignalStack',
-    cta: 'Download Sonar Recipe',
+    slug: 'fantasy-guild-desk',
+    name: 'Fantasy Guild Desk',
+    category: 'Fantasy Guild Desk',
+    hook: 'A magical guild coding desk with parchment cards, soft particles, and an original crest-like abstract mark.',
+    palette: ['#FFFBEB', '#FDECC8', '#261A0C', '#B45309', '#6D28D9'],
+    accent: '#B45309',
+    accentAlt: '#6D28D9',
+    background: 'linear-gradient(135deg, #fffbeb, #fdecc8 48%, #efe2ff)',
+    status: 'MVP_PROCEDURAL_TEMPLATE',
+    rightZone: 'Original guild desk atmosphere, books, particles, abstract crest geometry only.',
+    rightsNote: 'No known fantasy franchise symbols, school crests, spells, or creature designs.',
   },
 ]
 
-const heroStoreSkins = ['moonlit-magic-workspace', 'forge-core-alchemist', 'rainstreet-neon-ritual']
-  .map((slug) => templates.find((template) => template.slug === slug))
-  .filter((template): template is Template => Boolean(template))
-const heroCategoryChips = ['Moonlit', 'Forge', 'Neon', 'Free skins', 'Custom']
-
-const featuredStudioSkins = ['moonlit-magic-workspace', 'forge-core-alchemist', 'rainstreet-neon-ritual']
-  .map((slug) => templates.find((template) => template.slug === slug))
-  .filter((template): template is Template => Boolean(template))
-const templateFilters: TemplateFilter[] = ['All', 'Featured Concepts', 'Focus Worlds', 'High-Energy Systems', 'Creative Workspaces', 'Light / Paper', 'Dark / Terminal']
-
-const footerLinks = [
+const navLinks = [
   ['/', 'Home'],
-  ['/templates', 'Free Skins'],
-  ['/custom-codex-skin', 'Custom Skin'],
-  ['/how-it-works', 'How it works'],
-  ['/safety', 'Safety'],
-  ['/#install-guide', 'Install Guide'],
-  ['/privacy', 'Privacy'],
-  ['/terms', 'Terms'],
+  ['/builder', 'Builder'],
+  ['/skins', 'Skins'],
+  ['/docs/install', 'Install'],
+  ['/security', 'Security'],
 ] as const
 
-function buildWebSiteSchema() {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'CodexSkin.fun',
-    url: siteUrl,
-    description: 'Free and custom Codex skin concepts with IP-safe workspace mockups, reviewable recipes, and manual install guidance.',
-    inLanguage: 'en',
-  }
-}
-
-function buildSoftwareApplicationSchema() {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name: 'Codex Skin Studio',
-    applicationCategory: 'DeveloperApplication',
-    operatingSystem: 'Desktop',
-    url: siteUrl,
-    description: 'A static Codex skin concept library for browsing free skin recipes and requesting custom workspace skin directions.',
-  }
-}
-
-function buildCollectionPageSchema(path: string, name: string, description: string) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'CollectionPage',
-    name,
-    url: `${siteUrl}${path}`,
-    description,
-    isPartOf: { '@type': 'WebSite', name: 'CodexSkin.fun', url: siteUrl },
-    inLanguage: 'en',
-  }
-}
-
-function setJsonLd(schemas: Record<string, unknown>[] = []) {
-  const scriptId = 'codexskin-jsonld'
-  const existing = document.getElementById(scriptId)
-  if (schemas.length === 0) {
-    existing?.remove()
-    return
-  }
-  const script = existing ?? document.createElement('script')
-  script.id = scriptId
-  script.setAttribute('type', 'application/ld+json')
-  script.textContent = JSON.stringify(schemas.length === 1 ? schemas[0] : schemas)
-  document.head.appendChild(script)
-}
-
-function setMeta(title: string, description: string, options: { noindex?: boolean; schema?: Record<string, unknown>[] } = {}) {
+function setMeta(title: string, description: string) {
   document.title = title
   const meta = document.querySelector('meta[name="description"]') ?? document.createElement('meta')
   meta.setAttribute('name', 'description')
   meta.setAttribute('content', description)
   document.head.appendChild(meta)
+}
 
-  const canonical = document.querySelector('link[rel="canonical"]') ?? document.createElement('link')
-  canonical.setAttribute('rel', 'canonical')
-  canonical.setAttribute('href', `${siteUrl}${window.location.pathname === '/' ? '' : window.location.pathname}`)
-  document.head.appendChild(canonical)
+function downloadBlob(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+  URL.revokeObjectURL(url)
+}
 
-  const robots = document.querySelector('meta[name="robots"]') ?? document.createElement('meta')
-  robots.setAttribute('name', 'robots')
-  if (options.noindex) {
-    robots.setAttribute('content', 'noindex,follow')
-    document.head.appendChild(robots)
-  } else {
-    robots.remove()
+function crc32(data: Uint8Array) {
+  let crc = -1
+  for (let i = 0; i < data.length; i += 1) {
+    crc ^= data[i]
+    for (let j = 0; j < 8; j += 1) crc = (crc >>> 1) ^ (0xedb88320 & -(crc & 1))
   }
+  return (crc ^ -1) >>> 0
+}
 
-  setJsonLd(options.noindex ? [] : options.schema)
+function u16(value: number) { return [value & 255, (value >>> 8) & 255] }
+function u32(value: number) { return [value & 255, (value >>> 8) & 255, (value >>> 16) & 255, (value >>> 24) & 255] }
+function asArrayBuffer(data: Uint8Array): ArrayBuffer {
+  return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength) as ArrayBuffer
+}
+
+function createStoredZip(files: Array<{ name: string; data: Uint8Array }>) {
+  const encoder = new TextEncoder()
+  const chunks: Uint8Array[] = []
+  const central: Uint8Array[] = []
+  let offset = 0
+  for (const file of files) {
+    const name = encoder.encode(file.name)
+    const crc = crc32(file.data)
+    const local = new Uint8Array([...u32(0x04034b50), ...u16(20), ...u16(0), ...u16(0), ...u16(0), ...u16(0), ...u32(crc), ...u32(file.data.length), ...u32(file.data.length), ...u16(name.length), ...u16(0), ...name, ...file.data])
+    chunks.push(local)
+    central.push(new Uint8Array([...u32(0x02014b50), ...u16(20), ...u16(20), ...u16(0), ...u16(0), ...u16(0), ...u16(0), ...u32(crc), ...u32(file.data.length), ...u32(file.data.length), ...u16(name.length), ...u16(0), ...u16(0), ...u16(0), ...u16(0), ...u32(0), ...u32(offset), ...name]))
+    offset += local.length
+  }
+  const centralSize = central.reduce((sum, item) => sum + item.length, 0)
+  const end = new Uint8Array([...u32(0x06054b50), ...u16(0), ...u16(0), ...u16(files.length), ...u16(files.length), ...u32(centralSize), ...u32(offset), ...u16(0)])
+  return new Blob([...chunks, ...central, end].map(asArrayBuffer), { type: 'application/zip' })
+}
+
+async function sha256Text(data: Uint8Array) {
+  const digest = await crypto.subtle.digest('SHA-256', asArrayBuffer(data))
+  return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, '0')).join('')
+}
+
+async function dataFromUrl(url: string) {
+  if (url.startsWith('data:')) return new Uint8Array(await (await fetch(url)).arrayBuffer())
+  if (url.startsWith('linear-gradient')) return new TextEncoder().encode(url)
+  return new Uint8Array(await (await fetch(url)).arrayBuffer())
 }
 
 function Nav() {
+  return <header className="topbar"><a className="brand" href="/"><span className="brand-mark">CS</span><span>CodexSkin.fun</span></a><nav>{navLinks.map(([href, label]) => <a key={href} className={href === '/builder' ? 'nav-cta' : undefined} href={href}>{label}</a>)}</nav></header>
+}
+
+function Button({ href, children, secondary = false, download }: { href: string; children: string; secondary?: boolean; download?: string }) {
+  return <a className={`studio-button ${secondary ? 'studio-button--secondary' : ''}`} href={href} download={download}>{children}</a>
+}
+
+function WorkspacePreview({ skin, size = 'card' }: { skin: Skin; size?: 'hero' | 'card' | 'detail' }) {
+  const style = {
+    '--accent': skin.accent,
+    '--accent-alt': skin.accentAlt,
+    '--skin-bg': skin.preview ? `url(${skin.preview})` : skin.background,
+  } as CSSProperties & Record<string, string>
   return (
-    <header className="topbar">
-      <a className="brand" href="/" aria-label="Codex Skin Studio home">
-        <span className="brand-mark">CS</span>
-        <span>CodexSkin.fun</span>
-      </a>
-      <nav aria-label="Primary navigation">
-        <a href="/templates">Free Skins</a>
-        <a href="/custom-codex-skin">Custom Skin</a>
-        <a href="/#install-guide">Install Guide</a>
-        <a className="nav-cta" href="/templates">Browse</a>
-      </nav>
-    </header>
-  )
-}
-
-function StudioButton({ href, children, variant = 'primary', download }: { href: string; children: ReactElement | string; variant?: 'primary' | 'secondary'; download?: string }) {
-  return <a className={`studio-button studio-button--${variant}`} href={href} download={download}>{children}</a>
-}
-
-function recipeDownloadHref(template: Template) {
-  return `data:text/plain;charset=utf-8,${encodeURIComponent(`${template.name} Codex skin starter recipe\n\nPalette: ${template.palette.join(', ')}\n\n${template.recipe}\n\nReview and adapt manually. No automatic installer is included.`)}`
-}
-
-// Whether a skin ships a real downloadable macOS theme kit (vs text recipe only).
-function hasMacOsKit(slug: string) {
-  return skinSlugWithKit.has(slug)
-}
-
-function MockLines({ count = 4 }: { count?: number }) {
-  return <>{Array.from({ length: count }, (_, index) => <span key={index} className={`mock-line mock-line--${index + 1}`}></span>)}</>
-}
-
-function DefaultWorkspaceInterior({ template }: { template: Template }) {
-  const taskCards = [
-    ['Plan', 'Map workspace tokens', '68%'],
-    ['Build', 'Layer DOM preview', '52%'],
-    ['Review', 'Contrast states', '44%'],
-    ['Ship', 'Copy recipe notes', '76%'],
-  ]
-  const sideItems = ['Files', 'Search', 'Branches', 'Run', 'Extensions']
-  const chatCards = ['Palette check', 'Component pass', 'Readable diff']
-  return (
-    <div className="mock-body mock-body--pc">
-      <aside className="mock-sidebar" aria-label="Workspace sidebar">
-        <b>CS</b>
-        {sideItems.map((item, index) => <span key={item} className={index === 1 ? 'active' : undefined}>{item}</span>)}
-      </aside>
-      <main className="mock-main" aria-label="Codex workspace canvas">
-        <div className="mock-file-tab"><span>{template.name}</span><i></i></div>
-        <section className="task-card-grid" aria-label="Four skin task cards">
-          {taskCards.map(([title, detail, percent], index) => (
-            <article className="skin-task-card" key={title}>
-              <strong>{title}</strong>
-              <span>{detail}</span>
-              <i style={{ '--progress': percent } as CSSProperties & Record<string, string>}></i>
-              <em>{index + 1}</em>
-            </article>
-          ))}
-        </section>
-        <div className="mock-prompt-input"><span>{template.prompt}</span><button type="button">Generate</button></div>
-      </main>
-      <aside className="mock-right-panel" aria-label="AI chat and code panel">
-        <strong>AI chat</strong>
-        {chatCards.map((card) => <section className="mock-chat-card" key={card}><b>{card}</b><MockLines count={3} /></section>)}
-      </aside>
+    <div className={`themed-workspace themed-workspace--${size} ${skin.preview ? 'themed-workspace--image' : ''}`} style={style} aria-label={`${skin.name} Codex-like workspace preview`}>
+      <div className="mock-titlebar"><span className="window-dot"></span><span className="window-dot"></span><span className="window-dot"></span><strong>{skin.name}</strong><em>{skin.category}</em></div>
+      <div className="themed-shell">
+        <aside><b>CS</b><span>Files</span><span className="active">Tasks</span><span>Diff</span><span>Settings</span></aside>
+        <main><div className="mini-tab">DreamSkin package <i></i></div><div className="mini-cards">{['Home', 'Task', 'Diff', 'Composer'].map((item) => <span key={item}>{item}</span>)}</div><div className="mini-composer">review readability and export… <button type="button">Remix</button></div></main>
+      </div>
     </div>
   )
 }
 
-function GlasshouseWorkspaceInterior({ template }: { template: Template }) {
-  return (
-    <div className="glasshouse-lab-interior">
-      <div className="glass-roof" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-      <div className="lab-rail"><strong>GROWTH RAIL</strong><span></span><b>78%</b></div>
-      <main className="sprint-board" aria-label="Three-column sprint lab board">
-        {['Seed', 'Grow', 'Ship'].map((label, index) => (
-          <section key={label} className="sprint-column">
-            <strong>{label}</strong>
-            <span></span><span></span><span></span>
-            {index === 1 ? <em>LAB</em> : null}
-          </section>
-        ))}
-      </main>
-      <div className="growth-meter"><span>{template.prompt}</span><i></i><b></b></div>
-      <div className="greenhouse-silhouette" aria-hidden="true"><i></i><i></i><i></i><i></i><b></b></div>
-    </div>
-  )
+function SkinCard({ skin }: { skin: Skin }) {
+  return <article className="skin-gallery-card studio-card" style={{ '--accent': skin.accent } as CSSProperties & Record<string, string>}><div className="gallery-meta"><span>{skin.category}</span><span>{skin.status}</span></div><WorkspacePreview skin={skin} /><div className="gallery-copy"><h3>{skin.name}</h3><p>{skin.hook}</p><ul className="studio-tags"><li>Readable surfaces</li><li>Data-only package</li><li>Remixable</li></ul><div className="card-actions"><Button href={`/skins/${skin.slug}`}>View full preview</Button><Button href={`/builder?preset=${skin.slug}`} secondary>Remix</Button></div><p className="builder-export-note">{skin.rightsNote}</p></div></article>
 }
 
-function InkWorkspaceInterior({ template }: { template: Template }) {
-  return (
-    <div className="ink-scholar-interior">
-      <div className="scroll-panel"><strong>墨 · SCHOLAR DESK</strong><span>{template.prompt}</span></div>
-      <div className="ink-mist ink-mist--one" aria-hidden="true"></div>
-      <div className="ink-mist ink-mist--two" aria-hidden="true"></div>
-      <div className="ink-mountain ink-mountain--back" aria-hidden="true"></div>
-      <div className="ink-mountain ink-mountain--front" aria-hidden="true"></div>
-      <div className="red-seal" aria-hidden="true"><span>印</span></div>
-      <div className="brush-editor" aria-hidden="true"><i></i><i></i><i></i></div>
-    </div>
-  )
+function Home() {
+  const lead = skins[0]
+  return <main><section className="hero section-pad"><div className="hero-copy"><p className="eyebrow">CODEX DREAM SKIN BUILDER · LOCAL · DATA-ONLY</p><h1>Build your own Codex Dream Skin.</h1><p className="lede">Anime-style, idol-stage, sports-arena, fantasy, esports and personal-photo workspaces — start from original templates or upload images you have rights to use.</p><p className="lede">Preview Home / Task / Diff / Composer surfaces, tune crop, focal point, dimming, blur, panel opacity and accent colors, then export a reviewable `.dreamskin` data package.</p><div className="home-category-chips"><a href="/skins">Anime</a><a href="/skins/idol-stage">Idol</a><a href="/skins/football-nation-arena">Football</a><a href="/builder">Upload your image</a><a href="/security">Data-only safety</a></div><div className="cta-row"><Button href="/builder">Open Builder</Button><Button href="/skins" secondary>Browse Skins</Button><Button href="/docs/install" secondary>Install safely</Button></div><div className="trust-badges"><span>Local image processing</span><span>Data-only package</span><span>Review-first install</span><span>Restore path</span><span>Rights-cleared public templates</span></div></div><div className="hero-preview"><WorkspacePreview skin={lead} size="hero" /></div></section><section className="section-pad"><div className="section-heading"><p className="eyebrow">First templates</p><h2>Original emotional workspace templates</h2><p>Public templates are genre-inspired and IP-safe: no real celebrities, characters, teams, flags, crests, tournaments, or brand marks.</p></div><div className="gallery-grid">{skins.slice(0, 3).map((skin) => <SkinCard key={skin.slug} skin={skin} />)}</div></section></main>
 }
 
-function WorkspaceInterior({ template }: { template: Template }) {
-  if (template.variant === 'glasshouse') return <GlasshouseWorkspaceInterior template={template} />
-  if (template.variant === 'ink') return <InkWorkspaceInterior template={template} />
-  return <DefaultWorkspaceInterior template={template} />
+function Skins() {
+  return <main className="section-pad page"><p className="eyebrow">Original skin gallery</p><h1>Browse original Codex Dream Skins</h1><p className="page-lede">Every template is a Codex-like workspace preview with category chip, emotional hook, proof chips, Remix / View actions, and an IP-safe rights note. The first three use 小秀 design-xiu-themed-v1 assets; the remaining three are MVP procedural placeholders.</p><div className="gallery-grid">{skins.map((skin) => <SkinCard key={skin.slug} skin={skin} />)}</div></main>
 }
 
-function CodexWorkspaceMock({ template, size = 'card' }: { template: Template; size?: 'mini' | 'card' | 'hero' | 'detail' }) {
-  return (
-    <div className={`workspace-mock workspace-mock--${template.variant} workspace-mock--${size} ${template.imageUrl ? 'workspace-mock--stitch-backed' : ''}`} style={{ '--accent': template.accent, '--atmosphere': template.imageUrl ? `url(${template.imageUrl})` : 'none' } as CSSProperties & Record<string, string>} aria-label={`${template.name} original Codex PC workspace skin preview`}>
-      {template.imageUrl ? <div className="stitch-atmosphere" aria-hidden="true"></div> : null}
-      <div className="mock-titlebar">
-        <span className="window-dot"></span><span className="window-dot"></span><span className="window-dot"></span>
-        <strong>CodexSkin.fun / {template.studioId}</strong>
-        <em>{template.mood[0]}</em>
-      </div>
-      <WorkspaceInterior template={template} />
-      <div className="mock-decoration" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-    </div>
-  )
+function SkinDetail({ skin }: { skin: Skin }) {
+  return <main className="section-pad page"><p className="eyebrow">{skin.category}</p><h1>{skin.name}</h1><p className="page-lede">{skin.hook}</p><section className="work-hero"><div className="work-copy"><h2>Remix this style safely</h2><p>{skin.rightZone}</p><dl className="metadata-panel"><div><dt>Package</dt><dd>data-only .dreamskin export</dd></div><div><dt>Status</dt><dd>{skin.status}</dd></div><div><dt>Rights</dt><dd>{skin.rightsNote}</dd></div><div><dt>Windows</dt><dd>Documented path only; not tested by CodexSkin.fun.</dd></div></dl><div className="cta-row"><Button href={`/builder?preset=${skin.slug}`}>Remix this style</Button><Button href="/docs/install" secondary>Install guide</Button><Button href="/security" secondary>Security boundary</Button></div></div><WorkspacePreview skin={skin} size="detail" /></section><section className="studio-card adapt-steps"><h2>What exports in the `.dreamskin` package</h2><ol><li><code>manifest.json</code> with package type, rights, platform claim split, and unsigned local-export status.</li><li><code>theme.json</code> with focusX/Y, crop, dimming, blur, panel opacity, accent tokens, readability mode, and state preview notes.</li><li><code>background</code> and <code>preview</code> data only — no JS, shell, PowerShell, executable, app bundle, API key, or provider config.</li><li><code>LICENSE.txt</code>, <code>NOTICE.md</code>, <code>user-assets-notice.txt</code> if user uploads assets, <code>sha256.txt</code>, and <code>signature.json</code> marked unsigned.</li></ol></section></main>
 }
 
-function HeroSkinStoreCard({ template }: { template: Template }) {
-  return (
-    <article className="hero-skin-card studio-card" style={{ '--accent': template.accent } as CSSProperties & Record<string, string>}>
-      <div className="hero-skin-media">
-        <span className="free-ribbon">FREE</span>
-        <CodexWorkspaceMock template={template} size="hero" />
-      </div>
-      <div className="hero-skin-copy">
-        <p className="hero-skin-kicker">{template.mood[0]}</p>
-        <h3>{template.name}</h3>
-        <p>{template.tagline}</p>
-        <div className="hero-card-actions">
-          <StudioButton href={`/templates/${template.slug}`}>Preview Free</StudioButton>
-          {hasMacOsKit(template.slug)
-            ? <StudioButton href={moonlitKitHref} variant="secondary" download={moonlitKitDownloadName}>Download macOS Theme Kit</StudioButton>
-            : <StudioButton href={recipeDownloadHref(template)} variant="secondary" download={`${template.slug}-starter-recipe.txt`}>Copy Recipe</StudioButton>}
-        </div>
-      </div>
-    </article>
-  )
+function initialBuilderState(): BuilderState {
+  const queryPreset = new URLSearchParams(window.location.search).get('preset')
+  const skin = skins.find((item) => item.slug === queryPreset) ?? skins[0]
+  return { preset: skin.slug, localImage: '', localImageName: '', localImageType: '', focusX: 72, focusY: 48, cropZoom: 1, dimming: 42, blur: 12, panelOpacity: 82, readability: 'balanced', accent: skin.accent, accentAlt: skin.accentAlt, surface: 'home', rightsConfirmed: false }
 }
 
-function HeroSkinStore() {
-  return (
-    <div className="hero-store" aria-label="Free Codex skin store cards">
-      <div className="hero-store-grid">
-        {heroStoreSkins.map((template) => <HeroSkinStoreCard key={template.slug} template={template} />)}
-      </div>
-      <aside className="hero-generator-entry studio-card">
-        <p className="eyebrow">Need a different vibe?</p>
-        <h3>Request Custom</h3>
-        <p>Send a moodboard and constraints. Keep it review-first and IP-safe.</p>
-        <StudioButton href="/custom-codex-skin" variant="secondary">Request Custom</StudioButton>
-      </aside>
-    </div>
-  )
-}
+function Builder() {
+  const [state, setState] = useState<BuilderState>(() => initialBuilderState())
+  const [message, setMessage] = useState('')
+  const selected = skins.find((skin) => skin.slug === state.preset) ?? skins[0]
+  const previewBackground = state.localImage || selected.background
+  const surfaceCards = {
+    home: ['Today', 'Recent project', 'Prompt starter', 'Quick action'],
+    task: ['Plan', 'Build', 'Review', 'Ship'],
+    diff: ['+ token map', '- unsafe claim', '+ rights notice', '+ restore step'],
+    composer: ['Prompt focus', 'Readable input', 'Accent CTA', 'Muted helper'],
+  }[state.surface]
 
-function SkinGalleryCard({ template, featured = false }: { template: Template; featured?: boolean }) {
-  return (
-    <article className={`skin-gallery-card studio-card ${featured ? 'skin-gallery-card--featured' : ''}`} style={{ '--accent': template.accent } as CSSProperties & Record<string, string>}>
-      <div className="gallery-meta"><span>FREE TEMPLATE</span><span>{template.studioId}</span></div>
-      <CodexWorkspaceMock template={template} size="card" />
-      <div className="gallery-copy">
-        <h3>{template.name}</h3>
-        <p>{template.conceptHook}</p>
-        <ul className="studio-tags">{template.mood.slice(0, 3).map((tag) => <li key={tag}>{tag}</li>)}</ul>
-        <div className="palette-strip" aria-label={`${template.name} palette`}>{template.palette.map((color) => <span key={color} style={{ '--swatch': color } as CSSProperties & Record<string, string>}></span>)}</div>
-        <div className="card-actions">
-          <StudioButton href={`/templates/${template.slug}`}>Preview Skin</StudioButton>
-          {hasMacOsKit(template.slug)
-            ? <StudioButton href={moonlitKitHref} variant="secondary" download={moonlitKitDownloadName}>Download macOS Theme Kit</StudioButton>
-            : <StudioButton href={recipeDownloadHref(template)} variant="secondary" download={`${template.slug}-starter-recipe.txt`}>Recipe TXT</StudioButton>}
-        </div>
-      </div>
-    </article>
-  )
-}
-
-function SectionHeading({ eyebrow, title, text }: { eyebrow: string; title: string; text: string }) {
-  return <div className="section-heading"><p className="eyebrow">{eyebrow}</p><h2>{title}</h2><p>{text}</p></div>
-}
-
-function TemplateGallery({ items = templates, featured = false }: { items?: Template[]; featured?: boolean }) {
-  return <div className="gallery-grid">{items.map((template) => <SkinGalleryCard key={template.slug} template={template} featured={featured} />)}</div>
-}
-
-function TrustBadges() {
-  return <div className="trust-badges" aria-label="Trust and safety highlights"><span>Original visuals</span><span>No third-party artwork</span><span>Review before applying</span><span>Restore guide included</span></div>
-}
-
-function GeneratorRemixStrip() {
-  return (
-    <section className="generator-strip section-pad" id="generator-mock" aria-label="Moodboard to Codex skin direction mock workflow">
-      <div className="generator-head">
-        <p className="eyebrow">Generator / Remix mock</p>
-        <h2>Drop a moodboard. Get a Codex skin direction.</h2>
-        <p>v0 is request-based: no fake instant upload. The strip shows the path from moodboard cues to palette, scene mapping, preview, and recipe handoff.</p>
-      </div>
-      <div className="generator-flow">
-        <article>
-          <strong>01</strong>
-          <h3>Upload / paste moodboard</h3>
-          <p>Send vibe, colors, constraints, and links by email request.</p>
-          <div className="moodboard-pixels" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-        </article>
-        <article>
-          <strong>02</strong>
-          <h3>Palette + scene mapping</h3>
-          <p>Convert references into original, IP-safe workspace concepts.</p>
-          <div className="palette-analyzer" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
-        </article>
-        <article>
-          <strong>03</strong>
-          <h3>Preview + recipe handoff</h3>
-          <p>Review a screenshot-style mock, then copy a readable recipe.</p>
-          <div className="recipe-mini-card" aria-hidden="true"><b>recipe.json</b><span></span><span></span><span></span></div>
-        </article>
-      </div>
-      <div className="cta-row"><StudioButton href="/custom-codex-skin">Request Custom Skin</StudioButton><StudioButton href="/templates" variant="secondary">Start from a Free Skin</StudioButton></div>
-    </section>
-  )
-}
-
-function PathSplit() {
-  return (
-    <section className="section-pad path-split" aria-label="Free Template vs Custom Skin paths">
-      <SectionHeading eyebrow="Choose your lane" title="Free Template vs Custom Skin" text="Start with a free reviewable recipe, or send a moodboard and constraints for a custom skin direction. No checkout promise, no fake instant generator." />
-      <div className="path-grid">
-        <article className="studio-card path-card path-card--free">
-          <p className="eyebrow">Free template path</p>
-          <h3>Browse → preview → copy the recipe.</h3>
-          <p>Use the gallery when you want an IP-safe visual direction, palette, and manual install notes you can inspect before changing your setup.</p>
-          <StudioButton href="/templates">Browse Free Skins</StudioButton>
-        </article>
-        <article className="studio-card path-card path-card--custom">
-          <p className="eyebrow">Custom skin path</p>
-          <h3>Send moodboard, style, email, constraints.</h3>
-          <p>Request a custom direction for a personal or team workspace. Delivery scope and price are confirmed by email before any work starts.</p>
-          <StudioButton href="/custom-codex-skin" variant="secondary">Request Custom Skin</StudioButton>
-        </article>
-      </div>
-    </section>
-  )
-}
-
-function SafetyInstallGuide() {
-  return (
-    <section id="install-guide" className="section-pad install-guide" aria-label="Safety and install guide">
-      <div className="studio-card install-guide-inner">
-        <p className="eyebrow">Safety / Install Guide</p>
-        <h2>Reviewable recipes, restore-first workflow.</h2>
-        <div className="install-steps-grid">
-          <article><strong>1. Preview the skin</strong><span>Open a detail page and inspect the mock, palette, states, and recipe notes.</span></article>
-          <article><strong>2. Back up settings</strong><span>Save your current Codex/editor/terminal appearance settings before changing colors.</span></article>
-          <article><strong>3. Apply manually</strong><span>Use the recipe as text guidance. No hidden installer, no app bundle patching promise.</span></article>
-          <article><strong>4. Test and restore</strong><span>Check prompt text, selections, warnings, errors, links, and diffs. Roll back if readability drops.</span></article>
-        </div>
-        <div className="cta-row"><StudioButton href="/safety">Read Safety Notes</StudioButton><StudioButton href="/templates" variant="secondary">Pick a Skin First</StudioButton></div>
-      </div>
-    </section>
-  )
-}
-
-function CustomCta() {
-  return (
-    <section className="custom-order-card section-pad" aria-label="Custom skin request order form">
-      <div className="studio-card custom-order-inner">
-        <div className="order-form-preview">
-          <p className="eyebrow">CUSTOM SKIN REQUEST</p>
-          <h2>Submit a moodboard, desired style, email, and constraints.</h2>
-          <p>We will reply by email to confirm scope, delivery path, and price before any custom work starts. For a high-custom request, contact <a href={`mailto:${contactEmail}`}>{contactEmail}</a>. Free templates remain the fastest path today.</p>
-          <div className="form-lines" aria-hidden="true"><span>Email: where should we reply?</span><span>Moodboard / desired style: calm, paper, neon, forge...</span><span>Constraints: IP-safe, no third-party artwork, readability first</span></div>
-          <StudioButton href={`mailto:${contactEmail}?subject=Custom%20Codex%20Skin%20Request&body=Name%2Femail%3A%0AWorkspace%20mood%3A%0APalette%3A%0ASafety%20constraints%3A%0APersonal%20or%20team%20use%3A%0ADeadline%3A`}>Request Custom Skin</StudioButton>
-        </div>
-        <div className="before-after-mock" aria-label="Before and after Codex workspace mockup">
-          <div><span>Before</span><CodexWorkspaceMock template={templates[2]} size="mini" /></div>
-          <div><span>Studio Skin</span><CodexWorkspaceMock template={featuredStudioSkins[2]} size="mini" /></div>
-        </div>
-      </div>
-    </section>
-  )
-}
-
-function HomeBody() {
-  return (
-    <>
-      <section className="hero section-pad">
-        <div className="hero-copy">
-          <p className="eyebrow">CODEX SKIN STORE</p>
-          <h1>Moonlit Magic Codex PC workspace skin preview.</h1>
-          <p className="lede">Start with the Moonlit Magic Workspace hero, then compare Forge Alchemy Console and Neon Rain Workspace — three wide PC skin previews with real DOM UI layers and reviewable recipes.</p>
-          <div className="home-category-chips" aria-label="Skin categories">{heroCategoryChips.map((chip) => <a key={chip} href={chip === 'Custom' ? '/custom-codex-skin' : '/templates'}>{chip}</a>)}</div>
-          <div className="cta-row">
-            <StudioButton href="/templates">Preview Free</StudioButton>
-            <StudioButton href={moonlitKitHref} variant="secondary" download={moonlitKitDownloadName}>Download macOS Theme Kit</StudioButton>
-            <StudioButton href="/custom-codex-skin" variant="secondary">Request Custom Skin</StudioButton>
-          </div>
-          <TrustBadges />
-        </div>
-        <HeroSkinStore />
-      </section>
-      <GeneratorRemixStrip />
-      <section className="section-pad featured-skins">
-        <SectionHeading eyebrow="Featured Free Skins" title="The first three PC workspace skins." text="Moonlit Magic, Forge Alchemy, and Neon Rain are the selected homepage previews. Each uses the Stitch visual source for atmosphere while macOS chrome, sidebar, cards, right AI panel, and composer remain real DOM." />
-        <TemplateGallery items={featuredStudioSkins} featured />
-      </section>
-      <PathSplit />
-      <section className="section-pad">
-        <SectionHeading eyebrow="Browse Free Codex Skin Templates" title="More recipes sit below the selected PC skins" text="The full library remains available for SEO and exploration, while the homepage lead stays focused on Moonlit Magic, Forge Alchemy, and Neon Rain." />
-        <TemplateGallery />
-      </section>
-      <CustomCta />
-      <SafetyInstallGuide />
-    </>
-  )
-}
-
-function MetadataPanel({ template }: { template: Template }) {
-  const rows = [
-    ['SKIN ID', template.studioId],
-    ['TYPE', 'Free Codex skin template'],
-    ['MOOD', template.mood.join(' / ')],
-    ['BEST FOR', template.bestFor],
-    ['FORMAT', 'Reviewable recipe TXT'],
-    ['ASSETS', 'CSS / SVG / DOM only'],
-    ['STATUS', 'Free preview'],
-  ]
-  return <dl className="metadata-panel studio-card">{rows.map(([key, value]) => <div key={key}><dt>{key}</dt><dd>{value}</dd></div>)}</dl>
-}
-
-function isDarkHex(hex: string) {
-  const value = hex.replace('#', '')
-  if (!/^[0-9a-f]{6}$/i.test(value)) return false
-  const [r, g, b] = [0, 2, 4].map((start) => parseInt(value.slice(start, start + 2), 16) / 255)
-  const [lr, lg, lb] = [r, g, b].map((channel) => channel <= 0.03928 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4)
-  return (0.2126 * lr) + (0.7152 * lg) + (0.0722 * lb) < 0.28
-}
-
-function PaletteBoard({ template }: { template: Template }) {
-  const names: Record<string, string[]> = {
-    moonlit: ['Indigo shell', 'Violet glass', 'Arcane focus', 'Moon glow', 'Amber composer'],
-    ink: ['Ink base', 'Pine panels', 'Rice paper', 'Jade focus', 'Studio seal'],
-    forge: ['Charcoal base', 'Cast iron', 'Ember cursor', 'Molten focus', 'Bronze geometry'],
-    neon: ['Night asphalt', 'Slate panel', 'Cyan focus', 'Magenta scan', 'Amber geometry'],
-    rose: ['Deep plum', 'Pearl surface', 'Rose panel', 'Violet orbit', 'Star note'],
-    blueprint: ['Midnight base', 'Slate panel', 'Blueprint blue', 'Focus line', 'Soft text'],
-    glasshouse: ['Frosted white', 'Greenhouse mist', 'Clean blue', 'Growth mint', 'Ink text'],
-    gold: ['Matte black', 'Charcoal panel', 'Stage gold', 'Spotlight', 'Presenter text'],
-    pixel: ['Dark canvas', 'Coral block', 'Cyan block', 'Yellow highlight', 'Violet chip'],
-    sonar: ['Abyss base', 'Deep navy', 'Sonar teal', 'Cyan pulse', 'Signal lime'],
+  const onUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => setState((current) => ({ ...current, localImage: String(reader.result), localImageName: file.name, localImageType: file.type }))
+    reader.readAsDataURL(file)
   }
-  return (
-    <section className={`palette-board palette-board--${template.variant} studio-card`}>
-      <p className="eyebrow">Palette Board</p>
-      <div className="palette-board-grid">
-        {template.palette.map((color, index) => <div key={color} className={isDarkHex(color) ? 'is-dark-swatch' : undefined} style={{ '--swatch': color } as CSSProperties & Record<string, string>}><b></b><strong>{names[template.variant]?.[index] ?? `Token ${index + 1}`}</strong><span>{color}</span></div>)}
-      </div>
-    </section>
-  )
-}
 
-function InkLayerRecipe() {
-  const layers = [
-    ['Ink base', '#101418', 'app shell / deep background'],
-    ['Pine panels', '#123C3D', 'sidebar / cards'],
-    ['Rice paper', '#E8E1CF', 'reading surfaces'],
-    ['Mist belt', '#BCE8D8', 'separator fog / prompt glow'],
-    ['Studio seal', '#D94A32', 'small landmark / active stamp'],
-  ]
-  return <section className="recipe-board recipe-board--ink studio-card"><p className="eyebrow">Recipe System</p>{layers.map(([name, color, use], index) => <div className="ink-layer-row" key={name} style={{ '--layer-color': color, '--layer-index': String(index) } as CSSProperties & Record<string, string>}><svg viewBox="0 0 360 42" aria-hidden="true"><path d={index % 2 === 0 ? 'M0 31 C38 14 72 27 111 16 C157 2 194 32 236 18 C286 2 318 20 360 8 L360 42 L0 42 Z' : 'M0 25 C44 9 83 12 124 26 C166 39 198 10 239 16 C281 22 316 34 360 14 L360 42 L0 42 Z'} /></svg><div><strong>{name}</strong><span>{color} · {use}</span></div></div>)}</section>
-}
+  const manifest = useMemo(() => ({
+    schemaVersion: 'codexskin.dreamskin.v1',
+    id: `builder-${state.preset}`,
+    name: `${selected.name} Builder Export`,
+    category: selected.category,
+    packageType: 'data-only',
+    engine: 'external-reviewed-engine-required',
+    createdBy: 'CodexSkin.fun Builder v0',
+    visibility: 'private-export',
+    rights: { publicTemplate: 'original', userAssets: state.localImage ? 'user-provided-unreviewed' : 'none', confirmationRequired: true, confirmedInBrowser: state.rightsConfirmed },
+    platform: { dataPackage: 'cross-platform', macOS: 'documented', windows: 'documented' },
+  }), [selected, state.localImage, state.preset, state.rightsConfirmed])
 
-function GlasshouseSprintRecipe() {
-  const gauges = [
-    ['Frame ribs', '76%', '#38BDF8', 'visible greenhouse roof and lab rails'],
-    ['Sprint health', '64%', '#34D399', 'growth meter / done state'],
-    ['Focus glare', '42%', '#F8FAFC', 'sun pane highlight without low contrast'],
-    ['Ink anchor', '88%', '#0F172A', 'readability and card edges'],
-  ]
-  return <section className="recipe-board recipe-board--glasshouse studio-card"><p className="eyebrow">Recipe System · Sprint Lab Gauges</p><div className="glasshouse-instrument" aria-hidden="true"><span></span><b></b><i></i></div><div className="glasshouse-gauge-list">{gauges.map(([name, percent, color, note]) => <div className="glasshouse-gauge-row" key={name} style={{ '--gauge-color': color, '--gauge-width': percent } as CSSProperties & Record<string, string>}><div><strong>{name}</strong><span>{note}</span></div><em>{percent}</em><i></i></div>)}</div></section>
-}
+  const theme = useMemo(() => ({
+    schemaVersion: 'codexskin.theme.v1',
+    preset: state.preset,
+    background: state.localImage ? 'background-user-upload' : 'background-template',
+    preview: 'preview',
+    cropZoom: state.cropZoom,
+    focus: { x: state.focusX / 100, y: state.focusY / 100 },
+    safeArea: state.focusX > 55 ? 'left-reading-right-hero' : 'center-protected',
+    dimming: state.dimming / 100,
+    blur: state.blur,
+    panelOpacity: { sidebar: state.panelOpacity / 100, main: state.panelOpacity / 100, card: Math.min(0.95, (state.panelOpacity + 5) / 100), composer: Math.min(0.96, (state.panelOpacity + 8) / 100) },
+    accent: state.accent,
+    secondary: state.accentAlt,
+    highlight: selected.palette[0],
+    readabilityMode: state.readability,
+    statePreview: { selected: state.surface, covered: ['Home', 'Task', 'Diff', 'Composer'] },
+  }), [selected.palette, state])
 
-function ForgeRecipeGauge() {
-  const parts = [
-    ['Charcoal base', '52%', '#16110F', 'Base keeps glare down'],
-    ['Ember cursor', '18%', '#D6401F', 'Ember guides attention'],
-    ['Molten focus', '20%', '#FFB13B', 'Gold marks focus'],
-    ['Bronze geometry', '10%', '#8A5A32', 'Bronze adds structure'],
-  ]
-  return <section className="recipe-board recipe-board--forge studio-card"><p className="eyebrow">Recipe System</p><div className="forge-gauge-dial" aria-hidden="true"><span></span></div><div className="forge-gauge-bars">{parts.map(([name, percent, color, note]) => <div className="forge-gauge-row" key={name} style={{ '--gauge-color': color, '--gauge-width': percent } as CSSProperties & Record<string, string>}><div><strong>{name}</strong><span>{note}</span></div><b>{percent}</b><i></i></div>)}</div></section>
-}
-
-function NeonCircuitRecipe() {
-  const nodes = [
-    ['Asphalt base', '#2C3A4A', 'night foundation'],
-    ['Cyan focus', '#16D9E3', 'scan-ready highlights'],
-    ['Magenta scan', '#D946EF', 'secondary motion'],
-    ['Amber geometry', '#F6C85F', 'small structure cues'],
-    ['Off-white glow', '#EAF8FF', 'reading edges'],
-  ]
-  return <section className="recipe-board recipe-board--neon studio-card"><p className="eyebrow">Recipe System</p><svg viewBox="0 0 520 190" aria-hidden="true"><polyline points="44,132 145,72 246,118 355,48 474,112" />{nodes.map(([, color], index) => { const points = [[44, 132], [145, 72], [246, 118], [355, 48], [474, 112]][index]; return <circle key={color} cx={points[0]} cy={points[1]} r="11" style={{ '--node-color': color } as CSSProperties & Record<string, string>} /> })}</svg><div className="neon-node-list">{nodes.map(([name, color, note]) => <div key={name} style={{ '--node-color': color } as CSSProperties & Record<string, string>}><strong>{name}</strong><span>{note}</span></div>)}</div></section>
-}
-
-function UIStatesMock({ template }: { template: Template }) {
-  return <section className="ui-states studio-card"><p className="eyebrow">UI States Mock</p><div className="state-grid">{['Active tab', 'Prompt focus', 'Diff line', 'Command tag'].map((state) => <div key={state} style={{ '--accent': template.accent } as CSSProperties & Record<string, string>}><span>{state}</span><b></b><i></i></div>)}</div></section>
-}
-
-// macOS theme kit install workflow: mirrors the four real helper steps
-// (install → apply → verify → restore) so users know exactly what they get.
-function ThemeKitWorkflow({ template }: { template: Template }) {
-  if (!hasMacOsKit(template.slug)) return null
-  const steps = [
-    ['1. Download & Install', 'Double-click "Install CodexSkin.command". It copies the theme kit to ~/.codex/codexskin-macos-helper, validates the Codex desktop signature (bundle id com.openai.codex, Team ID 2DC432GLL2), and creates Desktop launchers. No app bundle is modified.'],
-    ['2. Apply the theme', 'Run "Apply CodexSkin.command". It launches Codex Desktop with a loopback-only CDP port (127.0.0.1) and injects the CSS/DOM theme into the live renderer. Nothing touches the on-disk application.'],
-    ['3. Verify', 'Run "Verify CodexSkin.command" to confirm the theme marker is present in the renderer and optionally capture a screenshot for your own records.'],
-    ['4. Restore', 'Run "Restore CodexSkin.command" to remove the injected theme and clear helper state. Fully reversible — your Codex Desktop returns to its original appearance.'],
-  ]
-  return (
-    <section className="theme-kit-workflow studio-card">
-      <p className="eyebrow">macOS Theme Kit · Install / Apply / Verify / Restore</p>
-      <h2>What the downloaded kit actually does</h2>
-      <p className="page-lede">This is a local-only helper that customizes the live Codex Desktop renderer on your own Mac. It is unofficial, not affiliated with OpenAI, and does not modify the Codex app bundle. Run it on a machine you control after reviewing the source.</p>
-      <ol className="kit-step-list">
-        {steps.map(([title, body]) => <li key={title}><strong>{title}</strong><span>{body}</span></li>)}
-      </ol>
-      <p className="kit-note">Compatibility verified on Codex Desktop 26.715.52143 (shipped as ChatGPT.app, bundle id com.openai.codex) on macOS. Requires the official Codex desktop app to be installed. The bundled background image is an original Google Stitch generation, not third-party artwork. See NOTICE.md inside the kit for full provenance and security notes.</p>
-    </section>
-  )
-}
-
-function ConceptStatement({ template }: { template: Template }) {
-  const statements: Record<Variant, string> = {
-    moonlit: 'For builders who want a cinematic PC workspace without losing structure: a moonlit atmosphere frames real Codex-style panels, task cards, a right AI/code panel, and a warm composer.',
-    ink: 'Designed for builders who want Codex to feel like a quiet writing desk: dark enough for code, warm enough for notes, and calm enough for long reasoning loops.',
-    forge: 'Built for debugging sprints and launch crunch: the interface feels hot, but the reading surfaces stay controlled.',
-    neon: 'For late-night builds that need motion and contrast without turning the workspace into a noisy cyberpunk cliché.',
-    rose: 'For creators who plan visually: orbit paths and task nodes make the workspace feel like a soft observatory instead of a pastel preset.',
-    blueprint: 'For deep reviews and systems thinking: low-glare code surfaces sit inside an engineering sheet with measured boundaries.',
-    glasshouse: 'For sprint planning in light mode: frosted panels, growth meters, and greenhouse geometry keep the desk clean and active.',
-    gold: 'For demos and launches: blackbox staging, cue strips, and spotlight accents make the workspace presentation-ready.',
-    pixel: 'For personal creative builds: bento tiles and stepped blocks add energy while staying readable and IP-safe.',
-    sonar: 'For quiet diagnostics: sonar rings, waveforms, and cyan pulse states make failure tracing feel calm and technical.',
+  const exportJson = () => {
+    const payload = { manifest, theme, notice: 'Data-only .dreamskin JSON artifact. No executable. Review a separate engine/helper before applying.', userAssetsNotice: state.localImage ? 'User-provided asset was not reviewed by CodexSkin.fun. Do not publish or redistribute without permission.' : 'No user assets included.' }
+    downloadBlob(new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }), `${state.preset}.dreamskin.json`)
   }
-  return <section className="concept-statement studio-card"><p className="eyebrow">Concept Statement</p><h2>{template.tagline}</h2><p>{statements[template.variant]}</p></section>
-}
 
-function RecipeVisualization({ template }: { template: Template }) {
-  if (template.variant === 'ink') return <InkLayerRecipe />
-  if (template.variant === 'forge') return <ForgeRecipeGauge />
-  if (template.variant === 'neon') return <NeonCircuitRecipe />
-  if (template.variant === 'glasshouse') return <GlasshouseSprintRecipe />
-  return <section className={`recipe-board recipe-board--concept recipe-board--${template.variant} studio-card`}><p className="eyebrow">Recipe System · {template.recipeTitle}</p><div className="concept-recipe-map">{template.palette.map((color, index) => <div key={color} style={{ '--node-color': color, '--node-index': String(index) } as CSSProperties & Record<string, string>}><b></b><strong>{template.mood[index % template.mood.length]}</strong><span>{color}</span></div>)}</div></section>
-}
-
-function VariantTemplateDetail({ template }: { template: Template }) {
-  const ctaByVariant: Record<Variant, string> = {
-    moonlit: 'Request a moonlit custom skin',
-    ink: 'Request a calmer custom skin',
-    forge: 'Commission a hotter workspace skin',
-    neon: 'Request a city-night custom skin',
-    rose: 'Request a softer planning skin',
-    blueprint: 'Request a deep-work system skin',
-    glasshouse: 'Request a cleaner sprint skin',
-    gold: 'Request a launch-ready custom skin',
-    pixel: 'Request a more playful coding skin',
-    sonar: 'Request a calmer diagnostic skin',
+  const exportZip = async () => {
+    if (!state.rightsConfirmed) {
+      setMessage('Export blocked: confirm the rights checkbox first.')
+      return
+    }
+    const encoder = new TextEncoder()
+    const bgData = await dataFromUrl(previewBackground)
+    const fileExt = state.localImageType.includes('png') ? 'png' : state.localImageType.includes('jpeg') ? 'jpg' : selected.preview ? 'png' : 'txt'
+    const sha = await sha256Text(bgData)
+    const files = [
+      { name: 'manifest.json', data: encoder.encode(JSON.stringify(manifest, null, 2)) },
+      { name: 'theme.json', data: encoder.encode(JSON.stringify(theme, null, 2)) },
+      { name: `background.${fileExt}`, data: bgData },
+      { name: `preview.${fileExt}`, data: bgData },
+      { name: 'LICENSE.txt', data: encoder.encode('CodexSkin.fun Builder v0 data package. Public template components are original genre-inspired assets. User uploads remain the user\'s responsibility.\n') },
+      { name: 'NOTICE.md', data: encoder.encode(`# ${selected.name}\n\nThis .dreamskin package is inert data only. It contains no JavaScript, shell, PowerShell, executable, app bundle, API key, provider config, auto-updater, or installer. Engine/helper is a separate reviewed trust layer.\n\n${selected.rightsNote}\n`) },
+      { name: 'user-assets-notice.txt', data: encoder.encode(state.localImage ? `User uploaded: ${state.localImageName || 'local browser file'}. CodexSkin.fun does not grant rights to third-party content. Private use only unless you have permission to share.\n` : 'No user-provided assets included.\n') },
+      { name: 'sha256.txt', data: encoder.encode(`background.${fileExt}  ${sha}\n`) },
+      { name: 'signature.json', data: encoder.encode(JSON.stringify({ signed: false, reason: 'local browser export', packageType: 'data-only' }, null, 2)) },
+    ]
+    downloadBlob(createStoredZip(files), `${state.preset}.dreamskin.zip`)
+    setMessage(`Exported ${state.preset}.dreamskin.zip with ${files.length} data-only files. No executable included.`)
   }
-  return (
-    <div className={`detail-work-page detail-work-page--${template.variant}`}>
-      <section className="work-hero">
-        <div className="work-copy">
-          <p className="eyebrow">Skin Concept Work Page</p>
-          <h2>{template.name}</h2>
-          <p>{template.conceptHook}</p>
-          <MetadataPanel template={template} />
-          <div className="cta-row">
-            {hasMacOsKit(template.slug)
-              ? <StudioButton href={moonlitKitHref} download={moonlitKitDownloadName}>Download macOS Theme Kit</StudioButton>
-              : <StudioButton href={recipeDownloadHref(template)} download={`${template.slug}-starter-recipe.txt`}>Use This Skin Recipe</StudioButton>}
-            <StudioButton href="/custom-codex-skin" variant="secondary">{ctaByVariant[template.variant]}</StudioButton>
-          </div>
-        </div>
-        <div className="concept-shot"><CodexWorkspaceMock template={template} size="detail" /></div>
-      </section>
-      <ConceptStatement template={template} />
-      <PaletteBoard template={template} />
-      <RecipeVisualization template={template} />
-      <UIStatesMock template={template} />
-      <ThemeKitWorkflow template={template} />
-      <CustomCta />
-    </div>
-  )
+
+  return <main className="section-pad page"><p className="eyebrow">Browser Builder · local preview · data-only export</p><h1>Frame the art, preview Codex, export a safe recipe</h1><p className="page-lede">Choose an original preset or upload a local image. Files stay in your browser; nothing is uploaded or applied to Codex Desktop from this page.</p><section className="builder-layout"><aside className="builder-controls studio-card"><p className="eyebrow">Preset</p><ul className="builder-preset-list">{skins.map((skin) => <li key={skin.slug}><button type="button" className={state.preset === skin.slug ? 'is-active' : ''} onClick={() => setState({ ...state, preset: skin.slug, accent: skin.accent, accentAlt: skin.accentAlt })}><strong>{skin.name}</strong><span>{skin.category}</span></button></li>)}</ul><p className="eyebrow">Local upload</p><label className="builder-upload"><input type="file" accept="image/png,image/jpeg,image/webp" onChange={onUpload} /><span>{state.localImageName || 'Choose an image you own / can use'}</span></label><p className="builder-export-note">Upload only images you own, created yourself, licensed, or are otherwise allowed to use. Do not upload or redistribute copyrighted celebrity, anime, sports team, player, brand, or private-person images without permission.</p><p className="eyebrow">Crop / focal</p><label className="builder-slider">Crop zoom <input type="range" min={1} max={1.8} step={0.02} value={state.cropZoom} onChange={(e) => setState({ ...state, cropZoom: Number(e.target.value) })} /><span>{state.cropZoom.toFixed(2)}×</span></label><label className="builder-slider">Focal X <input type="range" min={0} max={100} value={state.focusX} onChange={(e) => setState({ ...state, focusX: Number(e.target.value) })} /><span>{state.focusX}%</span></label><label className="builder-slider">Focal Y <input type="range" min={0} max={100} value={state.focusY} onChange={(e) => setState({ ...state, focusY: Number(e.target.value) })} /><span>{state.focusY}%</span></label><p className="eyebrow">Readability controls</p><label className="builder-slider">Dimming <input type="range" min={0} max={80} value={state.dimming} onChange={(e) => setState({ ...state, dimming: Number(e.target.value) })} /><span>{state.dimming}%</span></label><label className="builder-slider">Blur <input type="range" min={0} max={28} value={state.blur} onChange={(e) => setState({ ...state, blur: Number(e.target.value) })} /><span>{state.blur}px</span></label><label className="builder-slider">Panel opacity <input type="range" min={35} max={96} value={state.panelOpacity} onChange={(e) => setState({ ...state, panelOpacity: Number(e.target.value) })} /><span>{state.panelOpacity}%</span></label><div className="builder-accent-row"><input type="color" value={state.accent} onChange={(e) => setState({ ...state, accent: e.target.value })} /><code>{state.accent}</code></div><label className="builder-rights"><input type="checkbox" checked={state.rightsConfirmed} onChange={(e) => setState({ ...state, rightsConfirmed: e.target.checked })} /><span>I confirm I have the rights or permission to use the uploaded assets, and I understand exported skins containing third-party materials are for my private use unless I have permission to share them.</span></label><div className="cta-row"><button className="studio-button" type="button" onClick={() => void exportZip()}>Export .dreamskin zip</button><button className="studio-button studio-button--secondary" type="button" onClick={exportJson}>Export JSON</button></div>{message ? <p className="builder-status">{message}</p> : null}</aside><section className="builder-preview-wrap"><div className="filter-chips">{(['home', 'task', 'diff', 'composer'] as const).map((surface) => <button key={surface} className={state.surface === surface ? 'is-active' : ''} type="button" onClick={() => setState({ ...state, surface })}>{surface}</button>)}</div><div className="dream-builder-preview studio-card" style={{ '--accent': state.accent, '--bg': previewBackground.startsWith('linear-gradient') ? previewBackground : `url(${previewBackground})`, '--focus-x': `${state.focusX}%`, '--focus-y': `${state.focusY}%`, '--zoom': String(state.cropZoom), '--dim': `${state.dimming / 100}`, '--blur': `${state.blur}px`, '--panel': `${state.panelOpacity / 100}` } as CSSProperties & Record<string, string>}><div className="mock-titlebar"><span className="window-dot"></span><span className="window-dot"></span><span className="window-dot"></span><strong>{selected.name}</strong><em>{state.surface}</em></div><div className="dream-builder-bg"></div><div className="dream-builder-scrim"></div><div className="themed-shell"><aside><b>CS</b><span>Files</span><span className="active">Tasks</span><span>Diff</span><span>Security</span></aside><main><div className="mini-tab">{state.surface}.dreamskin <i></i></div><div className="mini-cards">{surfaceCards.map((item) => <span key={item}>{item}</span>)}</div><div className="mini-composer">Readable composer preview… <button type="button">Generate</button></div></main></div></div><section className="builder-export studio-card"><p className="eyebrow">Generated package contract</p><pre className="builder-recipe-pre"><code>{JSON.stringify({ manifest, theme }, null, 2)}</code></pre><p className="builder-export-note">The zip export is data-only: manifest/theme/background/preview/license/notice/user-assets notice/sha256/signature. It does not include executable code.</p></section></section></section></main>
 }
 
-function TemplateDetail({ template }: { template: Template }) {
-  return <VariantTemplateDetail template={template} />
+function InstallDocs({ platform }: { platform?: 'macos' | 'windows' }) {
+  const mac = <section className="studio-card"><p className="eyebrow">macOS helper · advanced / review-first</p><h2>macOS install / verify / restore path</h2><ol className="kit-step-list"><li><strong>Review first.</strong><span>Open the helper package source and `.dreamskin` data files before running anything. The package itself cannot install; the helper is the separate trust layer.</span></li><li><strong>Install.</strong><span>Run <code>Install CodexSkin.command</code> only after review. It should copy helper files, validate target assumptions, and avoid changing the Codex app bundle.</span></li><li><strong>Apply and verify.</strong><span>Run Apply, then Verify. Verify must check renderer markers and capture evidence before any `tested` claim is made.</span></li><li><strong>Restore.</strong><span>Run Restore CodexSkin.command to remove injected theme state and return Codex Desktop to its original appearance.</span></li></ol></section>
+  const win = <section className="studio-card"><p className="eyebrow">Windows · documented, not tested</p><h2>Windows path is documented only</h2><div className="kit-note"><strong>Windows has not been tested by CodexSkin.fun yet.</strong> Do not treat this as a supported or verified Windows installer.</div><ol className="kit-step-list"><li><strong>Inspect data package.</strong><span>Confirm `.dreamskin` contains only inert data files and no `.ps1`, `.exe`, `.bat`, `.cmd`, JavaScript, credentials, or provider config.</span></li><li><strong>Review engine separately.</strong><span>A Windows engine would be a separate PowerShell/helper trust layer. Read it before running and do not approve SmartScreen/UAC unless you understand the source.</span></li><li><strong>Verify and restore.</strong><span>Windows `tested` requires install → import → start/apply → verify screenshot → manual interaction check → restore → relaunch evidence. That evidence does not exist here yet.</span></li></ol></section>
+  return <main className="section-pad page"><p className="eyebrow">Install safely</p><h1>{platform === 'macos' ? 'Install and verify on macOS' : platform === 'windows' ? 'Windows install path and restore checklist' : 'Install a Codex skin safely, then restore anytime'}</h1><p className="page-lede">A `.dreamskin` is platform-neutral inert data. The engine/helper is the separate reviewed trust layer that applies it. Review first, verify after apply, restore if anything looks wrong.</p>{platform === 'windows' ? win : platform === 'macos' ? mac : <><section className="install-platform-table studio-card"><h2>Platform claim split</h2><table><tbody><tr><th>.dreamskin data</th><td>Cross-platform review artifact; no executable.</td></tr><tr><th>macOS helper</th><td>Advanced / review-first path with restore wording preserved. Only claim tested with real evidence per package/version.</td></tr><tr><th>Windows</th><td>Documented path only; not yet tested by CodexSkin.fun.</td></tr></tbody></table></section>{mac}{win}</>}</main>
 }
 
-function AdaptSteps() {
-  return <section className="adapt-steps studio-card"><h2>How to adapt it</h2><ol><li>Copy the palette and written recipe into your own notes.</li><li>Back up current Codex, terminal, or editor appearance settings before changing anything.</li><li>Apply colors manually in the environment you actually use.</li><li>Test prompt text, selections, links, warnings, errors, and diffs for contrast.</li><li>Rollback immediately if readability or behavior changes unexpectedly.</li></ol></section>
+function Security() {
+  return <main className="section-pad page"><p className="eyebrow">Security boundary</p><h1>Codex skin safety begins with clear boundaries</h1><p className="page-lede">CodexSkin.fun separates inert `.dreamskin` data packages from any helper/engine. The browser Builder does not apply anything to Codex Desktop and does not upload your images.</p><div className="value-grid"><article className="studio-card value-card"><h3>Data-only package</h3><p>manifest/theme/background/preview/license/notice/sha256/signature. No executable, script, API key, provider config, installer, or auto-updater.</p></article><article className="studio-card value-card"><h3>Engine is separate</h3><p>macOS helper or any Windows PowerShell flow must be reviewed separately before running on a machine you control.</p></article><article className="studio-card value-card"><h3>Restore first</h3><p>If Apply fails or readability regresses, run Restore before trying again. Do not call a skin usable without real screenshot/DOM evidence.</p></article></div><section className="studio-card adapt-steps"><h2>Threat model notes</h2><ol><li>Loopback CDP should bind only to <code>127.0.0.1</code>, never a remote interface.</li><li>The helper must not modify official Codex files or access API keys.</li><li>Windows remains documented, not tested, until full real-machine evidence exists.</li><li>No `official`, `endorsed`, `100% safe`, `one-click`, or `Windows tested` claims without proof.</li></ol></section></main>
 }
 
-function TemplatesPage() {
-  const [activeFilter, setActiveFilter] = useState<TemplateFilter>('All')
-  const filteredTemplates = activeFilter === 'All' ? templates : templates.filter((template) => template.category === activeFilter)
-
-  return <><p className="page-lede">Each template is an original Codex workspace concept built with CSS, DOM, and SVG — no screenshots, no third-party art, no IP references.</p><div className="filter-chips" aria-label="Template filters">{templateFilters.map((filter) => { const count = filter === 'All' ? templates.length : templates.filter((template) => template.category === filter).length; const isActive = activeFilter === filter; return <button key={filter} type="button" className={isActive ? 'is-active' : undefined} aria-pressed={isActive} onClick={() => setActiveFilter(filter)}>{filter} <span>{count}</span></button> })}</div><p className="filter-result-count" aria-live="polite">Showing {filteredTemplates.length} {filteredTemplates.length === 1 ? 'template' : 'templates'} in {activeFilter}.</p><TemplateGallery items={filteredTemplates} /></>
-}
-
-function HowItWorks() {
-  return <><p className="page-lede">Codex Skin Studio v0 is a lightweight template studio. It helps you choose a visual direction and review a starter recipe before manually adapting it.</p><AdaptSteps /></>
-}
-
-function Safety() {
-  return <><p className="page-lede">v0 is intentionally conservative: no uploads, no checkout, no accounts, and no automatic installer claim.</p><div className="value-grid"><article className="studio-card value-card"><h3>Starter recipes</h3><p>Text and palette guidance. Review them before applying anything to your local setup.</p></article><article className="studio-card value-card"><h3>Manual adaptation</h3><p>Back up configs first, change one layer at a time, and verify prompt/diff/error readability.</p></article><article className="studio-card value-card"><h3>No official claim</h3><p>This independent site does not claim official affiliation, endorsement, or guaranteed compatibility.</p></article></div></>
-}
-
-function CustomRequestPage() {
-  return <><p className="page-lede">Custom Codex skins are request-based in v0. Send your moodboard, desired style, reply email, and safety constraints; scope, delivery, and price are confirmed by email before work starts.</p><CustomCta /><SafetyInstallGuide /></>
-}
-
-function KeywordLandingPage({ keyword, intro, bullets }: { keyword: string; intro: string; bullets: string[] }) {
-  return (
-    <>
-      <p className="page-lede"><strong>{keyword}</strong> is the focus of this landing page: {intro}</p>
-      <div className="value-grid">
-        {bullets.map((bullet) => {
-          const [title, text] = bullet.split(': ')
-          return <article className="studio-card value-card" key={bullet}><h3>{title}</h3><p>{text ?? bullet}</p></article>
-        })}
-      </div>
-      <section className="studio-card adapt-steps">
-        <h2>Start from a reviewable Codex skin path</h2>
-        <ol>
-          <li>Browse the <a href="/templates">free Codex skin templates</a> and open any preview before changing your own workspace.</li>
-          <li>Use the <a href="/#install-guide">install guide</a> to back up settings, apply changes manually, test readability, and restore if needed.</li>
-          <li>If you need a personal moodboard direction, request a <a href="/custom-codex-skin">custom Codex skin</a> instead of forcing a generic preset.</li>
-        </ol>
-      </section>
-      <TemplateGallery items={featuredStudioSkins} featured />
-    </>
-  )
-}
-
-function Legal({ kind }: { kind: 'privacy' | 'terms' }) {
-  if (kind === 'privacy') return <div className="legal-copy studio-card"><p>Codex Skin Studio v0 is a static site. It does not provide accounts, uploads, payments, hosted file processing, or a live custom order backend.</p><p>If you use the email request link, your email client and email provider handle the message. Do not send secrets, tokens, private configs, unreleased code, or assets you do not have rights to use.</p><p>Future analytics, forms, uploads, payments, or custom order workflows should be documented here before launch.</p></div>
-  return <div className="legal-copy studio-card"><p>{disclaimer}</p><p>Templates are informational starter recipes, not guaranteed Codex engine packages. Review and adapt manually. Compatibility, appearance, and behavior vary by local environment.</p><p>Codex Skin Studio does not provide an automatic installer, official support channel, upload pipeline, checkout, or guaranteed custom delivery in v0.</p></div>
-}
-
-const pageMap: Record<string, Page> = {
-  '/codex-skin': { title: 'Codex Skin — Free Workspace Skin Recipes and Previews', description: 'Explore Codex skin ideas with original workspace mockups, free starter recipes, manual install guidance, and custom request options.', h1: 'Codex Skin Ideas for a Real Workspace Look', eyebrow: 'Codex skin landing', body: <KeywordLandingPage keyword="Codex skin" intro="use it to compare original workspace mockups, palette recipes, and safe manual adaptation steps before changing your own Codex setup." bullets={['Original preview first: each featured skin is shown as a large CSS/SVG workspace mock rather than a vague color preset.', 'Manual and safe: recipes are text guidance you can inspect, adapt, test, and roll back without hidden installers.', 'Free or custom path: start with a free recipe or request a custom direction when your workspace needs a specific moodboard.']} />, schema: [buildCollectionPageSchema('/codex-skin', 'Codex Skin Ideas', 'Original Codex skin previews, recipes, and safe manual adaptation guidance.')] },
-  '/free-codex-skins': { title: 'Free Codex Skins — Download Reviewable Skin Recipes', description: 'Browse free Codex skins with IP-safe visual concepts, palette strips, reviewable recipes, and install safety notes.', h1: 'Free Codex Skins You Can Review Before Applying', eyebrow: 'Free skin library', body: <KeywordLandingPage keyword="Free Codex skins" intro="this page gathers the fastest route to IP-safe previews, downloadable text recipes, and safety notes for builders who want a better-looking workspace without guessing." bullets={['No fake downloads: free recipes are readable text starters, not opaque installers or bundled third-party artwork.', 'Template library: compare Rain Neon, Ember Forge, Aurora Glass, Blueprint, Rose Orbit, and Cozy Bug Café from one indexable entry.', 'Install with rollback: follow the backup-first workflow before applying any palette or interface changes manually.']} />, schema: [buildCollectionPageSchema('/free-codex-skins', 'Free Codex Skins', 'A collection of free Codex skin recipes and workspace concept previews.')] },
-  '/codex-skin-generator': { title: 'Codex Skin Generator — Moodboard to Custom Skin Direction', description: 'Use the Codex skin generator entry to turn a moodboard into an original custom skin direction or start from free templates.', h1: 'Codex Skin Generator Entry for Moodboard-Based Skins', eyebrow: 'Generator entry', body: <KeywordLandingPage keyword="Codex skin generator" intro="treat it as a request-based generator entry: send mood, colors, and constraints, then review an original skin direction instead of trusting an instant black-box upload." bullets={['Moodboard to direction: translate colors, atmosphere, and constraints into an original Codex workspace concept.', 'Request-based v0: no fake instant generator claim; custom scope, delivery path, and price are confirmed before work starts.', 'Start free first: use the gallery to learn which visual lane fits before asking for a personalized Codex skin.']} />, schema: [buildCollectionPageSchema('/codex-skin-generator', 'Codex Skin Generator', 'A request-based Codex skin generator entry for moodboard-driven custom skin directions.')] },
-  '/templates': { title: 'Browse Free Codex Skin Concepts — Codex Skin Studio', description: 'Browse original Codex workspace skin concept cards including Moonlit Magic Workspace, Forge Alchemy Console, Neon Rain Workspace, Glasshouse Sprint Lab, Ink Mountain Scholar, and more.', h1: 'Browse Free Codex Skin Concepts', eyebrow: 'Template studio', body: <TemplatesPage /> },
-  '/custom-codex-skin': { title: 'Request a Custom Codex Skin — Codex Skin Studio', description: 'Join the custom Codex skin request list for premium personal, image-based, brand, or team skin customization.', h1: 'Request a Custom Codex Skin', eyebrow: 'Studio order', body: <CustomRequestPage /> },
-  '/how-it-works': { title: 'How Codex Skin Customization Works — Templates, Recipes, Requests', description: 'Learn how Codex Skin Studio works: choose a free template, preview the mood, download a starter recipe, adapt manually, or request custom work.', h1: 'How Codex Skin Customization Works', eyebrow: 'Workflow', body: <HowItWorks /> },
-  '/safety': { title: 'Codex Skin Safety — Reviewable Recipes, Manual Adaptation, Privacy', description: 'Safety and privacy boundaries for Codex skin templates, manual adaptation, custom skin requests, and independent compatibility disclaimers.', h1: 'Codex Skin Safety', eyebrow: 'Safety boundary', body: <Safety /> },
-  '/privacy': { title: 'Privacy Policy — Codex Skin Studio', description: 'Privacy policy for Codex Skin Studio, an independent static Codex skin customization resource.', h1: 'Privacy Policy', eyebrow: 'Static site privacy', body: <Legal kind="privacy" /> },
-  '/terms': { title: 'Terms and Disclaimer — Codex Skin Studio', description: 'Terms, independent resource disclaimer, compatibility disclaimer, and safety notes for Codex Skin Studio.', h1: 'Terms and Disclaimer', eyebrow: 'Terms', body: <Legal kind="terms" /> },
-}
-
-for (const template of templates) {
-  pageMap[`/templates/${template.slug}`] = { title: `${template.name} Codex Skin Template — Free Starter Recipe`, description: `${template.name} is a free Codex skin starter recipe with palette, preview mood, recommended use, and manual adaptation notes.`, h1: `${template.name} Codex Skin Template`, eyebrow: template.category, body: <TemplateDetail template={template} /> }
-}
-
-function StandardPage({ page }: { page: Page }) {
-  return <main className="section-pad page"><p className="eyebrow">{page.eyebrow}</p><h1>{page.h1}</h1>{page.body}</main>
+function PrivacyTerms({ kind }: { kind: 'privacy' | 'terms' }) {
+  return <main className="section-pad page"><p className="eyebrow">{kind}</p><h1>{kind === 'privacy' ? 'Privacy Policy' : 'Terms of Use'}</h1><section className="legal-copy studio-card"><p>{disclaimer}</p><p>The Builder runs in your browser. Local uploaded images are not sent to CodexSkin.fun by this static MVP. If you export user-provided assets, you are responsible for having rights or permission and for keeping third-party materials private unless authorized to share.</p><p>Do not use CodexSkin.fun to create, package, or distribute illegal, infringing, hateful, privacy-invasive, sexualized-minor, non-consensual intimate, malicious, or credential-stealing content.</p></section></main>
 }
 
 function Footer() {
-  return <footer className="footer section-pad"><p>{disclaimer}</p><div className="footer-links">{footerLinks.map(([href, label]) => <a key={href} href={href}>{label}</a>)}</div></footer>
+  return <footer className="footer section-pad"><p>{disclaimer}</p><div className="footer-links"><a href="/docs/install/macos">macOS guide</a><a href="/docs/install/windows">Windows documented path</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href={`mailto:${contactEmail}`}>Contact</a></div></footer>
 }
 
 function App() {
   const path = window.location.pathname.replace(/\/$/, '') || '/'
-  const page = pageMap[path]
-  if (path === '/') {
-    setMeta('CodexSkin.fun — Moonlit Magic Codex PC Workspace Skin Preview', 'Preview Moonlit Magic, Forge Alchemy, and Neon Rain Codex PC workspace skins with real DOM UI layers, reviewable recipes, and custom skin request options.', { schema: [buildWebSiteSchema(), buildSoftwareApplicationSchema()] })
-    return <><Nav /><main><HomeBody /></main><Footer /></>
-  }
-  if (!page) {
-    setMeta('404 Page not found — Codex Skin Studio', '404: the requested Codex Skin Studio page was not found.', { noindex: true })
-    return <><Nav /><main className="section-pad page"><p className="eyebrow">404 / Not Found</p><h1>404 — Page not found</h1><p className="page-lede">This Codex Skin Studio route does not exist. It is marked noindex for crawlers; try the free templates hub or one of the verified routes in the footer.</p><StudioButton href="/templates">Browse free templates</StudioButton></main><Footer /></>
-  }
-  setMeta(page.title, page.description, { schema: page.schema })
-  return <><Nav /><StandardPage page={page} /><Footer /></>
+  setMeta('CodexSkin.fun — Build your own Codex Dream Skin', 'Build anime-style, idol-stage, sports-arena, fantasy, esports and personal-photo Codex Dream Skin packages in the browser, then export a data-only .dreamskin artifact.')
+  let body = <Home />
+  if (path === '/builder') body = <Builder />
+  else if (path === '/skins') body = <Skins />
+  else if (path.startsWith('/skins/')) {
+    const skin = skins.find((item) => item.slug === path.split('/').pop())
+    body = skin ? <SkinDetail skin={skin} /> : <main className="section-pad page"><p className="eyebrow">404</p><h1>Skin not found</h1><Button href="/skins">Browse skins</Button></main>
+  } else if (path === '/docs/install') body = <InstallDocs />
+  else if (path === '/docs/install/macos') body = <InstallDocs platform="macos" />
+  else if (path === '/docs/install/windows') body = <InstallDocs platform="windows" />
+  else if (path === '/security') body = <Security />
+  else if (path === '/privacy') body = <PrivacyTerms kind="privacy" />
+  else if (path === '/terms') body = <PrivacyTerms kind="terms" />
+  else if (path !== '/') body = <main className="section-pad page"><p className="eyebrow">404</p><h1>Page not found</h1><Button href="/">Go home</Button></main>
+  return <><Nav />{body}<Footer /></>
 }
 
 export default App

@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "assetPack": "football-nation-arena",
+  "displayName": "Football Nation Arena",
+  "themeFamily": "benchmark-style-emotional-template",
+  "status": "DESIGN_CONCEPT_ASSET_READY_OWNER_REVIEW_ONLY",
+  "category": "Sports / national arena mood",
+  "hook": "A national-team inspired football arena skin for tournament season without real flags, crests, players, or FIFA marks.",
+  "positioning": "stadium lights, abstract jersey stripes, tournament-night energy, command-center scoreboard accents",
+  "requiredShape": {
+    "marketplacePreview": "16:9 horizontal Codex-like full workspace + right-side emotional hero/world art + themed sidebar/main/composer + skin chip + Remix / Customize CTA",
+    "liveSkinDecomposition": [
+      "background image",
+      "optional hero/ornament layer",
+      "surface tokens",
+      "accent tokens",
+      "readability scrim rules"
+    ],
+    "liveLayout": "right 42% emotional art/world zone; left/center functional surfaces protected by pale frosted panels; composer accent ring with stable text"
+  },
+  "files": {
+    "marketplacePreview": "design-xiu-themed-v1/football-nation-arena/marketplace-preview.png",
+    "liveBackground": "design-xiu-themed-v1/football-nation-arena/live-background.png",
+    "simulatedCodexOverlay": "design-xiu-themed-v1/football-nation-arena/simulated-codex-overlay.png",
+    "crops": {
+      "sidebar": "design-xiu-themed-v1/football-nation-arena/crops/sidebar-crop.png",
+      "main": "design-xiu-themed-v1/football-nation-arena/crops/main-crop.png",
+      "composer": "design-xiu-themed-v1/football-nation-arena/crops/composer-crop.png"
+    },
+    "prompts": {
+      "marketplacePreview": "design-xiu-themed-v1/football-nation-arena/preview_prompt.txt",
+      "liveBackground": "design-xiu-themed-v1/football-nation-arena/background_prompt.txt"
+    }
+  },
+  "palette": {
+    "canvas": "#F6FFF8",
+    "panelSoft": "#E4F4E9",
+    "panelWhite": "#FFFFFF",
+    "textPrimary": "#102418",
+    "mutedText": "#506B58",
+    "accent": "#16A34A",
+    "accentAlt": "#F59E0B",
+    "glow": "#D6F8DE",
+    "border": "#C8E4CF",
+    "heroInk": "#073D21"
+  },
+  "tokens": {
+    "canvas": "#F6FFF8",
+    "backgroundArtScrimLeft": "rgba(255,255,255,0.70)",
+    "backgroundArtScrimCenter": "rgba(255,255,255,0.42)",
+    "sidebarBackground": "#E4F4E9",
+    "mainBackground": "rgba(255,255,255,0.50)",
+    "panelBackground": "#FFFFFF",
+    "composerBackground": "rgba(255,255,255,0.88)",
+    "textPrimary": "#102418",
+    "textSecondary": "#506B58",
+    "border": "#C8E4CF",
+    "accent": "#16A34A",
+    "accentSecondary": "#F59E0B",
+    "focusRing": "#16A34A33",
+    "backdropBlur": "20px",
+    "panelScrim": "rgba(255,255,255,0.82)"
+  },
+  "generationPrompts": {
+    "marketplacePreview": "Marketplace preview for Football Nation Arena: horizontal 16:9 benchmark-style Codex Desktop skin preview, Codex-like desktop window occupies 52-72% left/center, visible app chrome/sidebar/main workspace/AI side panel/task cards/bottom composer, right-side emotional art zone: Right 42% becomes a generic football arena with floodlights, original abstract jersey stripe ribbons, pitch-line geometry and scoreboard-like UI blocks; no flag/crest/player. Category chip and Remix / Customize CTA visible. Palette canvas #F6FFF8, panelSoft #E4F4E9, panelWhite #FFFFFF, textPrimary #102418, mutedText #506B58, accent #16A34A, accentAlt #F59E0B, glow #D6F8DE, border #C8E4CF, heroInk #073D21. Premium PC workspace product, not a poster, not a wallpaper, not plain color. IP safety negative prompt: no national flag, no club crest, no FIFA/World Cup marks, no real player likeness, no jersey sponsor/logo, no official tournament typography, no competitor image.",
+    "liveBackground": "Live background for Football Nation Arena: UI-free low-detail atmospheric background only, right 42% emotional hero/world art, calm left/sidebar and bottom composer safe zones for readability scrims. Decompose into background + optional hero/ornament layer + surface/accent tokens. No baked text, no logos, no real person/team/franchise marks. Mood: stadium lights, abstract jersey stripes, tournament-night energy, command-center scoreboard accents. Negative prompt: no national flag, no club crest, no FIFA/World Cup marks, no real player likeness, no jersey sponsor/logo, no official tournament typography, no competitor image."
+  },
+  "contrastSelfCheck": {
+    "textPrimaryOnPanelWhite": 16.31,
+    "textPrimaryOnPanelSoft": 14.3,
+    "mutedTextOnPanelWhite": 5.86,
+    "mutedTextOnPanelSoft": 5.14,
+    "thresholds": {
+      "body": 4.5,
+      "mutedPlaceholder": 3
+    },
+    "result": "USABILITY_MOCK_PASS"
+  },
+  "ipSafetyNotes": {
+    "publicSafeVersion": "Right 42% becomes a generic football arena with floodlights, original abstract jersey stripe ribbons, pitch-line geometry and scoreboard-like UI blocks; no flag/crest/player.",
+    "bannedSubjectMatter": "no national flag, no club crest, no FIFA/World Cup marks, no real player likeness, no jersey sponsor/logo, no official tournament typography, no competitor image",
+    "rightsNotes": "Original programmatic vector-style composition generated locally with Playwright/CSS. No third-party artwork, real celebrities, anime/game characters, team crests, FIFA/World Cup marks, player likenesses, logos, competitor images, or external assets used.",
+    "builderCopyReminder": "Use images you own or have rights to. Do not redistribute copyrighted celebrity, anime, sports team, or player artwork without permission."
+  },
+  "qaNotes": [
+    "Owner-review concept batch only; no real Codex Desktop apply per brief.",
+    "Crops are simulated Codex overlay crops, not CDP evidence.",
+    "If selected, next step is decompose into .dreamskin/manual kit and run real Install/Apply/Verify/Restore."
+  ]
+}

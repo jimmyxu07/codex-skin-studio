@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "assetPack": "anime-hero-desk",
+  "displayName": "Anime Hero Desk",
+  "themeFamily": "benchmark-style-emotional-template",
+  "status": "DESIGN_CONCEPT_ASSET_READY_OWNER_REVIEW_ONLY",
+  "category": "Anime-style hero coding desk",
+  "hook": "Anime-style coding desk with heroic protagonist energy, built from an original character world.",
+  "positioning": "morning training-room confidence, original anime protagonist silhouette, school desk meets cyber-city task board",
+  "requiredShape": {
+    "marketplacePreview": "16:9 horizontal Codex-like full workspace + right-side emotional hero/world art + themed sidebar/main/composer + skin chip + Remix / Customize CTA",
+    "liveSkinDecomposition": [
+      "background image",
+      "optional hero/ornament layer",
+      "surface tokens",
+      "accent tokens",
+      "readability scrim rules"
+    ],
+    "liveLayout": "right 42% emotional art/world zone; left/center functional surfaces protected by pale frosted panels; composer accent ring with stable text"
+  },
+  "files": {
+    "marketplacePreview": "design-xiu-themed-v1/anime-hero-desk/marketplace-preview.png",
+    "liveBackground": "design-xiu-themed-v1/anime-hero-desk/live-background.png",
+    "simulatedCodexOverlay": "design-xiu-themed-v1/anime-hero-desk/simulated-codex-overlay.png",
+    "crops": {
+      "sidebar": "design-xiu-themed-v1/anime-hero-desk/crops/sidebar-crop.png",
+      "main": "design-xiu-themed-v1/anime-hero-desk/crops/main-crop.png",
+      "composer": "design-xiu-themed-v1/anime-hero-desk/crops/composer-crop.png"
+    },
+    "prompts": {
+      "marketplacePreview": "design-xiu-themed-v1/anime-hero-desk/preview_prompt.txt",
+      "liveBackground": "design-xiu-themed-v1/anime-hero-desk/background_prompt.txt"
+    }
+  },
+  "palette": {
+    "canvas": "#F4FBFF",
+    "panelSoft": "#E3F1FA",
+    "panelWhite": "#FFFFFF",
+    "textPrimary": "#102033",
+    "mutedText": "#4D657C",
+    "accent": "#0EA5E9",
+    "accentAlt": "#F97316",
+    "glow": "#BDEBFF",
+    "border": "#C9DFEC",
+    "heroInk": "#102A4A"
+  },
+  "tokens": {
+    "canvas": "#F4FBFF",
+    "backgroundArtScrimLeft": "rgba(255,255,255,0.70)",
+    "backgroundArtScrimCenter": "rgba(255,255,255,0.42)",
+    "sidebarBackground": "#E3F1FA",
+    "mainBackground": "rgba(255,255,255,0.50)",
+    "panelBackground": "#FFFFFF",
+    "composerBackground": "rgba(255,255,255,0.88)",
+    "textPrimary": "#102033",
+    "textSecondary": "#4D657C",
+    "border": "#C9DFEC",
+    "accent": "#0EA5E9",
+    "accentSecondary": "#F97316",
+    "focusRing": "#0EA5E933",
+    "backdropBlur": "20px",
+    "panelScrim": "rgba(255,255,255,0.82)"
+  },
+  "generationPrompts": {
+    "marketplacePreview": "Marketplace preview for Anime Hero Desk: horizontal 16:9 benchmark-style Codex Desktop skin preview, Codex-like desktop window occupies 52-72% left/center, visible app chrome/sidebar/main workspace/AI side panel/task cards/bottom composer, right-side emotional art zone: Right 42% shows an original anime-style heroic coder silhouette beside a desk, floating training cards, cyber city dawn outside window; no known costume/franchise pose. Category chip and Remix / Customize CTA visible. Palette canvas #F4FBFF, panelSoft #E3F1FA, panelWhite #FFFFFF, textPrimary #102033, mutedText #4D657C, accent #0EA5E9, accentAlt #F97316, glow #BDEBFF, border #C9DFEC, heroInk #102A4A. Premium PC workspace product, not a poster, not a wallpaper, not plain color. IP safety negative prompt: no recognizable anime/game character, no franchise costume, no school emblem copied from IP, no readable Japanese brand text, no watermark, no competitor image.",
+    "liveBackground": "Live background for Anime Hero Desk: UI-free low-detail atmospheric background only, right 42% emotional hero/world art, calm left/sidebar and bottom composer safe zones for readability scrims. Decompose into background + optional hero/ornament layer + surface/accent tokens. No baked text, no logos, no real person/team/franchise marks. Mood: morning training-room confidence, original anime protagonist silhouette, school desk meets cyber-city task board. Negative prompt: no recognizable anime/game character, no franchise costume, no school emblem copied from IP, no readable Japanese brand text, no watermark, no competitor image."
+  },
+  "contrastSelfCheck": {
+    "textPrimaryOnPanelWhite": 16.45,
+    "textPrimaryOnPanelSoft": 14.28,
+    "mutedTextOnPanelWhite": 6.06,
+    "mutedTextOnPanelSoft": 5.26,
+    "thresholds": {
+      "body": 4.5,
+      "mutedPlaceholder": 3
+    },
+    "result": "USABILITY_MOCK_PASS"
+  },
+  "ipSafetyNotes": {
+    "publicSafeVersion": "Right 42% shows an original anime-style heroic coder silhouette beside a desk, floating training cards, cyber city dawn outside window; no known costume/franchise pose.",
+    "bannedSubjectMatter": "no recognizable anime/game character, no franchise costume, no school emblem copied from IP, no readable Japanese brand text, no watermark, no competitor image",
+    "rightsNotes": "Original programmatic vector-style composition generated locally with Playwright/CSS. No third-party artwork, real celebrities, anime/game characters, team crests, FIFA/World Cup marks, player likenesses, logos, competitor images, or external assets used.",
+    "builderCopyReminder": "Use images you own or have rights to. Do not redistribute copyrighted celebrity, anime, sports team, or player artwork without permission."
+  },
+  "qaNotes": [
+    "Owner-review concept batch only; no real Codex Desktop apply per brief.",
+    "Crops are simulated Codex overlay crops, not CDP evidence.",
+    "If selected, next step is decompose into .dreamskin/manual kit and run real Install/Apply/Verify/Restore."
+  ]
+}

@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://codexskin.fun/</loc></url>
-  <url><loc>https://codexskin.fun/codex-skin</loc></url>
-  <url><loc>https://codexskin.fun/free-codex-skins</loc></url>
-  <url><loc>https://codexskin.fun/codex-skin-generator</loc></url>
-  <url><loc>https://codexskin.fun/templates</loc></url>
-  <url><loc>https://codexskin.fun/templates/ink-mountain-scholar</loc></url>
-  <url><loc>https://codexskin.fun/templates/forge-core-alchemist</loc></url>
-  <url><loc>https://codexskin.fun/templates/rainstreet-neon-ritual</loc></url>
-  <url><loc>https://codexskin.fun/templates/rose-orbit-observatory</loc></url>
-  <url><loc>https://codexskin.fun/templates/midnight-blueprint-room</loc></url>
-  <url><loc>https://codexskin.fun/templates/glasshouse-sprint-lab</loc></url>
-  <url><loc>https://codexskin.fun/templates/blackbox-gold-premiere</loc></url>
-  <url><loc>https://codexskin.fun/templates/pixel-bento-arcade</loc></url>
-  <url><loc>https://codexskin.fun/templates/deepsea-sonar-console</loc></url>
-  <url><loc>https://codexskin.fun/custom-codex-skin</loc></url>
-  <url><loc>https://codexskin.fun/how-it-works</loc></url>
-  <url><loc>https://codexskin.fun/safety</loc></url>
+  <url><loc>https://codexskin.fun/builder</loc></url>
+  <url><loc>https://codexskin.fun/skins</loc></url>
+  <url><loc>https://codexskin.fun/skins/idol-stage</loc></url>
+  <url><loc>https://codexskin.fun/skins/anime-hero-desk</loc></url>
+  <url><loc>https://codexskin.fun/skins/football-nation-arena</loc></url>
+  <url><loc>https://codexskin.fun/skins/basketball-court-lights</loc></url>
+  <url><loc>https://codexskin.fun/skins/mecha-command-bay</loc></url>
+  <url><loc>https://codexskin.fun/skins/fantasy-guild-desk</loc></url>
+  <url><loc>https://codexskin.fun/docs/install</loc></url>
+  <url><loc>https://codexskin.fun/docs/install/macos</loc></url>
+  <url><loc>https://codexskin.fun/docs/install/windows</loc></url>
+  <url><loc>https://codexskin.fun/security</loc></url>
   <url><loc>https://codexskin.fun/privacy</loc></url>
   <url><loc>https://codexskin.fun/terms</loc></url>
 </urlset>

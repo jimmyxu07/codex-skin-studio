@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 2,
+  "assetPack": "anime-hero-desk",
+  "displayName": "Anime Hero Desk",
+  "themeFamily": "owner-review-v2-benchmark-like-emotional-template",
+  "status": "DESIGN_OWNER_REVIEW_V2_READY_SIMULATED_ONLY",
+  "category": "Anime-style / Hero Desk",
+  "hook": "Turn Codex into an anime-style protagonist desk: dawn city, training cards, and a heroic but readable coding cockpit.",
+  "identityUpgrade": "Original fictional coder “Ari Signal” with non-franchise hair silhouette, short energy scarf, desk tools, floating training cards, and cyber-dawn window shapes.",
+  "customizationAngles": [
+    "replace hero/world art with rights-cleared upload",
+    "adjust focal point",
+    "tune dimming and blur",
+    "change accent/secondary/highlight colors",
+    "choose Home/Task/Diff/Composer preview state"
+  ],
+  "requiredShape": {
+    "marketplacePreview": "16:9 horizontal Codex-like workspace preview with full app chrome/sidebar/main/AI panel/composer and visible emotional identity hook",
+    "liveSkinDecomposition": [
+      "live-background.png UI-free background",
+      "optional hero/ornament safe zone",
+      "surface tokens",
+      "accent/focus tokens",
+      "readability scrim rules"
+    ],
+    "liveLayout": "right hero desk/world zone, center task board, bright readable panels, composer with blue/orange focus rail"
+  },
+  "files": {
+    "marketplacePreview": "design-xiu-themed-v2/anime-hero-desk/marketplace-preview.png",
+    "liveBackground": "design-xiu-themed-v2/anime-hero-desk/live-background.png",
+    "simulatedCodexOverlay": "design-xiu-themed-v2/anime-hero-desk/simulated-codex-overlay.png",
+    "crops": {
+      "sidebar": "design-xiu-themed-v2/anime-hero-desk/crops/sidebar-crop.png",
+      "main": "design-xiu-themed-v2/anime-hero-desk/crops/main-crop.png",
+      "composer": "design-xiu-themed-v2/anime-hero-desk/crops/composer-crop.png"
+    },
+    "prompts": {
+      "marketplacePreview": "design-xiu-themed-v2/anime-hero-desk/preview_prompt.txt",
+      "liveBackground": "design-xiu-themed-v2/anime-hero-desk/background_prompt.txt"
+    },
+    "ipSafetyNote": "design-xiu-themed-v2/anime-hero-desk/IP_SAFETY_NOTE.md"
+  },
+  "focus": {
+    "x": 0.72,
+    "y": 0.46
+  },
+  "safeArea": "left-reading-right-original-character-world",
+  "palette": {
+    "canvas": "#f4fbff",
+    "panel": "#fbfdff",
+    "panel2": "#e1f2fb",
+    "ink": "#0e2034",
+    "muted": "#4f657c",
+    "accent": "#0ea5e9",
+    "accent2": "#f97316",
+    "accent3": "#ffe08a",
+    "glow": "#bdeaff",
+    "border": "#c8dfed",
+    "dark": "#102a4a"
+  },
+  "tokens": {
+    "canvas": "#f4fbff",
+    "backgroundArtScrimLeft": "rgba(255,255,255,0.78)",
+    "backgroundArtScrimCenter": "rgba(255,255,255,0.55)",
+    "backgroundArtScrimRight": "rgba(255,255,255,0.08)",
+    "sidebarBackground": "#e1f2fb",
+    "mainBackground": "rgba(255,255,255,0.50)",
+    "panelBackground": "#fbfdff",
+    "composerBackground": "rgba(255,255,255,0.89)",
+    "textPrimary": "#0e2034",
+    "textSecondary": "#4f657c",
+    "border": "#c8dfed",
+    "accent": "#0ea5e9",
+    "accentSecondary": "#f97316",
+    "highlight": "#ffe08a",
+    "focusRing": "#0ea5e91A",
+    "backdropBlur": "24px",
+    "panelScrim": "rgba(255,255,255,0.82)"
+  },
+  "generationPrompts": {
+    "marketplacePreview": "Owner Review v2 marketplace preview for Anime Hero Desk: horizontal 16:9 benchmark-like Codex workspace, app window occupies 52-72% with desktop chrome, sidebar, main task cards, AI/diff side panel, and bottom composer. Upgrade from abstract silhouette to specific original emotional identity: Original fictional coder “Ari Signal” with non-franchise hair silhouette, short energy scarf, desk tools, floating training cards, and cyber-dawn window shapes.. Include visible category chip, customization/remix affordance, and premium product-card click desire. Functional surfaces must visibly share theme tokens. IP-safe original only; avoid recognizable anime or game character, franchise costume, copied weapon or emblem, studio logo, readable brand text, competitor image.",
+    "liveBackground": "Owner Review v2 live background for Anime Hero Desk: UI-free atmospheric art layer, no text/logos, no real IP. Layout: right hero desk/world zone, center task board, bright readable panels, composer with blue/orange focus rail. Keep left/center and bottom safe for frosted readability panels. Original identity details: Original fictional coder “Ari Signal” with non-franchise hair silhouette, short energy scarf, desk tools, floating training cards, and cyber-dawn window shapes.. Export as background + optional ornament/hero layer + tokens + scrim rules. Negative: recognizable anime or game character, franchise costume, copied weapon or emblem, studio logo, readable brand text, competitor image."
+  },
+  "contrastSelfCheck": {
+    "textPrimaryOnPanel": 16.16,
+    "textPrimaryOnPanel2": 14.35,
+    "mutedTextOnPanel": 5.91,
+    "mutedTextOnPanel2": 5.25,
+    "thresholds": {
+      "body": 4.5,
+      "mutedPlaceholder": 3
+    },
+    "result": "USABILITY_MOCK_PASS"
+  },
+  "rights": {
+    "source": "original-programmatic-vector-composition",
+    "containsRealPerson": false,
+    "containsTrademark": false,
+    "containsOfficialSportsMark": false,
+    "containsKnownAnimeGameCharacter": false,
+    "containsCompetitorAsset": false,
+    "ipRisk": "low",
+    "threeSecondRecognitionTest": "pass - generic original category identity only",
+    "notes": "No recognizable anime or game character; franchise costume; copied weapon or emblem; studio logo; readable brand text; competitor image."
+  },
+  "qaNotes": [
+    "Owner Review visual package only; no real Codex Desktop apply per official brief.",
+    "Crops are from simulated Codex overlay and support VISUAL_OWNER_REVIEW, not TECH_GO/USABILITY_GO for real app.",
+    "If Owner chooses a candidate, next step is .dreamskin/manual kit decomposition and real Install/Apply/Verify/Restore evidence."
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 2,
+  "assetPack": "football-nation-arena",
+  "displayName": "Football Nation Arena",
+  "themeFamily": "owner-review-v2-benchmark-like-emotional-template",
+  "status": "DESIGN_OWNER_REVIEW_V2_READY_SIMULATED_ONLY",
+  "category": "Sports / Arena Mood",
+  "hook": "A tournament-night football command workspace with abstract nation-energy stripes — no flags, crests, players, or marks.",
+  "identityUpgrade": "Original fictional arena “Aurora Pitch”: floodlights, anonymous jersey-fabric ribbons, tactical pitch geometry, generic scoreboard cards, and customizable accent colorways.",
+  "customizationAngles": [
+    "replace hero/world art with rights-cleared upload",
+    "adjust focal point",
+    "tune dimming and blur",
+    "change accent/secondary/highlight colors",
+    "choose Home/Task/Diff/Composer preview state"
+  ],
+  "requiredShape": {
+    "marketplacePreview": "16:9 horizontal Codex-like workspace preview with full app chrome/sidebar/main/AI panel/composer and visible emotional identity hook",
+    "liveSkinDecomposition": [
+      "live-background.png UI-free background",
+      "optional hero/ornament safe zone",
+      "surface tokens",
+      "accent/focus tokens",
+      "readability scrim rules"
+    ],
+    "liveLayout": "right stadium/jersey-energy zone, left command sidebar, center match-plan task cards, stable composer under arena glow"
+  },
+  "files": {
+    "marketplacePreview": "design-xiu-themed-v2/football-nation-arena/marketplace-preview.png",
+    "liveBackground": "design-xiu-themed-v2/football-nation-arena/live-background.png",
+    "simulatedCodexOverlay": "design-xiu-themed-v2/football-nation-arena/simulated-codex-overlay.png",
+    "crops": {
+      "sidebar": "design-xiu-themed-v2/football-nation-arena/crops/sidebar-crop.png",
+      "main": "design-xiu-themed-v2/football-nation-arena/crops/main-crop.png",
+      "composer": "design-xiu-themed-v2/football-nation-arena/crops/composer-crop.png"
+    },
+    "prompts": {
+      "marketplacePreview": "design-xiu-themed-v2/football-nation-arena/preview_prompt.txt",
+      "liveBackground": "design-xiu-themed-v2/football-nation-arena/background_prompt.txt"
+    },
+    "ipSafetyNote": "design-xiu-themed-v2/football-nation-arena/IP_SAFETY_NOTE.md"
+  },
+  "focus": {
+    "x": 0.71,
+    "y": 0.5
+  },
+  "safeArea": "left-reading-right-arena-world",
+  "palette": {
+    "canvas": "#f6fff8",
+    "panel": "#fbfffc",
+    "panel2": "#e3f5e8",
+    "ink": "#102417",
+    "muted": "#506b58",
+    "accent": "#16a34a",
+    "accent2": "#f59e0b",
+    "accent3": "#9ee6b2",
+    "glow": "#d7f8de",
+    "border": "#c7e5cf",
+    "dark": "#073d21"
+  },
+  "tokens": {
+    "canvas": "#f6fff8",
+    "backgroundArtScrimLeft": "rgba(255,255,255,0.78)",
+    "backgroundArtScrimCenter": "rgba(255,255,255,0.55)",
+    "backgroundArtScrimRight": "rgba(255,255,255,0.08)",
+    "sidebarBackground": "#e3f5e8",
+    "mainBackground": "rgba(255,255,255,0.50)",
+    "panelBackground": "#fbfffc",
+    "composerBackground": "rgba(255,255,255,0.89)",
+    "textPrimary": "#102417",
+    "textSecondary": "#506b58",
+    "border": "#c7e5cf",
+    "accent": "#16a34a",
+    "accentSecondary": "#f59e0b",
+    "highlight": "#9ee6b2",
+    "focusRing": "#16a34a1A",
+    "backdropBlur": "24px",
+    "panelScrim": "rgba(255,255,255,0.82)"
+  },
+  "generationPrompts": {
+    "marketplacePreview": "Owner Review v2 marketplace preview for Football Nation Arena: horizontal 16:9 benchmark-like Codex workspace, app window occupies 52-72% with desktop chrome, sidebar, main task cards, AI/diff side panel, and bottom composer. Upgrade from abstract silhouette to specific original emotional identity: Original fictional arena “Aurora Pitch”: floodlights, anonymous jersey-fabric ribbons, tactical pitch geometry, generic scoreboard cards, and customizable accent colorways.. Include visible category chip, customization/remix affordance, and premium product-card click desire. Functional surfaces must visibly share theme tokens. IP-safe original only; avoid national flag, club crest, FIFA or World Cup mark, real player likeness, jersey sponsor, official tournament typography, competitor image.",
+    "liveBackground": "Owner Review v2 live background for Football Nation Arena: UI-free atmospheric art layer, no text/logos, no real IP. Layout: right stadium/jersey-energy zone, left command sidebar, center match-plan task cards, stable composer under arena glow. Keep left/center and bottom safe for frosted readability panels. Original identity details: Original fictional arena “Aurora Pitch”: floodlights, anonymous jersey-fabric ribbons, tactical pitch geometry, generic scoreboard cards, and customizable accent colorways.. Export as background + optional ornament/hero layer + tokens + scrim rules. Negative: national flag, club crest, FIFA or World Cup mark, real player likeness, jersey sponsor, official tournament typography, competitor image."
+  },
+  "contrastSelfCheck": {
+    "textPrimaryOnPanel": 16.17,
+    "textPrimaryOnPanel2": 14.37,
+    "mutedTextOnPanel": 5.81,
+    "mutedTextOnPanel2": 5.16,
+    "thresholds": {
+      "body": 4.5,
+      "mutedPlaceholder": 3
+    },
+    "result": "USABILITY_MOCK_PASS"
+  },
+  "rights": {
+    "source": "original-programmatic-vector-composition",
+    "containsRealPerson": false,
+    "containsTrademark": false,
+    "containsOfficialSportsMark": false,
+    "containsKnownAnimeGameCharacter": false,
+    "containsCompetitorAsset": false,
+    "ipRisk": "low",
+    "threeSecondRecognitionTest": "pass - generic original category identity only",
+    "notes": "No national flag; club crest; FIFA or World Cup mark; real player likeness; jersey sponsor; official tournament typography; competitor image."
+  },
+  "qaNotes": [
+    "Owner Review visual package only; no real Codex Desktop apply per official brief.",
+    "Crops are from simulated Codex overlay and support VISUAL_OWNER_REVIEW, not TECH_GO/USABILITY_GO for real app.",
+    "If Owner chooses a candidate, next step is .dreamskin/manual kit decomposition and real Install/Apply/Verify/Restore evidence."
+  ]
+}

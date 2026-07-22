@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 2,
+  "assetPack": "idol-stage-skin",
+  "displayName": "Idol Stage Skin",
+  "themeFamily": "owner-review-v2-benchmark-like-emotional-template",
+  "status": "DESIGN_OWNER_REVIEW_V2_READY_SIMULATED_ONLY",
+  "category": "Idol / Stage",
+  "hook": "Make Codex feel like a premium concert-stage command center — collectible, glowing, and remixable.",
+  "identityUpgrade": "Original fictional performer “Nova Echo” as a faceless, non-real-person stage presence: headset arc, star hairpins, fan-light sea, backstage pass cards, and stage runway geometry.",
+  "customizationAngles": [
+    "replace hero/world art with rights-cleared upload",
+    "adjust focal point",
+    "tune dimming and blur",
+    "change accent/secondary/highlight colors",
+    "choose Home/Task/Diff/Composer preview state"
+  ],
+  "requiredShape": {
+    "marketplacePreview": "16:9 horizontal Codex-like workspace preview with full app chrome/sidebar/main/AI panel/composer and visible emotional identity hook",
+    "liveSkinDecomposition": [
+      "live-background.png UI-free background",
+      "optional hero/ornament safe zone",
+      "surface tokens",
+      "accent/focus tokens",
+      "readability scrim rules"
+    ],
+    "liveLayout": "right hero stage zone, left/center protected reading surfaces, bottom composer with controllable stage glow"
+  },
+  "files": {
+    "marketplacePreview": "design-xiu-themed-v2/idol-stage-skin/marketplace-preview.png",
+    "liveBackground": "design-xiu-themed-v2/idol-stage-skin/live-background.png",
+    "simulatedCodexOverlay": "design-xiu-themed-v2/idol-stage-skin/simulated-codex-overlay.png",
+    "crops": {
+      "sidebar": "design-xiu-themed-v2/idol-stage-skin/crops/sidebar-crop.png",
+      "main": "design-xiu-themed-v2/idol-stage-skin/crops/main-crop.png",
+      "composer": "design-xiu-themed-v2/idol-stage-skin/crops/composer-crop.png"
+    },
+    "prompts": {
+      "marketplacePreview": "design-xiu-themed-v2/idol-stage-skin/preview_prompt.txt",
+      "liveBackground": "design-xiu-themed-v2/idol-stage-skin/background_prompt.txt"
+    },
+    "ipSafetyNote": "design-xiu-themed-v2/idol-stage-skin/IP_SAFETY_NOTE.md"
+  },
+  "focus": {
+    "x": 0.73,
+    "y": 0.48
+  },
+  "safeArea": "left-reading-right-idol-hero",
+  "palette": {
+    "canvas": "#fff4fb",
+    "panel": "#fffafd",
+    "panel2": "#f8e7f5",
+    "ink": "#251226",
+    "muted": "#6d5670",
+    "accent": "#ed3d94",
+    "accent2": "#8b5cf6",
+    "accent3": "#ffd166",
+    "glow": "#ffd4ec",
+    "border": "#ead0e3",
+    "dark": "#351535"
+  },
+  "tokens": {
+    "canvas": "#fff4fb",
+    "backgroundArtScrimLeft": "rgba(255,255,255,0.78)",
+    "backgroundArtScrimCenter": "rgba(255,255,255,0.55)",
+    "backgroundArtScrimRight": "rgba(255,255,255,0.08)",
+    "sidebarBackground": "#f8e7f5",
+    "mainBackground": "rgba(255,255,255,0.50)",
+    "panelBackground": "#fffafd",
+    "composerBackground": "rgba(255,255,255,0.89)",
+    "textPrimary": "#251226",
+    "textSecondary": "#6d5670",
+    "border": "#ead0e3",
+    "accent": "#ed3d94",
+    "accentSecondary": "#8b5cf6",
+    "highlight": "#ffd166",
+    "focusRing": "#ed3d941A",
+    "backdropBlur": "24px",
+    "panelScrim": "rgba(255,255,255,0.82)"
+  },
+  "generationPrompts": {
+    "marketplacePreview": "Owner Review v2 marketplace preview for Idol Stage Skin: horizontal 16:9 benchmark-like Codex workspace, app window occupies 52-72% with desktop chrome, sidebar, main task cards, AI/diff side panel, and bottom composer. Upgrade from abstract silhouette to specific original emotional identity: Original fictional performer “Nova Echo” as a faceless, non-real-person stage presence: headset arc, star hairpins, fan-light sea, backstage pass cards, and stage runway geometry.. Include visible category chip, customization/remix affordance, and premium product-card click desire. Functional surfaces must visibly share theme tokens. IP-safe original only; avoid real celebrity likeness, idol group name or agency mark, copied concert poster, recognizable outfit from a performer, brand logo, competitor image.",
+    "liveBackground": "Owner Review v2 live background for Idol Stage Skin: UI-free atmospheric art layer, no text/logos, no real IP. Layout: right hero stage zone, left/center protected reading surfaces, bottom composer with controllable stage glow. Keep left/center and bottom safe for frosted readability panels. Original identity details: Original fictional performer “Nova Echo” as a faceless, non-real-person stage presence: headset arc, star hairpins, fan-light sea, backstage pass cards, and stage runway geometry.. Export as background + optional ornament/hero layer + tokens + scrim rules. Negative: real celebrity likeness, idol group name or agency mark, copied concert poster, recognizable outfit from a performer, brand logo, competitor image."
+  },
+  "contrastSelfCheck": {
+    "textPrimaryOnPanel": 17.05,
+    "textPrimaryOnPanel2": 14.87,
+    "mutedTextOnPanel": 6.33,
+    "mutedTextOnPanel2": 5.52,
+    "thresholds": {
+      "body": 4.5,
+      "mutedPlaceholder": 3
+    },
+    "result": "USABILITY_MOCK_PASS"
+  },
+  "rights": {
+    "source": "original-programmatic-vector-composition",
+    "containsRealPerson": false,
+    "containsTrademark": false,
+    "containsOfficialSportsMark": false,
+    "containsKnownAnimeGameCharacter": false,
+    "containsCompetitorAsset": false,
+    "ipRisk": "low",
+    "threeSecondRecognitionTest": "pass - generic original category identity only",
+    "notes": "No real celebrity likeness; idol group name or agency mark; copied concert poster; recognizable outfit from a performer; brand logo; competitor image."
+  },
+  "qaNotes": [
+    "Owner Review visual package only; no real Codex Desktop apply per official brief.",
+    "Crops are from simulated Codex overlay and support VISUAL_OWNER_REVIEW, not TECH_GO/USABILITY_GO for real app.",
+    "If Owner chooses a candidate, next step is .dreamskin/manual kit decomposition and real Install/Apply/Verify/Restore evidence."
+  ]
+}
