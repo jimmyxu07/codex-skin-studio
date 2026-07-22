@@ -1,11 +1,7 @@
 import { useMemo, useState, type CSSProperties, type ChangeEvent } from 'react'
 import './App.css'
-import idolPreview from '../design-xiu-themed-v1/idol-stage-skin/marketplace-preview.png'
 import idolBackground from '../design-xiu-themed-v1/idol-stage-skin/live-background.png'
-import animePreview from '../design-xiu-themed-v1/anime-hero-desk/marketplace-preview.png'
 import animeBackground from '../design-xiu-themed-v1/anime-hero-desk/live-background.png'
-import footballPreview from '../design-xiu-themed-v1/football-nation-arena/marketplace-preview.png'
-import footballBackground from '../design-xiu-themed-v1/football-nation-arena/live-background.png'
 
 type Skin = {
   slug: string
@@ -53,9 +49,8 @@ const skins: Skin[] = [
     accent: '#E83E8C',
     accentAlt: '#7C3AED',
     background: idolBackground,
-    preview: idolPreview,
-    status: 'USABILITY_MOCK_PASS · OWNER_REVIEW_INPUT',
-    rightZone: 'Right 42% original faceless cyber-idol silhouette, light sticks, fan-card shapes — no celebrity likeness.',
+    status: 'Builder concept · preview recipe',
+    rightZone: 'Concept direction: faceless cyber-idol mood, light sticks, fan-card shapes — no celebrity likeness. Use the Builder to remix before treating it as a finished package.',
     rightsNote: 'Original genre-inspired design; no real celebrity, agency logo, idol group, or brand assets.',
   },
   {
@@ -67,23 +62,21 @@ const skins: Skin[] = [
     accent: '#0EA5E9',
     accentAlt: '#F97316',
     background: animeBackground,
-    preview: animePreview,
-    status: 'USABILITY_MOCK_PASS · OWNER_REVIEW_INPUT',
-    rightZone: 'Original heroic coder silhouette, training cards, and dawn cyber-city mood — no known character or franchise costume.',
+    status: 'Builder concept · preview recipe',
+    rightZone: 'Concept direction: original heroic coder desk, training cards, and dawn cyber-city mood — no known character or franchise costume. Remix before using publicly.',
     rightsNote: 'Original anime-style template; no recognizable anime/game characters, copied costumes, logos, or franchise text.',
   },
   {
     slug: 'football-nation-arena',
-    name: 'Football Nation Arena',
-    category: 'Football Arena Vibes',
-    hook: 'A national-team inspired football arena skin for tournament season without real flags, crests, players, or FIFA marks.',
+    name: 'Sports Arena Builder Concept',
+    category: 'Sports Arena Recipe',
+    hook: 'A restrained sports-arena builder recipe for tournament-season experiments without real flags, crests, players, or FIFA marks.',
     palette: ['#F6FFF8', '#E4F4E9', '#102418', '#16A34A', '#F59E0B'],
     accent: '#16A34A',
     accentAlt: '#F59E0B',
-    background: footballBackground,
-    preview: footballPreview,
-    status: 'USABILITY_MOCK_PASS · OWNER_REVIEW_INPUT',
-    rightZone: 'Generic arena floodlights, abstract jersey ribbons, pitch-line geometry, scoreboard-like blocks — no flags, crests, or players.',
+    background: 'linear-gradient(135deg, #f8fafc, #e8f0ec 48%, #dce8df)',
+    status: 'Builder concept · preview recipe',
+    rightZone: 'Concept direction only: generic arena floodlights, abstract jersey ribbons, pitch-line geometry, scoreboard-like blocks — no flags, crests, or players.',
     rightsNote: 'Original sports-arena mood; no team crests, tournament marks, player likenesses, flags, sponsors, or official typography.',
   },
   {
@@ -95,7 +88,7 @@ const skins: Skin[] = [
     accent: '#EA580C',
     accentAlt: '#7C2D12',
     background: 'linear-gradient(135deg, #fff7ed, #fdebd1 45%, #ffedd5)',
-    status: 'MVP_PROCEDURAL_TEMPLATE',
+    status: 'Preview recipe · builder starter',
     rightZone: 'Abstract hardwood arcs, spotlights, scoreboard blocks, and net-like geometry only.',
     rightsNote: 'No NBA, team logo, player likeness, sponsor, or league asset.',
   },
@@ -108,7 +101,7 @@ const skins: Skin[] = [
     accent: '#2563EB',
     accentAlt: '#F59E0B',
     background: 'linear-gradient(135deg, #f7f9fc, #e4ecf7 46%, #dbeafe)',
-    status: 'MVP_PROCEDURAL_TEMPLATE',
+    status: 'Preview recipe · builder starter',
     rightZone: 'Original cockpit HUD shapes and robot silhouettes; no recognizable franchise mecha design.',
     rightsNote: 'No Gundam/EVA/Transformers-like silhouettes, marks, names, or color layouts.',
   },
@@ -121,7 +114,7 @@ const skins: Skin[] = [
     accent: '#B45309',
     accentAlt: '#6D28D9',
     background: 'linear-gradient(135deg, #fffbeb, #fdecc8 48%, #efe2ff)',
-    status: 'MVP_PROCEDURAL_TEMPLATE',
+    status: 'Preview recipe · builder starter',
     rightZone: 'Original guild desk atmosphere, books, particles, abstract crest geometry only.',
     rightsNote: 'No known fantasy franchise symbols, school crests, spells, or creature designs.',
   },
@@ -224,16 +217,16 @@ function WorkspacePreview({ skin, size = 'card' }: { skin: Skin; size?: 'hero' |
 }
 
 function SkinCard({ skin }: { skin: Skin }) {
-  return <article className="skin-gallery-card studio-card" style={{ '--accent': skin.accent } as CSSProperties & Record<string, string>}><div className="gallery-meta"><span>{skin.category}</span><span>{skin.status}</span></div><WorkspacePreview skin={skin} /><div className="gallery-copy"><h3>{skin.name}</h3><p>{skin.hook}</p><ul className="studio-tags"><li>Readable surfaces</li><li>Data-only package</li><li>Remixable</li></ul><div className="card-actions"><Button href={`/skins/${skin.slug}`}>View full preview</Button><Button href={`/builder?preset=${skin.slug}`} secondary>Remix</Button></div><p className="builder-export-note">{skin.rightsNote}</p></div></article>
+  return <article className="skin-gallery-card studio-card" style={{ '--accent': skin.accent } as CSSProperties & Record<string, string>}><div className="gallery-meta"><span>{skin.category}</span><span>{skin.status}</span></div><WorkspacePreview skin={skin} /><div className="gallery-copy"><h3>{skin.name}</h3><p>{skin.hook}</p><ul className="studio-tags"><li>Builder concept</li><li>Data-only export</li><li>Remixable recipe</li></ul><div className="card-actions"><Button href={`/skins/${skin.slug}`}>View preview recipe</Button><Button href={`/builder?preset=${skin.slug}`} secondary>Remix</Button></div><p className="builder-export-note">{skin.rightsNote}</p></div></article>
 }
 
 function Home() {
   const lead = skins[0]
-  return <main><section className="hero section-pad"><div className="hero-copy"><p className="eyebrow">CODEX DREAM SKIN BUILDER · LOCAL · DATA-ONLY</p><h1>Build your own Codex Dream Skin.</h1><p className="lede">Anime-style, idol-stage, sports-arena, fantasy, esports and personal-photo workspaces — start from original templates or upload images you have rights to use.</p><p className="lede">Preview Home / Task / Diff / Composer surfaces, tune crop, focal point, dimming, blur, panel opacity and accent colors, then export a reviewable `.dreamskin` data package.</p><div className="home-category-chips"><a href="/skins">Anime</a><a href="/skins/idol-stage">Idol</a><a href="/skins/football-nation-arena">Football</a><a href="/builder">Upload your image</a><a href="/security">Data-only safety</a></div><div className="cta-row"><Button href="/builder">Open Builder</Button><Button href="/skins" secondary>Browse Skins</Button><Button href="/docs/install" secondary>Install safely</Button></div><div className="trust-badges"><span>Local image processing</span><span>Data-only package</span><span>Review-first install</span><span>Restore path</span><span>Rights-cleared public templates</span></div></div><div className="hero-preview"><WorkspacePreview skin={lead} size="hero" /></div></section><section className="section-pad"><div className="section-heading"><p className="eyebrow">First templates</p><h2>Original emotional workspace templates</h2><p>Public templates are genre-inspired and IP-safe: no real celebrities, characters, teams, flags, crests, tournaments, or brand marks.</p></div><div className="gallery-grid">{skins.slice(0, 3).map((skin) => <SkinCard key={skin.slug} skin={skin} />)}</div></section></main>
+  return <main><section className="hero section-pad"><div className="hero-copy"><p className="eyebrow">CODEX DREAM SKIN BUILDER · LOCAL · DATA-ONLY</p><h1>Build your own Codex Dream Skin.</h1><p className="lede">Anime-style, idol-stage, sports-arena, fantasy, esports and personal-photo workspaces — start from original builder concepts or upload images you have rights to use.</p><p className="lede">Preview Home / Task / Diff / Composer surfaces, tune crop, focal point, dimming, blur, panel opacity and accent colors, then export a reviewable `.dreamskin` data package.</p><div className="home-category-chips"><a href="/skins">Anime</a><a href="/skins/idol-stage">Idol</a><a href="/skins/football-nation-arena">Sports recipe</a><a href="/builder">Upload your image</a><a href="/security">Data-only safety</a></div><div className="cta-row"><Button href="/builder">Open Builder</Button><Button href="/skins" secondary>Browse Concepts</Button><Button href="/docs/install" secondary>Install safely</Button></div><div className="trust-badges"><span>Local image processing</span><span>Data-only package</span><span>Review-first install</span><span>Restore path</span><span>Rights-cleared public templates</span></div></div><div className="hero-preview"><WorkspacePreview skin={lead} size="hero" /></div></section><section className="section-pad"><div className="section-heading"><p className="eyebrow">Builder concepts</p><h2>Original preview recipes for remixing</h2><p>These are builder concepts, not finished skin packs. Public concepts are genre-inspired and IP-safe: no real celebrities, characters, teams, flags, crests, tournaments, or brand marks.</p></div><div className="gallery-grid">{skins.slice(0, 3).map((skin) => <SkinCard key={skin.slug} skin={skin} />)}</div></section></main>
 }
 
 function Skins() {
-  return <main className="section-pad page"><p className="eyebrow">Original skin gallery</p><h1>Browse original Codex Dream Skins</h1><p className="page-lede">Every template is a Codex-like workspace preview with category chip, emotional hook, proof chips, Remix / View actions, and an IP-safe rights note. The first three use 小秀 design-xiu-themed-v1 assets; the remaining three are MVP procedural placeholders.</p><div className="gallery-grid">{skins.map((skin) => <SkinCard key={skin.slug} skin={skin} />)}</div></main>
+  return <main className="section-pad page"><p className="eyebrow">Builder concept gallery</p><h1>Browse Codex Dream Skin preview recipes</h1><p className="page-lede">Emergency public gallery cleanup: entries are builder concepts and remixable preview recipes, not finished skin packs. Use the Builder to export an inert `.dreamskin` data package, then review any separate helper before applying.</p><div className="gallery-grid">{skins.map((skin) => <SkinCard key={skin.slug} skin={skin} />)}</div></main>
 }
 
 function SkinDetail({ skin }: { skin: Skin }) {
